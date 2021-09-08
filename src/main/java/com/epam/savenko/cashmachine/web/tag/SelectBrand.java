@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class SelectBrand extends TagSupport {
+
     private static final Logger LOG = Logger.getLogger(SelectBrand.class);
+
     private String name;
     private String localeMessage;
 

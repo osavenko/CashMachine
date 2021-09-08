@@ -10,10 +10,8 @@
 <fmt:message key="local.login.title" var="title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
-<h1>OK</h1>
+<%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
-<fmt:message key="local.lang" var="labelText"/>
-<cash:CashLocale shortName="ru" message="${labelText}"/>
-<span>После локали</span>
 <a href="add_product.jsp">Добавить продукт</a>
+
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

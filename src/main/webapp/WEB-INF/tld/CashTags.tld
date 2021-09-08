@@ -71,4 +71,9 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>MenuLine</name>
+        <tag-class>com.epam.savenko.cashmachine.web.tag.MenuLine</tag-class>
+        <body-content>empty</body-content>
+    </tag>
 </taglib>

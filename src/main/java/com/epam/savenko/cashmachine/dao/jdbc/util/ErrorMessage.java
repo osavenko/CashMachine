@@ -33,4 +33,5 @@ public class ErrorMessage {
     public static String getSetPassword() {
         return "Error when set password for user: ";
     }
+    public static String getReceiveMenuItems(){return "Error when receiving menu items";}
 }

@@ -4,7 +4,9 @@ import com.epam.savenko.cashmachine.dao.LocaleDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Locale;
+import com.epam.savenko.cashmachine.model.User;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -26,18 +28,23 @@ public class CashLocale extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        JspWriter out= pageContext.getOut();
+        JspWriter out = pageContext.getOut();
         LocaleDao localeDao = new JdbcLocaleDaoImpl();
-
+        HttpSession session = pageContext.getSession();
+        User user = (User) session.getAttribute("cashUser");
         Optional<Locale> oLocale = null;
         try {
-            oLocale = localeDao.findByName(shortName);
+            if (user != null) {
+                oLocale = localeDao.findById(user.getLocaleId());
+            }else {
+                oLocale = localeDao.findByName(shortName);
+            }
             out.write("<span>");
             out.write(message);
             out.write(": ");
             if (oLocale.isPresent()) {
                 out.write(oLocale.get().getDescription());
-            }else {
+            } else {
                 out.write("Unknown language");
             }
             out.write("</span>");

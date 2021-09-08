@@ -51,6 +51,7 @@ public class LoginCommand extends Command {
                 LOG.error("errorMessage --> " + errorMessage + ", login=" + login);
                 return forward;
             } else {
+                session.setAttribute("cashUser", oUser.get());
                 LOG.debug("User valid(user=" + oUser.get());
                 forward = Path.PAGE_MAIN;
             }

@@ -15,6 +15,7 @@ public class CommandContainer {
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("register", new RegisterCommand());
+        commands.put("ProductsList", new ProductsListCommand());
         commands.put("addProduct", new AddProductCommand());
         commands.put("noCommand", new NoCommand());
 

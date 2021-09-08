@@ -92,4 +92,13 @@ public class Fields {
         public static final String FULLNAME = "fullname";
         public static final String USER_ID = "user_id";
     }
+
+    public static class MenuItem {
+        private MenuItem() {
+        }
+
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String URL = "url";
+    }
 }
