@@ -18,6 +18,7 @@ import static com.epam.savenko.cashmachine.dao.Fields.MenuItem.*;
 public class JdbcMenuDaoImpl implements MenuDao {
 
     private static final Logger LOG = Logger.getLogger(JdbcMenuDaoImpl.class.getName());
+
     private static final String TABLE_NAME = "menu_item";
 
     private static final String SQL_SELECT_MENU_ITEMS =
@@ -42,7 +43,7 @@ public class JdbcMenuDaoImpl implements MenuDao {
         }
         return menuItems;
     };
-    public static final String PATTERN_FIND_COMMAND = "^\\/controller\\?command=(?<command>[a-z]+)";
+    public static final String PATTERN_FIND_COMMAND = "command=(?<cmd>[a-z]+)";
 
     @Override
     public List<MenuItem> findRoleMenuItemsFromGroupByLocale(int roleId, int groupMenuId, int localeId) throws CashMachineException {
@@ -96,18 +97,21 @@ public class JdbcMenuDaoImpl implements MenuDao {
 
     private String getCommandByPattern(String text, String patternLng) {
         StringBuilder rezult = new StringBuilder();
+        LOG.debug("Start check command by pattern");
+        LOG.debug("Source: "+text);
+        LOG.debug("Pattern: "+patternLng);
         Matcher matcher = Pattern.compile(patternLng).matcher(text);
         while (matcher.find()) {
-            rezult.append(matcher.group("command"))
-                    .append(" ");
+            rezult.append(matcher.group("cmd"));
         }
+        LOG.debug("Checked command: "+rezult);
+        LOG.debug("End check command by pattern");
         return rezult.toString();
     }
 
     private List<MenuItem> getMenuItemsByStatement(PreparedStatement statement) throws SQLException {
         ResultSet rs = statement.executeQuery();
-        List<MenuItem> menuItems = mapMenuItemsRows.mapList(rs);
-        return menuItems;
+        return mapMenuItemsRows.mapList(rs);
     }
 
     @Override

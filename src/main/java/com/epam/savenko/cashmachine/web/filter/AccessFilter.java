@@ -19,8 +19,8 @@ public class AccessFilter implements Filter {
 
     private static final Logger LOG = Logger.getLogger(AccessFilter.class);
     private static Map<Integer, List<String>> accessMap = new HashMap<>();
-    private static List<String> outOfControl = new ArrayList<String>();
-    private static List<String> commons = new ArrayList<String>();
+    private static List<String> outOfControl = new ArrayList<>();
+    private static List<String> commons = new ArrayList<>();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -60,11 +60,14 @@ public class AccessFilter implements Filter {
         if (user == null) {
             return false;
         }
+        LOG.debug("User in system: " + user);
+        LOG.debug("Commands list to user: " + accessMap.get(user.getRoleId()).contains(commandName));
+
         return accessMap.get(user.getRoleId()).contains(commandName) || commons.contains(commandName);
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig){
         LOG.debug("Started initialisation AccessFilter");
         // out of control
         outOfControl = asList(filterConfig.getInitParameter("out-of-control"));
@@ -78,7 +81,9 @@ public class AccessFilter implements Filter {
             List<Integer> rolesId = menuDao.findAllRolesInAccessMenuItem();
             for (Integer roleId : rolesId) {
                 accessMap.put(roleId, menuDao.findCommandByRole(roleId));
+                LOG.debug("Initialised commands to roleId: "+roleId+", commands list: "+accessMap.get(roleId));
             }
+            LOG.debug("SELECTED ROLES_ID: "+rolesId);
         } catch (CashMachineException e) {
             LOG.error("Error MenuAccessItem" + e.getMessage());
         }
@@ -87,7 +92,7 @@ public class AccessFilter implements Filter {
     }
 
     private List<String> asList(String initParameter) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(initParameter);
         while (st.hasMoreTokens()) list.add(st.nextToken());
         return list;

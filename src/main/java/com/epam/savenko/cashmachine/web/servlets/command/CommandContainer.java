@@ -8,14 +8,14 @@ import java.util.TreeMap;
 public class CommandContainer {
     private static final Logger LOG = Logger.getLogger(CommandContainer.class);
 
-    private static Map<String, Command> commands = new TreeMap<String, Command>();
+    private static Map<String, Command> commands = new TreeMap<>();
 
     static {
         // common commands
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("register", new RegisterCommand());
-        commands.put("ProductsList", new ProductsListCommand());
+        commands.put("productslist", new ProductsListCommand());
         commands.put("addProduct", new AddProductCommand());
         commands.put("noCommand", new NoCommand());
 
