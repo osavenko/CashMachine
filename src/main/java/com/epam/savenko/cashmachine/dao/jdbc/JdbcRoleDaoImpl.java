@@ -1,12 +1,19 @@
 package com.epam.savenko.cashmachine.dao.jdbc;
 
+import com.epam.savenko.cashmachine.dao.ConnectionProvider;
 import com.epam.savenko.cashmachine.dao.EntitiesMapper;
 import com.epam.savenko.cashmachine.dao.EntityMapper;
 import com.epam.savenko.cashmachine.dao.RoleDao;
+import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Role;
+import com.epam.savenko.cashmachine.model.UserDetails;
 import org.apache.log4j.Logger;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,4 +76,6 @@ public class JdbcRoleDaoImpl implements RoleDao {
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
     }
+
+
 }

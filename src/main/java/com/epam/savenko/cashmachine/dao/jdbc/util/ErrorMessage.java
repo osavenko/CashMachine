@@ -23,6 +23,9 @@ public class ErrorMessage {
     public static String getReceiveById(String tableName) {
         return "Error when receiving " + tableName + " with id=";
     }
+    public static String getReceiveByUserId(String tableName) {
+        return "Error when receiving " + tableName + " with user_id=";
+    }
     public static String getCheckUser() {
         return "Error when check password for login ";
     }

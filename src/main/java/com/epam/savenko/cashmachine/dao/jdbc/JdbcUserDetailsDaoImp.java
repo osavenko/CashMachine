@@ -27,6 +27,7 @@ public class JdbcUserDetailsDaoImp implements UserDetailsDao {
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id=?";
     private static final String SQL_SELECT_ALL_USER_DETAILS = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_SELECT_USER_DETAIL_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id=?";
+    private static final String SQL_SELECT_USER_DETAIL_BY_USER_ID = "SELECT * FROM " + TABLE_NAME + " WHERE user_id=?";
 
     private static final EntityMapper<UserDetails> mapUserDetailRow = resultSet -> new UserDetails(resultSet.getInt(ID),
             resultSet.getString(FULLNAME),
@@ -103,5 +104,24 @@ public class JdbcUserDetailsDaoImp implements UserDetailsDao {
     @Override
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
+    }
+
+    @Override
+    public Optional<UserDetails> findByUserId(Integer key) throws CashMachineException {
+        UserDetails userDetails = null;
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_USER_DETAIL_BY_USER_ID)) {
+            statement.setInt(1, key);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return Optional.ofNullable(mapUserDetailRow.mapRow(resultSet));
+            }
+        } catch (SQLException | CashMachineException e) {
+            StringBuilder sb = new StringBuilder(ErrorMessage.getReceiveByUserId(TABLE_NAME))
+                    .append(key);
+            LOG.error(sb, e);
+            throw new CashMachineException(sb.toString(), e);
+        }
+        return Optional.ofNullable(userDetails);
     }
 }

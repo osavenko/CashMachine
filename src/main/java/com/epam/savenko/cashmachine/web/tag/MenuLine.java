@@ -19,29 +19,36 @@ public class MenuLine extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
+        LOG.debug("Start custom tag MenuLine");
         HttpSession session = pageContext.getSession();
         User user = (User) session.getAttribute("cashUser");
         StringBuilder sb = new StringBuilder();
         if (user != null) {
+            LOG.debug("Checked user"+user);
             MenuDao menuDao = new JdbcMenuDaoImpl();
             try {
+                LOG.debug("Build sub menu Reference");
                 List<MenuItem> listReferences = menuDao.findRoleMenuItemsFromGroupByLocale(user.getRoleId(), 1, user.getLocaleId());
                 buildDropMenu(sb, listReferences);
+                LOG.debug("Build sub menu Journals");
                 List<MenuItem> listJournals = menuDao.findRoleMenuItemsFromGroupByLocale(user.getRoleId(), 2, user.getLocaleId());
                 buildDropMenu(sb, listJournals);
+                LOG.debug("Build sub menu Reports");
                 List<MenuItem> listReports = menuDao.findRoleMenuItemsFromGroupByLocale(user.getRoleId(), 3, user.getLocaleId());
                 buildDropMenu(sb, listReports);
             } catch (CashMachineException e) {
-                e.printStackTrace();
+                LOG.error("Error current tag MenuLine"+e.getMessage());
             }
         } else {
+            LOG.debug("No user");
             sb.append("Меню отсутствует");
         }
         try {
             pageContext.getOut().write(sb.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error: "+e.getMessage());
         }
+        LOG.debug("End custom tag MenuLine");
         return SKIP_BODY;
     }
 

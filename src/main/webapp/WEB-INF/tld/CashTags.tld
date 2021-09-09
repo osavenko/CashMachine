@@ -76,4 +76,9 @@
         <tag-class>com.epam.savenko.cashmachine.web.tag.MenuLine</tag-class>
         <body-content>empty</body-content>
     </tag>
+    <tag>
+        <name>CurrentUser</name>
+        <tag-class>com.epam.savenko.cashmachine.web.tag.CurrentUser</tag-class>
+        <body-content>empty</body-content>
+    </tag>
 </taglib>
