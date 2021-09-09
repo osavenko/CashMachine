@@ -2,10 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="cash" uri="/WEB-INF/tld/CashTags.tld" %>
 
-<%--
-            <fmt:message key="local.app.name" var="appName"/>
-            <span class="navbar-brand mb-0 h1">${appName}</span>
---%>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <fmt:message key="local.app.name" var="appName"/>
@@ -18,6 +14,7 @@
                 <cash:MenuLine/>
             </ul>
             <cash:CurrentUser/>
+            <%@ include file="/WEB-INF/jspf/logout.jspf" %>
         </div>
     </div>
 </nav>

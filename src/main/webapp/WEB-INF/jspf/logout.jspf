@@ -1,0 +1,9 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="cash" uri="/WEB-INF/tld/CashTags.tld" %>
+
+<form class="d-flex">
+    <input type="hidden" name="command" value="logout"/>
+    <fmt:message key="local.button.logout" var="btnLogout" />
+    <button class="btn btn-outline-success" type="submit">${btnLogout}</button>
+</form>
