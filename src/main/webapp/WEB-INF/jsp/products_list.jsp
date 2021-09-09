@@ -12,7 +12,6 @@
 
 <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
-<h2></h2>
 <div>
     <fmt:message key="local.products.count" var="pCount"/>
     <span>${pCount}: ${sessionScope.get("productCount")}</span>

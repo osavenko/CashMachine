@@ -27,7 +27,7 @@ public class JdbcProductDaoImpl implements ProductDao {
     private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product";
     private static final String SQL_PRODUCT_COUNT = "SELECT count(*) FROM product";
     private static final String SQL_SELECT_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?";
-    private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT * FROM product LIMIT ? OFFSET ?";
+    private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product LIMIT ? OFFSET ?";
 
     private static final EntityMapper<Product> mapProductRow = resultSet ->
             new Product(resultSet.getInt(ID),
