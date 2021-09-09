@@ -25,7 +25,9 @@ public class JdbcProductDaoImpl implements ProductDao {
     private static final String SQL_UPDATE = "UPDATE product SET name =?, brandId=?, price=?, quantity=?, weight=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM product WHERE id=?";
     private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product";
+    private static final String SQL_PRODUCT_COUNT = "SELECT count(*) FROM product";
     private static final String SQL_SELECT_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?";
+    private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT * FROM product LIMIT ? OFFSET ?";
 
     private static final EntityMapper<Product> mapProductRow = resultSet ->
             new Product(resultSet.getInt(ID),
@@ -64,6 +66,37 @@ public class JdbcProductDaoImpl implements ProductDao {
         int id = insertProduct(entity);
         entity.setId(id);
         return Optional.ofNullable(id > 0 ? entity : null);
+    }
+
+    @Override
+    public int productCount() throws CashMachineException {
+        int count = 0;
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             Statement statement = con.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(SQL_PRODUCT_COUNT)) {
+                if (resultSet.next()) {
+                    count = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return count;
+    }
+
+    @Override
+    public List<Product> findPage(int rows, int offset) throws CashMachineException {
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_PRODUCT_BY_PAGES)) {
+            statement.setInt(1, rows);
+            statement.setInt(2, offset);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return mapProductRows.mapList(resultSet);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error pagination database", e);
+            throw new CashMachineException("Error pagination database", e);
+        }
     }
 
     private int insertProduct(Product product) throws CashMachineException {

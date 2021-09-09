@@ -12,6 +12,4 @@
 
 <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
-<a href="add_product.jsp">Добавить продукт</a>
-
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

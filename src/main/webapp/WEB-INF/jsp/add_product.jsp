@@ -46,6 +46,8 @@
         <textarea class="form-control"  rows="3"  name="description" required></textarea>
         <fmt:message key="local.add.product.button" var="lbutton"/>
         <button type="submit">${lbutton}</button>
+        <fmt:message key="local.label.back" var="lBack"/>
+        <a href="controller?command=main">${lBack}</a>
     </div>
 </form>
 

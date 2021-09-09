@@ -67,7 +67,7 @@ public class AccessFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig filterConfig){
+    public void init(FilterConfig filterConfig) {
         LOG.debug("Started initialisation AccessFilter");
         // out of control
         outOfControl = asList(filterConfig.getInitParameter("out-of-control"));
@@ -79,11 +79,12 @@ public class AccessFilter implements Filter {
         MenuDao menuDao = new JdbcMenuDaoImpl();
         try {
             List<Integer> rolesId = menuDao.findAllRolesInAccessMenuItem();
+            accessMap.put(0, menuDao.findCommandByRole(0));
             for (Integer roleId : rolesId) {
                 accessMap.put(roleId, menuDao.findCommandByRole(roleId));
-                LOG.debug("Initialised commands to roleId: "+roleId+", commands list: "+accessMap.get(roleId));
+                LOG.debug("Initialised commands to roleId: " + roleId + ", commands list: " + accessMap.get(roleId));
             }
-            LOG.debug("SELECTED ROLES_ID: "+rolesId);
+            LOG.debug("SELECTED ROLES_ID: " + rolesId);
         } catch (CashMachineException e) {
             LOG.error("Error MenuAccessItem" + e.getMessage());
         }
