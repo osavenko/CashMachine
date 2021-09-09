@@ -6,13 +6,12 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.MenuItem;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.epam.savenko.cashmachine.dao.Fields.MenuItem.*;
 
@@ -28,6 +27,11 @@ public class JdbcMenuDaoImpl implements MenuDao {
                     + " JOIN public.locale_item_menu AS lim ON lim.item_menu_id=im.id"
                     + " WHERE amt.role_id=? AND lim.locale_id=? AND im.group_menu_id=?";
 
+    public static final String SQL_SELECT_ALL_ROLE = "SELECT role_id FROM access_menu_item  GROUP BY role_id";
+    public static final String SQL_SELECT_COMMAND_BY_ROLE =
+            "SELECT im.url AS url FROM access_menu_item AS ta"
+                    + " INNER JOIN item_menu im ON im.id = ta.item_menu_id"
+                    + " WHERE ta.role_id=?";
     public static final EntityMapper<MenuItem> mapRow = resultSet ->
             new MenuItem(resultSet.getInt(ID), resultSet.getString(NAME), resultSet.getString(URL), 0);
 
@@ -38,7 +42,9 @@ public class JdbcMenuDaoImpl implements MenuDao {
         }
         return menuItems;
     };
+    public static final String PATTERN_FIND_COMMAND = "^\\/controller\\?command=(?<command>[a-z]+)";
 
+    @Override
     public List<MenuItem> findRoleMenuItemsFromGroupByLocale(int roleId, int groupMenuId, int localeId) throws CashMachineException {
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SELECT_MENU_ITEMS)) {
@@ -50,6 +56,52 @@ public class JdbcMenuDaoImpl implements MenuDao {
             LOG.error(ErrorMessage.getReceiveMenuItems(), e);
             throw new CashMachineException(ErrorMessage.getReceiveMenuItems(), e);
         }
+    }
+
+    @Override
+    public List<String> findCommandByRole(int roleId) throws CashMachineException {
+        List<String> commands = new ArrayList<>();
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_COMMAND_BY_ROLE)) {
+            statement.setInt(1, roleId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String url = getCommandByPattern(resultSet.getString(1), PATTERN_FIND_COMMAND);
+                    commands.add(url);
+                }
+            }
+        } catch (SQLException | CashMachineException e) {
+            LOG.error(ErrorMessage.getReceiveMenuItems(), e);
+            throw new CashMachineException(ErrorMessage.getReceiveMenuItems(), e);
+        }
+        return commands;
+    }
+
+    @Override
+    public List<Integer> findAllRolesInAccessMenuItem() throws CashMachineException {
+        List<Integer> commands = new ArrayList<>();
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             Statement statement = con.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_ROLE)) {
+                while (resultSet.next()) {
+                    commands.add(resultSet.getInt(1));
+                }
+            }
+        } catch (SQLException | CashMachineException e) {
+            LOG.error(ErrorMessage.getReceiveMenuItems(), e);
+            throw new CashMachineException(ErrorMessage.getReceiveMenuItems(), e);
+        }
+        return commands;
+    }
+
+    private String getCommandByPattern(String text, String patternLng) {
+        StringBuilder rezult = new StringBuilder();
+        Matcher matcher = Pattern.compile(patternLng).matcher(text);
+        while (matcher.find()) {
+            rezult.append(matcher.group("command"))
+                    .append(" ");
+        }
+        return rezult.toString();
     }
 
     private List<MenuItem> getMenuItemsByStatement(PreparedStatement statement) throws SQLException {
