@@ -20,6 +20,7 @@
     </div>
     <div class="container">
         <input type="hidden" name="command" value="login"/>
+
         <fieldset>
             <fmt:message key="local.login.label.user" var="luser"/>
             <label><b>${luser}</b></label>
