@@ -22,11 +22,11 @@ public class ProductsListCommand extends Command {
         LOG.debug("Start command productslist");
         String forward = Path.PAGE_PRODUCTS_LIST;
         LOG.debug("Set redirect address: " + forward);
-        int productCount = 0;
+        int productCount;
         List<Product> products;
         HttpSession session = req.getSession();
         session.setAttribute("offset", ROWS_IN_PAGE);
-        Integer start = (Integer) session.getAttribute("startProsition");
+        Integer start = (Integer) session.getAttribute("startPosition");
         if (start == null) {
             start = 0;
         } else {

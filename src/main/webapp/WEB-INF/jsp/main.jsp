@@ -9,7 +9,7 @@
 
 <fmt:message key="local.login.title" var="title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
-
-<%@ include file="/WEB-INF/jspf/navbar.jspf" %>
-
+<div class="container">
+    <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
+</div>
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

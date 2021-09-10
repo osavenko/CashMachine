@@ -122,4 +122,48 @@ public class Product implements Serializable {
                 ", weight=" + weight +
                 '}';
     }
+
+    public static Builder newBuilder() {
+        return new Product().new Builder();
+    }
+
+    public class Builder {
+        private Builder() {
+        }
+
+        public Builder setId(int id) {
+            Product.this.id = id;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            Product.this.name = name;
+            return this;
+        }
+
+        public Builder setBrandId(int brandId) {
+            Product.this.brandId = brandId;
+            return this;
+        }
+
+        public Builder setPrice(double price) {
+            Product.this.price = price;
+            return this;
+        }
+
+        public Builder setQuantity(int quantity) {
+            Product.this.quantity = quantity;
+            return this;
+        }
+
+        public Builder setWeight(boolean weight) {
+            Product.this.weight = weight;
+            return this;
+        }
+
+        public Product build() {
+            return Product.this;
+        }
+    }
+    //    public Product(int id, String name, Brand brand, double price, int quantity, boolean weight) {
 }
