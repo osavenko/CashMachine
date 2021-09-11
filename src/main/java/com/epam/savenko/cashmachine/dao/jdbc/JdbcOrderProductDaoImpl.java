@@ -1,9 +1,6 @@
 package com.epam.savenko.cashmachine.dao.jdbc;
 
-import com.epam.savenko.cashmachine.dao.ConnectionProvider;
-import com.epam.savenko.cashmachine.dao.EntitiesMapper;
-import com.epam.savenko.cashmachine.dao.EntityMapper;
-import com.epam.savenko.cashmachine.dao.OrderProductDao;
+import com.epam.savenko.cashmachine.dao.*;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.OrderProduct;
@@ -29,11 +26,13 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     private static final String SQL_SELECT_ORDER_PRODUCT_BY_ID = "SELECT * FROM order_product WHERE id=?";
 
     private static final EntityMapper<OrderProduct> mapOrderProductRow = resultSet ->
-            new OrderProduct(resultSet.getInt(ID),
-                    resultSet.getInt(ORDER_ID),
-                    resultSet.getInt(PRODUCT_ID),
-                    resultSet.getInt(QUANTITY),
-                    resultSet.getDouble(PRODUCT_ID));
+            OrderProduct.newBuilder()
+                    .setId(resultSet.getInt(ID))
+                    .setOrderId(resultSet.getInt(ORDER_ID))
+                    .setProductId(resultSet.getInt(PRODUCT_ID))
+                    .setQuantity(resultSet.getInt(QUANTITY))
+                    .setPrice(resultSet.getDouble(PRICE))
+                    .build();
 
     public static final EntitiesMapper<OrderProduct> mapOrderProductRows = resultSet -> {
         List<OrderProduct> orderProducts = new ArrayList<>();

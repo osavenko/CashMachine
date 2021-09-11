@@ -16,29 +16,6 @@ public class OrderProduct implements Serializable {
     public OrderProduct() {
     }
 
-    public OrderProduct(int orderId, int productId, int quantity, double price) {
-        this.orderId = orderId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.price = price;
-    }
-
-    public OrderProduct(Order order, Product product, int quantity, double price) {
-        this(order.getId(), product.getId(), quantity, price);
-    }
-
-    public OrderProduct(int id, int orderId, int productId, int quantity, double price) {
-        this.id = id;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.price = price;
-    }
-
-    public OrderProduct(int id, Order order, Product product, int quantity, double price) {
-        this(id, order.getId(), product.getId(), quantity, price);
-    }
-
     public int getId() {
         return id;
     }
@@ -113,5 +90,43 @@ public class OrderProduct implements Serializable {
                 ", quantity=" + quantity +
                 ", price=" + price +
                 '}';
+    }
+
+    public static Builder newBuilder() {
+        return new OrderProduct().new Builder();
+    }
+
+    public class Builder {
+        public Builder() {
+        }
+
+        public Builder setId(int id) {
+            OrderProduct.this.id = id;
+            return this;
+        }
+
+        public Builder setOrderId(int id) {
+            OrderProduct.this.orderId = id;
+            return this;
+        }
+
+        public Builder setProductId(int id) {
+            OrderProduct.this.productId = id;
+            return this;
+        }
+
+        public Builder setQuantity(int quantity) {
+            OrderProduct.this.quantity = quantity;
+            return this;
+        }
+
+        public Builder setPrice(double price) {
+            OrderProduct.this.price = price;
+            return this;
+        }
+
+        public OrderProduct build() {
+            return OrderProduct.this;
+        }
     }
 }
