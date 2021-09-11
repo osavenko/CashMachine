@@ -31,12 +31,14 @@ public class JdbcProductDaoImpl implements ProductDao {
     private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product ORDER BY id LIMIT ? OFFSET ?";
 
     private static final EntityMapper<Product> mapProductRow = resultSet ->
-            new Product(resultSet.getInt(ID),
-                    resultSet.getString(NAME),
-                    resultSet.getInt(BRAND_ID),
-                    resultSet.getDouble(PRICE),
-                    resultSet.getInt(QUANTITY),
-                    resultSet.getBoolean(WEIGHT));
+            Product.newBuilder()
+                    .setId(resultSet.getInt(ID))
+                    .setName(resultSet.getString(NAME))
+                    .setBrandId(resultSet.getInt(BRAND_ID))
+                    .setPrice(resultSet.getDouble(PRICE))
+                    .setQuantity(resultSet.getInt(QUANTITY))
+                    .setWeight(resultSet.getBoolean(WEIGHT))
+                    .build();
 
     public static final EntitiesMapper<Product> mapProductRows = resultSet -> {
         List<Product> products = new ArrayList<>();

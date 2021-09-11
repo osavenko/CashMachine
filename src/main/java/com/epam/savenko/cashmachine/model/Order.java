@@ -1,6 +1,7 @@
 package com.epam.savenko.cashmachine.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Order implements Serializable {
@@ -11,29 +12,9 @@ public class Order implements Serializable {
     private int userId;
     private boolean closed;
     private double amount;
+    private Timestamp dataTime;
 
     public Order() {
-    }
-
-    public Order(int userId, boolean closed, double amount) {
-        this.userId = userId;
-        this.closed = closed;
-        this.amount = amount;
-    }
-
-    public Order(int id, int userId, boolean closed, double amount) {
-        this.id = id;
-        this.userId = userId;
-        this.closed = closed;
-        this.amount = amount;
-    }
-
-    public Order(User user, boolean closed, double amount) {
-        this(user.getId(), closed, amount);
-    }
-
-    public Order(int id, User user, boolean closed, double amount) {
-        this(id, user.getId(), closed, amount);
     }
 
     public int getId() {
@@ -77,7 +58,7 @@ public class Order implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()){
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Order order = (Order) o;
@@ -97,5 +78,44 @@ public class Order implements Serializable {
                 ", closed=" + closed +
                 ", amount=" + amount +
                 '}';
+    }
+
+    public static Builder newOrder() {
+        return new Order().new Builder();
+    }
+
+    public class Builder {
+
+        private Builder() {
+        }
+
+        public Builder setId(int id) {
+            Order.this.id = id;
+            return this;
+        }
+
+        public Builder setUserId(int id) {
+            Order.this.userId = id;
+            return this;
+        }
+
+        public Builder setState(boolean state) {
+            Order.this.closed = state;
+            return this;
+        }
+
+        public Builder setAmount(double amount) {
+            Order.this.amount = amount;
+            return this;
+        }
+
+        public Builder setDateTime(Timestamp timestamp) {
+            Order.this.dataTime = timestamp;
+            return this;
+        }
+
+        public Order build() {
+            return Order.this;
+        }
     }
 }

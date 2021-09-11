@@ -30,10 +30,12 @@ public class JdbcOrderDaoImpl implements OrderDao {
     private static final String SQL_SELECT_ORDER_BY_ID = "SELECT * FROM order WHERE id=?";
 
     private static final EntityMapper<Order> mapOrderRow = resultSet ->
-            new Order(resultSet.getInt(ID),
-                    resultSet.getInt(USER_ID),
-                    resultSet.getBoolean(CLOSED),
-                    resultSet.getDouble(AMOUNT));
+            Order.newOrder()
+                    .setId(resultSet.getInt(ID))
+                    .setUserId(resultSet.getInt(USER_ID))
+                    .setState(resultSet.getBoolean(CLOSED))
+                    .setAmount(resultSet.getDouble(AMOUNT))
+                    .build();
 
     public static final EntitiesMapper<Order> mapOrderRows = resultSet -> {
         List<Order> orders = new ArrayList<>();

@@ -17,31 +17,6 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String name, int brandId, double price, int quantity, boolean weight) {
-        this.name = name;
-        this.brandId = brandId;
-        this.price = price;
-        this.quantity = quantity;
-        this.weight = weight;
-    }
-
-    public Product(String name, Brand brand, double price, int quantity, boolean weight) {
-        this(name, brand.getId(), price, quantity, weight);
-    }
-
-    public Product(int id, String name, int brandId, double price, int quantity, boolean weight) {
-        this.id = id;
-        this.name = name;
-        this.brandId = brandId;
-        this.price = price;
-        this.quantity = quantity;
-        this.weight = weight;
-    }
-
-    public Product(int id, String name, Brand brand, double price, int quantity, boolean weight) {
-        this(id, name, brand.getId(), price, quantity, weight);
-    }
-
     public int getId() {
         return id;
     }
@@ -165,5 +140,4 @@ public class Product implements Serializable {
             return Product.this;
         }
     }
-    //    public Product(int id, String name, Brand brand, double price, int quantity, boolean weight) {
 }
