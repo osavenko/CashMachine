@@ -26,6 +26,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
     private static final String SQL_UPDATE = "UPDATE order SET user_id=?, closed=?, amount=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM order WHERE id=?";
     private static final String SQL_SELECT_ALL_ORDERS = "SELECT * FROM order";
+    private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM order";
     private static final String SQL_SELECT_ORDER_BY_ID = "SELECT * FROM order WHERE id=?";
 
     private static final EntityMapper<Order> mapOrderRow = resultSet ->
@@ -107,5 +108,10 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Override
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
+    }
+
+    @Override
+    public int getCount() throws CashMachineException {
+        return new JdbcCountEntity().getCount(SQL_SELECT_ORDER_COUNTS, TABLE_NAME);
     }
 }

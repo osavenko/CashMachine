@@ -40,7 +40,7 @@ public class ProductsListCommand extends Command {
 
         ProductDao productDao = new JdbcProductDaoImpl();
         try {
-            productCount = productDao.productCount();
+            productCount = productDao.getCount();
             products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * start);
             LOG.debug("Selected products" + products.size());
             LOG.debug("Selected product offset: " + (start * ROWS_IN_PAGE));

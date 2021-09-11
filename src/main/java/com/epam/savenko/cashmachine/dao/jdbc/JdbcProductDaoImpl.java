@@ -70,19 +70,8 @@ public class JdbcProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int productCount() throws CashMachineException {
-        int count = 0;
-        try (Connection con = ConnectionProvider.getInstance().getConnection();
-             Statement statement = con.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(SQL_PRODUCT_COUNT)) {
-                if (resultSet.next()) {
-                    count = resultSet.getInt(1);
-                }
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return count;
+    public int getCount() throws CashMachineException {
+        return new JdbcCountEntity().getCount(SQL_PRODUCT_COUNT, TABLE_NAME);
     }
 
     @Override

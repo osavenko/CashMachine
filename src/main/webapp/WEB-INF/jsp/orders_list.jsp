@@ -14,10 +14,10 @@
     <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
     <div>
-<%--
-        <fmt:message key="local.products.count" var="pCount"/>
-        <span>${pCount}: ${sessionScope.get("productCount")}</span>
---%>
+
+        <fmt:message key="local.order.count" var="pCount"/>
+        <span>${pCount}: ${sessionScope.get("ordersCount")}</span>
+
         <table class="table">
             <tr class="table-primary">
                 <fmt:message key="local.order.number" var="pNumber"/>
@@ -58,8 +58,10 @@
 --%>
 
         </table>
+<%--
         <fmt:message key="local.add.product.button" var="lAddProdyct"/>
         <a href="controller?command=addproductpage">${lAddProdyct}</a>
+--%>
     </div>
 </div>
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>
