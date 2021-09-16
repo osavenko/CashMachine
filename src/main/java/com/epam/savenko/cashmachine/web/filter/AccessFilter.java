@@ -5,6 +5,7 @@ import com.epam.savenko.cashmachine.dao.jdbc.JdbcMenuDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.User;
 import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.constant.SessionParam;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
@@ -40,6 +41,8 @@ public class AccessFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) req;
 
         String commandName = httpRequest.getParameter("command");
+        String changeLanguage = httpRequest.getParameter("changeLanguage");
+
         if (commandName == null || commandName.isEmpty()) {
             LOG.debug("AccessFilter command is empty ");
             return false;

@@ -38,10 +38,6 @@ public class RedirectCommand extends Command {
             forward.setPath(Path.PAGE_TO_ADD_CHECK);
             LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_CHECK);
         }
-        if ("main".equals(command)) {
-            forward.setPath(Path.PAGE_MAIN);
-            LOG.debug("Redirect page: " + Path.PAGE_MAIN);
-        }
         return forward;
     }
 }

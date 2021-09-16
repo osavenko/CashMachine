@@ -50,12 +50,13 @@ public class Controller extends HttpServlet {
             //send Error page
             resp.sendRedirect(req.getContextPath()+ Path.PAGE_ERROR);
         }
-        LOG.debug("Controller finished, now go to forward address --> " + forward);
         // if the forward address is not null go to the address
         if (forward.getRouteType() == RouteType.FORWARD) {
             RequestDispatcher dispatcher = req.getRequestDispatcher(forward.toString());
+            LOG.debug("Controller finished, RequestDispatcher now go to forward address --> " + forward);
             dispatcher.forward(req, resp);
         } else {
+            LOG.debug("Controller finished, REDIRECT now go to forward address --> " + forward);
             resp.sendRedirect(req.getContextPath() + forward.getPath());
         }
     }

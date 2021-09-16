@@ -61,8 +61,8 @@ public class LoginCommand extends Command {
                 Optional<Locale> locale = new JdbcLocaleDaoImpl().findById(oUser.get().getLocaleId());
                 session.setAttribute(SessionParam.LANGUAGE, locale.isPresent() ? locale.get().getName() : "en");
                 LOG.debug("User valid(user=" + oUser.get());
-                forward.setPath(Path.PAGE_MAIN);
-                forward.setRouteType(RouteType.FORWARD);
+                forward.setPath("/controller?command=main");
+                forward.setRouteType(RouteType.REDIRECT);
             }
         } catch (CashMachineException e) {
             LOG.error("Error when login");

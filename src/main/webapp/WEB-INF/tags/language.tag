@@ -10,7 +10,7 @@
     <ul class="nav justify-content-end">
         <c:forEach var="lang" items="${languages}">
             <form action="" method="post">
-                <input type="hidden" name="command" value="changeLanguage"/>
+                <input type="hidden" name="changeLanguage" value="changeLanguage"/>
                 <input type="hidden" name="choiceLang" value="${lang}"/>
                 <input type="hidden" name="currentPath" value="${currPath}"/>
                 <button type="submit">${lang}</button>

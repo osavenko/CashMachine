@@ -1,5 +1,6 @@
 
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
+
 <div class="container">
     <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
@@ -51,7 +52,7 @@
                     <c:choose>
                         <c:when test="${currentPage eq i}">
                             <li class="page-item active"><a class="page-link">
-                                    ${i} <span class="sr-only">(current)</span></a>
+                                    ${i}</a>
                             </li>
                         </c:when>
                         <c:otherwise>
@@ -62,13 +63,6 @@
                     </c:choose>
                 </c:forEach>
             </ul>
-            <%--            <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>--%>
         </nav>
     </div>
 </div>
