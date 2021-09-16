@@ -1,5 +1,8 @@
 package com.epam.savenko.cashmachine.web.servlets;
 
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleDaoImpl;
+import com.epam.savenko.cashmachine.exception.CashMachineException;
+import com.epam.savenko.cashmachine.web.constant.Path;
 import com.epam.savenko.cashmachine.web.servlets.command.Command;
 import com.epam.savenko.cashmachine.web.servlets.command.CommandContainer;
 import org.apache.log4j.Logger;
@@ -11,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //@WebServlet(name = "mainController", value = "/controller")
 public class Controller extends HttpServlet {
@@ -38,15 +43,20 @@ public class Controller extends HttpServlet {
         Command command = CommandContainer.get(commandName);
         LOG.trace("Obtained command --> " + command);
         // execute command and get forward address
-        String forward = command.execute(req, resp);
+        RoutePath forward = command.execute(req, resp);
         LOG.trace("Forward address --> " + forward);
 
+        if (forward.getPath()==null){
+            //send Error page
+            resp.sendRedirect(req.getContextPath()+ Path.PAGE_ERROR);
+        }
         LOG.debug("Controller finished, now go to forward address --> " + forward);
         // if the forward address is not null go to the address
-        if (forward != null) {
-            RequestDispatcher dispatcher = req.getRequestDispatcher(forward);
+        if (forward.getRouteType() == RouteType.FORWARD) {
+            RequestDispatcher dispatcher = req.getRequestDispatcher(forward.toString());
             dispatcher.forward(req, resp);
+        } else {
+            resp.sendRedirect(req.getContextPath() + forward.getPath());
         }
     }
-
 }

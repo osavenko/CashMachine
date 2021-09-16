@@ -1,13 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="cash" uri="/WEB-INF/tld/CashTags.tld" %>
 
-<fmt:setLocale value="ru" scope="session"/>
-<fmt:setBundle basename="locale"/>
-
-<fmt:message key="local.login.title" var="title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 <div class="container">
     <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
@@ -52,8 +43,33 @@
             </c:forEach>
 
         </table>
-        <fmt:message key="local.add.product.button" var="lAddProdyct"/>
-        <a href="controller?command=addproductpage">${lAddProdyct}</a>
+        <fmt:message key="local.common.add" var="pAdd"/>
+        <a href="controller?command=addproductpage">${pAdd}</a>
+        <nav class="container" aria-label="Page navigation example">
+            <ul class="pagination">
+                <c:forEach begin="1" end="${pages}" var="i">
+                    <c:choose>
+                        <c:when test="${currentPage eq i}">
+                            <li class="page-item active"><a class="page-link">
+                                    ${i} <span class="sr-only">(current)</span></a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link"
+                                                     href="controller?command=productslist&currentPage=${i}">${i}</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </ul>
+            <%--            <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>--%>
+        </nav>
     </div>
 </div>
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

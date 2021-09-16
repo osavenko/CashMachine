@@ -1,6 +1,8 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
-import com.epam.savenko.cashmachine.web.Path;
+import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.servlets.RoutePath;
+import com.epam.savenko.cashmachine.web.servlets.RouteType;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -14,7 +16,7 @@ public class LogoutCommand extends Command {
     private static final Logger LOG = Logger.getLogger(LogoutCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         LOG.debug("Command logout starts");
 
         HttpSession session = req.getSession(false);
@@ -23,6 +25,7 @@ public class LogoutCommand extends Command {
         }
 
         LOG.debug("Command logout finished");
-        return Path.PAGE_LOGIN;
+
+        return new RoutePath(Path.PAGE_LOGIN, RouteType.FORWARD);
     }
 }

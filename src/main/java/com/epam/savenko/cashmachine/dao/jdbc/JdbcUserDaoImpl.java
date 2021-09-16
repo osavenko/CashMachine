@@ -27,7 +27,7 @@ public class JdbcUserDaoImpl implements UserDao {
     private static final String SQL_UPDATE_PASSWORD = "UPDATE \"user\" SET hash=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM \"user\" WHERE id=? ";
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM \"user\"";
-    private static final String SQL_SELECT_USERS_BY_LOGIN_AND_HASH = "SELECT * FROM \"user\" WHERE name=? AND hash=?";
+    private static final String SQL_SELECT_USERS_BY_LOGIN_AND_HASH = "SELECT * FROM \"user\" WHERE name=? AND hash=? AND activated='true'";
     private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM \'user\" WHERE id=? ";
 
     private static final EntityMapper<User> mapUserRow = resultSet ->

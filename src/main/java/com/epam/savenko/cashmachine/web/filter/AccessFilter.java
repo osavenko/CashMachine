@@ -3,9 +3,8 @@ package com.epam.savenko.cashmachine.web.filter;
 import com.epam.savenko.cashmachine.dao.MenuDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcMenuDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
-import com.epam.savenko.cashmachine.model.Role;
 import com.epam.savenko.cashmachine.model.User;
-import com.epam.savenko.cashmachine.web.Path;
+import com.epam.savenko.cashmachine.web.constant.Path;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;

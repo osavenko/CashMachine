@@ -11,7 +11,9 @@ import com.epam.savenko.cashmachine.model.Locale;
 import com.epam.savenko.cashmachine.model.Role;
 import com.epam.savenko.cashmachine.model.User;
 import com.epam.savenko.cashmachine.model.UserDetails;
-import com.epam.savenko.cashmachine.web.Path;
+import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.servlets.RoutePath;
+import com.epam.savenko.cashmachine.web.servlets.RouteType;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -20,30 +22,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
+
 public class RegisterCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(RegisterCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         LOG.debug("Start registration");
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        String fullName = req.getParameter("fullname");
-        String sRole = req.getParameter("role");
-        String sLocale = req.getParameter("locale");
-        String forward = Path.PAGE_LOGIN;
+        String login = req.getParameter(LOGIN);
+        String password = req.getParameter(PASSWORD);
+        String fullName = req.getParameter(FULLNAME);
+        String sRole = req.getParameter(ROLE);
+        String sLocale = req.getParameter(LOCALE);
+        RoutePath forward = new RoutePath(Path.PAGE_ERROR, RouteType.REDIRECT);
         try {
             if (isValid(login, password, fullName, sRole, sLocale)) {
                 int roleId = getRoleId(sRole);
                 Optional<Role> oRole = new JdbcRoleDaoImpl().findById(roleId);
                 if (!oRole.isPresent()) {
-                    throw new CashMachineException("Role is empty");
+                    return forward;
                 }
                 LOG.debug("Got the role -->" + oRole.get());
                 Optional<Locale> oLocale = new JdbcLocaleDaoImpl().findByName(sLocale);
                 if (!oLocale.isPresent()) {
-                    throw new CashMachineException("Locale is empty");
+                    return forward;
                 }
                 LOG.debug("Got the locale -->"+oLocale.get());
                 User user = new User(login, oRole.get().getId(), oLocale.get().getId(), false);
@@ -51,7 +55,7 @@ public class RegisterCommand extends Command {
                 UserDao userDao = new JdbcUserDaoImpl();
                 Optional<User> newUser = userDao.insert(user);
                 if (!newUser.isPresent()) {
-                    throw new CashMachineException("error while creating user");
+                    return forward;
                 }
                 LOG.debug("Created user -->"+newUser.get());
 
@@ -59,17 +63,19 @@ public class RegisterCommand extends Command {
                 UserDetails userDetails = new UserDetails(fullName, newUser.get());
                 Optional<UserDetails> newUserDetails = userDetailsDao.insert(userDetails);
                 if (!newUser.isPresent()) {
-                    throw new CashMachineException("error while creating user details");
+                    return forward;
                 }
                 LOG.debug("Saved user details -->"+newUserDetails.get());
 
                 if (!userDao.setPassword(newUser.get(), User.getHash().apply(password))) {
-                    throw new CashMachineException("error while setting user password");
+                    return forward;
                 }
                 LOG.debug("Installed user password ");
+                forward.setPath(Path.PAGE_MAIN);
+                forward.setRouteType(RouteType.REDIRECT);
             }
         } catch (CashMachineException e) {
-            LOG.debug("Registration error", e);
+            LOG.error("Registration error", e);
         }
         return forward;
     }

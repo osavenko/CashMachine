@@ -27,6 +27,8 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id=?";
     private static final String SQL_SELECT_ALL_LOCALE_PRODUCTS = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_SELECT_LOCALE_PRODUCT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id=?";
+    private static final String SQL_SELECT_DESCRIPTION_TO_ID_PRODUCT_BY_LOCALE =
+            "SELECT * FROM " + TABLE_NAME + " WHERE product_id=? AND locale_id=?";
 
     private static final EntityMapper<LocaleProduct> mapLocaleProductRow = resultSet -> new LocaleProduct(resultSet.getInt(ID),
             resultSet.getInt(LOCALE_ID),
@@ -106,5 +108,21 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
     @Override
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
+    }
+
+    @Override
+    public Optional<LocaleProduct> findDescriptionProductByLocale(int idProduct, int localeId) throws CashMachineException {
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_DESCRIPTION_TO_ID_PRODUCT_BY_LOCALE)) {
+            try(ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()){
+                    return Optional.ofNullable(mapLocaleProductRow.mapRow(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error(ErrorMessage.getReceiveById(TABLE_NAME));
+            throw new CashMachineException("ErrorMessage.getReceiveById(TABLE_NAME)", e);
+        }
+        return Optional.empty();
     }
 }

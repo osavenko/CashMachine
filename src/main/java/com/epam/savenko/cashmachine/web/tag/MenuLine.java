@@ -19,10 +19,12 @@ public class MenuLine extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
+
         LOG.debug("Start custom tag MenuLine");
         HttpSession session = pageContext.getSession();
         User user = (User) session.getAttribute("cashUser");
         StringBuilder sb = new StringBuilder();
+
         if (user != null) {
             LOG.debug("Checked user"+user);
             MenuDao menuDao = new JdbcMenuDaoImpl();

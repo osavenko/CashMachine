@@ -1,6 +1,8 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
-import com.epam.savenko.cashmachine.web.Path;
+import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.servlets.RoutePath;
+import com.epam.savenko.cashmachine.web.servlets.RouteType;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +11,7 @@ import java.io.IOException;
 
 public class NoCommand extends Command{
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-        return Path.PAGE_NO_COMMAND;
+    public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        return new RoutePath(Path.PAGE_NO_COMMAND, RouteType.REDIRECT);
     }
 }

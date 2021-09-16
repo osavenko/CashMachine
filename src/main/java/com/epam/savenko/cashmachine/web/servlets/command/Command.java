@@ -1,5 +1,7 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
+import com.epam.savenko.cashmachine.web.servlets.RoutePath;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +16,7 @@ public abstract class Command implements Serializable {
      * Execution method for command.
      * @return Address to go once the command is executed.
      */
-    public abstract String execute(HttpServletRequest req, HttpServletResponse res)
+    public abstract RoutePath execute(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException;
 
     @Override

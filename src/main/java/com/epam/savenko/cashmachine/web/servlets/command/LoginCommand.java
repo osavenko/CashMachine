@@ -1,10 +1,15 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
 import com.epam.savenko.cashmachine.dao.UserDao;
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcUserDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
+import com.epam.savenko.cashmachine.model.Locale;
 import com.epam.savenko.cashmachine.model.User;
-import com.epam.savenko.cashmachine.web.Path;
+import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.constant.SessionParam;
+import com.epam.savenko.cashmachine.web.servlets.RoutePath;
+import com.epam.savenko.cashmachine.web.servlets.RouteType;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -14,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
+
 public class LoginCommand extends Command {
 
     private static final long serialVersionUID = 5430749800774281878L;
@@ -21,17 +28,16 @@ public class LoginCommand extends Command {
     private static final Logger LOG = Logger.getLogger(LoginCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         LOG.debug("Start check user");
         HttpSession session = req.getSession();
-        String login = req.getParameter("login");
+        String login = req.getParameter(LOGIN);
         LOG.debug("Check user with name " + login);
-        String password = req.getParameter("password");
+        String password = req.getParameter(PASSWORD);
 
         String errorMessage = null;
-        String forward = Path.PAGE_BAD_LOGIN;
+        RoutePath forward = new RoutePath(Path.PAGE_BAD_LOGIN, RouteType.REDIRECT);
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
-            LOG.debug("Null user name or password(login=" + login + ")");
             errorMessage = "Login/password cannot be empty";
             req.setAttribute("errorMessage", errorMessage);
             LOG.error("errorMessage --> " + errorMessage);
@@ -42,7 +48,7 @@ public class LoginCommand extends Command {
         Optional<User> oUser = null;
 
         try {
-            LOG.debug("Login: "+login+", password: "+password);
+            LOG.debug("Login: " + login + ", password: " + password);
             oUser = userDao.check(login, User.getHash().apply(password));
             if (!oUser.isPresent()) {
                 errorMessage = "Bad login or password";
@@ -51,12 +57,15 @@ public class LoginCommand extends Command {
                 LOG.error("errorMessage --> " + errorMessage + ", login=" + login);
                 return forward;
             } else {
-                session.setAttribute("cashUser", oUser.get());
+                session.setAttribute(USER, oUser.get());
+                Optional<Locale> locale = new JdbcLocaleDaoImpl().findById(oUser.get().getLocaleId());
+                session.setAttribute(SessionParam.LANGUAGE, locale.isPresent() ? locale.get().getName() : "en");
                 LOG.debug("User valid(user=" + oUser.get());
-                forward = Path.PAGE_MAIN;
+                forward.setPath(Path.PAGE_MAIN);
+                forward.setRouteType(RouteType.FORWARD);
             }
         } catch (CashMachineException e) {
-            e.printStackTrace();
+            LOG.error("Error when login");
         }
         return forward;
     }

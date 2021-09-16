@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SelectLocale extends TagSupport {
 
-    private static final Logger LOG = Logger.getLogger(SelectRole.class);
+    private static final Logger LOG = Logger.getLogger(SelectLocale.class);
 
     private String name;
     private String localeMessage;

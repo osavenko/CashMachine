@@ -1,19 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="ru" scope="session"/>
-<fmt:setBundle basename="locale"/>
-
-<fmt:message key="local.login.title" var="title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <div class="container">
     <fmt:message key="local.welcome" var="welcome"/>
     <h2>${welcome}</h2>
 </div>
-<br>
 <form action="controller" method="post">
     <div class="imgcontainer">
         <img src="images/cashmachine.png" alt="Cash machine" class="avatar">
@@ -26,13 +17,13 @@
             <label><b>${luser}</b></label>
 
             <fmt:message key="local.login.label.user.placeholder" var="uplaceholder"/>
-            <input type="text" placeholder=${uplaceholder} name="login" required>
+            <input type="text" placeholder="${uplaceholder}" name="login" required>
         </fieldset>
         <fieldset>
             <fmt:message key="local.login.label.password" var="lpassword"/>
             <label><b>${lpassword}</b></label>
             <fmt:message key="local.login.label.password.placeholder" var="pplaceholder"/>
-            <input type="password" placeholder=${pplaceholder} name="password">
+            <input type="password" placeholder="${pplaceholder}" name="password">
         </fieldset>
         <fmt:message key="local.login.button" var="lbutton"/>
         <button type="submit">${lbutton}</button>

@@ -4,7 +4,10 @@ import com.epam.savenko.cashmachine.dao.ProductDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Product;
-import com.epam.savenko.cashmachine.web.Path;
+import com.epam.savenko.cashmachine.web.WebUtil;
+import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.servlets.RoutePath;
+import com.epam.savenko.cashmachine.web.servlets.RouteType;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,32 +21,24 @@ public class ProductsListCommand extends Command {
     public static final int ROWS_IN_PAGE = 5;
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) {
+    public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {
         LOG.debug("Start command productslist");
-        String forward = Path.PAGE_PRODUCTS_LIST;
+        RoutePath forward = new RoutePath(Path.PAGE_PRODUCTS_LIST, RouteType.FORWARD);
         LOG.debug("Set redirect address: " + forward);
         int productCount;
         List<Product> products;
         HttpSession session = req.getSession();
         session.setAttribute("offset", ROWS_IN_PAGE);
-        Integer start = (Integer) session.getAttribute("startPosition");
-        if (start == null) {
-            start = 0;
-        } else {
-            String sStart = req.getParameter("page");
-            try {
-                start = Integer.parseInt(sStart);
-            } catch (NumberFormatException e) {
-                LOG.error("Error convert parameter page: " + e.getMessage());
-            }
-        }
+        int currentPage = WebUtil.getNumberStartPage(req, session, LOG);
 
         ProductDao productDao = new JdbcProductDaoImpl();
         try {
             productCount = productDao.getCount();
-            products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * start);
+            products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage-1));
             LOG.debug("Selected products" + products.size());
-            LOG.debug("Selected product offset: " + (start * ROWS_IN_PAGE));
+            LOG.debug("Selected product offset: " + (currentPage * ROWS_IN_PAGE));
+            session.setAttribute("currentPage", currentPage);
+            session.setAttribute("pages", productCount / ROWS_IN_PAGE + 1);
             session.setAttribute("productCount", productCount);
             session.setAttribute("products", products);
         } catch (CashMachineException e) {
@@ -53,4 +48,6 @@ public class ProductsListCommand extends Command {
         LOG.debug("Finished command productslist");
         return forward;
     }
+
+
 }
