@@ -20,14 +20,14 @@ public class JdbcOrderDaoImpl implements OrderDao {
 
     private static final Logger LOG = Logger.getLogger(JdbcOrderDaoImpl.class.getName());
 
-    private static final String TABLE_NAME = "order";
+    private static final String TABLE_NAME = "\"order\"";
 
-    private static final String SQL_INSERT = "INSERT INTO order (user_id, closed, amount) VALUES (?,?,?)";
-    private static final String SQL_UPDATE = "UPDATE order SET user_id=?, closed=?, amount=? WHERE id=?";
-    private static final String SQL_DELETE = "DELETE FROM order WHERE id=?";
-    private static final String SQL_SELECT_ALL_ORDERS = "SELECT * FROM order";
-    private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM order";
-    private static final String SQL_SELECT_ORDER_BY_ID = "SELECT * FROM order WHERE id=?";
+    private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (user_id, closed, amount) VALUES (?,?,?)";
+    private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET user_id=?, closed=?, amount=? WHERE id=?";
+    private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id=?";
+    private static final String SQL_SELECT_ALL_ORDERS = "SELECT * FROM " + TABLE_NAME;
+    private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM " + TABLE_NAME;
+    private static final String SQL_SELECT_ORDER_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id=?";
 
     private static final EntityMapper<Order> mapOrderRow = resultSet ->
             Order.newOrder()
