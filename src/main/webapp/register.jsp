@@ -1,4 +1,3 @@
-
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <div class="container">
@@ -8,21 +7,45 @@
     <fmt:message key="local.register.message" var="lmessage"/>
     <p>${lmessage}</p>
 </div>
-<form action="controller" method="post">
+<fmt:message key="local.error.login" var="errLogin"/>
+<fmt:message key="local.error.password" var="errPassword"/>
+<fmt:message key="local.error.fullname" var="errFullName"/>
+<form action="controller" method="post"
+      onsubmit="return validateRegisterForm('${errLogin}', '${errPassword}', '${errFullName}')">
     <div class="container">
         <input type="hidden" name="command" value="register"/>
 
-        <fmt:message key="local.register.user" var="luser"/>
-        <label><b>${luser}</b></label>
-        <input type="text" placeholder="${luser}" name="login" required>
+        <fieldset>
+            <fmt:message key="local.login.label.user" var="luser"/>
+            <label><b>${luser}</b></label>
 
-        <fmt:message key="local.register.password" var="lpassword"/>
-        <label><b>${lpassword}</b></label>
-        <input type="password" placeholder="${lpassword}" name="password" required>
+            <fmt:message key="local.login.label.user.placeholder" var="uplaceholder"/>
+            <input id="lg" class="form-control" type="text" placeholder="${uplaceholder}" name="login"
+                   onchange="validateLogin('${errLogin}')" required>
+            <div id="spanLogin" class="invalid-feedback"></div>
+        </fieldset>
 
-        <fmt:message key="local.register.fullname" var="lfullname"/>
-        <label><b>${lfullname}</b></label>
-        <input type="text" placeholder="${lfullname}" name="fullname" required>
+
+        <fieldset>
+            <fmt:message key="local.register.password" var="lpassword"/>
+            <fmt:message key="local.error.password.repeat" var="errPasswordRepeat"/>
+            <label><b>${lpassword}</b></label>
+            <input id="pwd" type="password" placeholder="${lpassword}" name="password"
+                   onchange="checkPassword('${errPasswordRepeat}')" required>
+            <div id="spanPassword" class="invalid-feedback"></div>
+        </fieldset>
+        <fieldset>
+            <fmt:message key="local.register.password.repeat" var="lrPassword"/>
+            <label><b>${lrPassword}</b></label>
+            <input id="rpwd" type="password" placeholder="${lrPassword}" name="passwordRepeat"
+                   onchange="checkPassword('${errPasswordRepeat}')" required>
+        </fieldset>
+        <fieldset>
+            <fmt:message key="local.register.fullname" var="lfullname"/>
+            <label><b>${lfullname}</b></label>
+            <input id="fName" type="text" placeholder="${lfullname}" name="fullname" required>
+            <div id="spanFullName" class="invalid-feedback"></div>
+        </fieldset>
 
         <fmt:message key="local.register.role" var="lrole"/>
         <cash:SelectRole name="role" localeMessage="${lrole}"/>
@@ -31,8 +54,7 @@
         <cash:SelectLocale name="locale" localeMessage="${llocale}"/>
 
         <fmt:message key="local.register.button" var="lbutton"/>
-        <button type="submit">${lbutton}</button>
+        <button class="btn" type="submit">${lbutton}</button>
     </div>
 </form>
-
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

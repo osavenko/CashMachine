@@ -36,7 +36,7 @@ public class RegisterCommand extends Command {
         String fullName = req.getParameter(FULLNAME);
         String sRole = req.getParameter(ROLE);
         String sLocale = req.getParameter(LOCALE);
-        RoutePath forward = new RoutePath(Path.PAGE_ERROR, RouteType.REDIRECT);
+        RoutePath forward = new RoutePath(Path.PAGE_ERROR, RouteType.FORWARD);
         try {
             if (isValid(login, password, fullName, sRole, sLocale)) {
                 int roleId = getRoleId(sRole);
@@ -71,8 +71,8 @@ public class RegisterCommand extends Command {
                     return forward;
                 }
                 LOG.debug("Installed user password ");
-                forward.setPath(Path.PAGE_MAIN);
-                forward.setRouteType(RouteType.REDIRECT);
+                forward.setPath(Path.PAGE_LOGIN);
+//                forward.setRouteType(RouteType.REDIRECT);
             }
         } catch (CashMachineException e) {
             LOG.error("Registration error", e);
