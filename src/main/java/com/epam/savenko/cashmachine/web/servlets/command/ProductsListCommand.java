@@ -6,6 +6,7 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Product;
 import com.epam.savenko.cashmachine.web.WebUtil;
 import com.epam.savenko.cashmachine.web.constant.Path;
+import com.epam.savenko.cashmachine.web.constant.SessionParam;
 import com.epam.savenko.cashmachine.web.servlets.RoutePath;
 import com.epam.savenko.cashmachine.web.servlets.RouteType;
 import org.apache.log4j.Logger;
@@ -18,7 +19,7 @@ import java.util.List;
 public class ProductsListCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(ProductsListCommand.class);
-    public static final int ROWS_IN_PAGE = 5;
+    public static final int ROWS_IN_PAGE = SessionParam.ROWS_IN_PAGE;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {
@@ -48,6 +49,4 @@ public class ProductsListCommand extends Command {
         LOG.debug("Finished command productslist");
         return forward;
     }
-
-
 }

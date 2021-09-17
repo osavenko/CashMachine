@@ -1,9 +1,4 @@
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
-<%@ include file="/WEB-INF/jspf/navbar.jspf" %>
-
-<div class="container">
-    <fmt:message key="local.products.count" var="pCount"/>
-</div>
 <div class="container">
     <span>${pCount}: ${sessionScope.get("productCount")}</span>
     <table class="table">
@@ -17,6 +12,7 @@
             <fmt:message key="local.product.price" var="pPrice"/>
             <td>${pPrice}</td>
             <fmt:message key="local.product.description" var="pDescription"/>
+            <td ></td>
         </tr>
 
         <c:forEach var="product" items="${products}">
@@ -38,13 +34,34 @@
                 </c:if>
 
                 <td><c:out value="${product.getPrice()}"/></td>
-                <td><c:out value=""/></td>
+                <td><c:out value=""/>
+                    <form class="row" action="" method="post">
+                        <input type="hidden" name="command" value="addToTovList"/>
+                        <input type="hidden" name="currPrice" value="${product.getPrice()}"/>
+                        <input type="hidden" name="isWeight" value="${product.isWeight()}"/>
+                        <div class="col">
+                            <c:if test="${product.isWeight()==true}">
+                                <input class="form-control" type="number" name="tov${product.getId()}" min="0.000"
+                                       step="0.001"
+                                       max="${product.getQuantity()/1000}" value="0.000" required/>
+                            </c:if>
+                            <c:if test="${product.isWeight()==false}">
+                                <input class="form-control" type="number" name="tov${product.getId()}" min="0"
+                                       step="1"
+                                       max="${product.getQuantity()}" value="0" required/>
+                            </c:if>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline-secondary" type="submit">+</button>
+                        </div>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
 
     </table>
     <fmt:message key="local.common.add" var="pAdd"/>
-    <a href="controller?command=addproductpage">${pAdd}</a>
+    <a href="controller?command=addcheck">${pAdd}</a>
     <nav class="container" aria-label="Page navigation">
         <ul class="pagination">
             <c:forEach begin="1" end="${pages}" var="i">
@@ -56,7 +73,7 @@
                     </c:when>
                     <c:otherwise>
                         <li class="page-item"><a class="page-link"
-                                                 href="controller?command=productslist&currentPage=${i}">${i}</a>
+                                                 href="${currUrl}&currentPage=${i}">${i}</a>
                         </li>
                     </c:otherwise>
                 </c:choose>

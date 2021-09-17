@@ -46,7 +46,7 @@
 <div class="container">
     <div class="input-group">
         <fmt:message key="local.add.product.button" var="pAdd"/>
-        <a class="btn btn-primary" role="button" href="#">${pAdd}</a>
+        <a class="btn btn-primary" role="button" href="controller?command=choiceproduct">${pAdd}</a>
         <fmt:message key="local.common.save" var="pSave"/>
         <a class="btn btn-outline-success" role="button" href="#">${pSave}</a>
         <fmt:message key="local.common.cancel" var="pCancel"/>

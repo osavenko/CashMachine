@@ -10,6 +10,7 @@ public class Path {
     public static final String PAGE_ORDERS_LIST="/WEB-INF/jsp/orders_list.jsp";
     public static final String PAGE_TO_ADD_PRODUCTS="/WEB-INF/jsp/add_product.jsp";
     public static final String PAGE_TO_ADD_CHECK = "/WEB-INF/jsp/add_check.jsp";
+    public static final String PAGE_CHOICE_PRODUCT = "/WEB-INF/jsp/choice_product.jsp";
     public static final String PAGE_REGISTRATION="register.jsp";
     public static final String PAGE_MAIN="/WEB-INF/jsp/main.jsp";
     public static final String PAGE_NO_COMMAND="/hello-servlet";

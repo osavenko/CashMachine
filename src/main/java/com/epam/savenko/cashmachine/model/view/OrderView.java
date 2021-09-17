@@ -8,6 +8,8 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ public class OrderView implements Serializable {
 
     public OrderView(Order order) {
         this.order = order;
+        productInOrderViewList = new ArrayList<>();
     }
 
     public Order getOrder() {
@@ -38,34 +41,45 @@ public class OrderView implements Serializable {
         return productInOrderViewList;
     }
 
-    public void addOrderProduct(int productId, int quantity, double price, int localeId) throws CashMachineException {
-        Optional<Product> oProduct = new JdbcProductDaoImpl().findById(productId);
-        if (oProduct.isPresent()) {
-            Product p = oProduct.get();
-            Optional<LocaleProduct> oLocaleProduct = new JdbcLocaleProductImpl().findDescriptionProductByLocale(p.getId(), localeId);
-            Optional<Brand> oBrand = new JdbcBrandDaoImpl().findById(p.getBrandId());
-            String description = oLocaleProduct.isPresent() ? oLocaleProduct.get().getDescription() : "";
-            String brandName = oBrand.isPresent() ? oBrand.get().getName() : "";
-            ProductInOrderView product =
-                    new ProductInOrderView(p.getId(), p.getName(), brandName, description, p.isWeight(), quantity, price);
-            productInOrderViewList.add(product);
+    public void addOrderProduct(int productId, int quantity, double price) throws CashMachineException {
+        long countProducts = productInOrderViewList.stream()
+                .filter(productInOrderView -> productInOrderView.getId() == productId)
+                .count();
+        if (countProducts > 0) {
+            Iterator<ProductInOrderView> iterator = productInOrderViewList.iterator();
+            while (iterator.hasNext()){
+                ProductInOrderView next = iterator.next();
+                if(next.getId()==productId){
+                    next.quantity+=quantity;
+                }
+            }
+        } else {
+            Optional<Product> oProduct = new JdbcProductDaoImpl().findById(productId);
+            if (oProduct.isPresent()) {
+                Product p = oProduct.get();
+                Optional<Brand> oBrand = new JdbcBrandDaoImpl().findById(p.getBrandId());
+                String brandName = oBrand.isPresent() ? oBrand.get().getName() : "";
+                ProductInOrderView product =
+                        new ProductInOrderView(p.getId(), p.getName(), brandName, p.isWeight(), quantity, price);
+                productInOrderViewList.add(product);
+            }
         }
+
     }
+
 
     public static class ProductInOrderView {
         private int id;
         private String name;
         private String brandName;
-        private String description;
         private boolean type;
         private int quantity;
         private double price;
 
-        public ProductInOrderView(int id, String name, String brandName, String description, boolean type, int quantity, double price) {
+        public ProductInOrderView(int id, String name, String brandName, boolean type, int quantity, double price) {
             this.id = id;
             this.name = name;
             this.brandName = brandName;
-            this.description = description;
             this.type = type;
             this.quantity = quantity;
             this.price = price;
@@ -83,11 +97,7 @@ public class OrderView implements Serializable {
             return brandName;
         }
 
-        public String getDescription() {
-            return description;
-        }
-
-        public boolean isType() {
+        public boolean isWeight() {
             return type;
         }
 
