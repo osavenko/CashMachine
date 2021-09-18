@@ -1,14 +1,17 @@
 let regLogin = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ]{4,20}$/;
 let regFullName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,50}$/;
+let regProductName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,200}$/;
 let regPassword = /^[0-9a-zA-Z!@#$%]{3,}$/;
 
 
 let login = document.querySelector('#lg');
 let fullName = document.querySelector('#fName');
+let productName = document.querySelector('#id_name');
 let password = document.querySelector('#pwd');
 let rPassword = document.querySelector('#rpwd');
 let spanLogin = document.querySelector('#spanLogin');
 let spanFullName = document.querySelector('#spanFullName');
+let spanProductName = document.querySelector('#spanProductName');
 let spanPassword = document.querySelector('#spanPassword');
 
 function checkPassword(err) {
@@ -35,7 +38,11 @@ function validateLoginForm(errLogin, errPassword) {
     result = validatePassword(errPassword);
     return result;
 }
-
+function validateProductForm(errProduct){
+    let result = true;
+    result = validateProductName(errProduct);
+    return result;
+}
 function validateFullName(errName) {
     if (validate(regFullName, fullName)) {
         valid(fullName, spanFullName);
@@ -46,7 +53,16 @@ function validateFullName(errName) {
         return false;
     }
 }
-
+function validateProductName(errProduct){
+    if (validate(regProductName, productName)) {
+        valid(productName, spanProductName);
+        console.log('Product name is Ok')
+    } else {
+        notValid(productName,spanProductName, errProduct);
+        console.log('Product name is BAD')
+        return false;
+    }
+}
 function validateLogin(errLogin) {
     if (validate(regLogin, login)) {
         valid(login, spanLogin);

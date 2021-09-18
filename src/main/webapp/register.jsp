@@ -43,7 +43,7 @@
         <fieldset>
             <fmt:message key="local.register.fullname" var="lfullname"/>
             <label><b>${lfullname}</b></label>
-            <input id="fName" type="text" placeholder="${lfullname}" name="fullname" required>
+            <input id="fName" type="text" placeholder="${lfullname}" name="fullname" onchange="validateFullName('${errFullName}')" required>
             <div id="spanFullName" class="invalid-feedback"></div>
         </fieldset>
 
