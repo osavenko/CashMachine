@@ -5,6 +5,7 @@ import java.util.Objects;
 
 /**
  * Class describe brands of products.The class Brand has two properties <b>id</b> and <b>name</b>.
+ *
  * @author Oleh Savenko
  * @version 1.0
  */
@@ -23,6 +24,7 @@ public class Brand implements Serializable {
 
     /**
      * Initializes a newly created Brand object.
+     *
      * @see Brand#Brand(String)
      * @see Brand#Brand(int, String)
      */
@@ -31,6 +33,7 @@ public class Brand implements Serializable {
 
     /**
      * Initializes a newly created Brand object. Constructor sets one parameter <b>name</b> brand.
+     *
      * @param name - name brand.
      * @see Brand#Brand(int, String)
      * @see Brand#Brand()
@@ -41,7 +44,8 @@ public class Brand implements Serializable {
 
     /**
      * Initializes a newly created Brand object. Constructor sets two parameters <b>id</b>, <b>name</b>.
-     * @param id - id brand
+     *
+     * @param id   - id brand
      * @param name - name brand
      * @see Brand#Brand()
      * @see Brand#Brand(String)
@@ -53,6 +57,7 @@ public class Brand implements Serializable {
 
     /**
      * Gets value field {@link Brand#id}
+     *
      * @return id brand (value field {@link Brand#id})
      */
     public int getId() {
@@ -61,6 +66,7 @@ public class Brand implements Serializable {
 
     /**
      * Sets value field {@link Brand#id}
+     *
      * @param id - id brand
      */
     public void setId(int id) {
@@ -69,6 +75,7 @@ public class Brand implements Serializable {
 
     /**
      * Gets value field {@link Brand#name}
+     *
      * @return name brand (value field {@link Brand#name})
      */
     public String getName() {
@@ -77,6 +84,7 @@ public class Brand implements Serializable {
 
     /**
      * Sets value field {@link Brand#name}
+     *
      * @param name - name brand
      */
     public void setName(String name) {

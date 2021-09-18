@@ -27,6 +27,7 @@ public class Locale implements Serializable {
 
     /**
      * Initializes a newly created Locale object.
+     *
      * @see Locale#Locale(String, String)
      * @see Locale#Locale(int, String, String)
      */
@@ -35,7 +36,8 @@ public class Locale implements Serializable {
 
     /**
      * Initializes a newly created Locale object. Sets two parameters <b>name</b>, <b>description</b>
-     * @param name - locale name
+     *
+     * @param name        - locale name
      * @param description - locale description
      * @see Locale#Locale()
      * @see Locale#Locale(int, String, String)
@@ -44,10 +46,12 @@ public class Locale implements Serializable {
         this.name = name;
         this.description = description;
     }
+
     /**
      * Initializes a newly created Locale object. Sets three parameters <b>id</b>, <b>name</b>, <b>description</b>
-     * @param id - locale id
-     * @param name - locale name
+     *
+     * @param id          - locale id
+     * @param name        - locale name
      * @param description - locale description
      * @see Locale#Locale()
      * @see Locale#Locale(String, String)
@@ -61,6 +65,7 @@ public class Locale implements Serializable {
 
     /**
      * Gets value field {@link Locale#id}
+     *
      * @return id locale (value {@link Locale#id})
      */
     public int getId() {
@@ -69,6 +74,7 @@ public class Locale implements Serializable {
 
     /**
      * Sets value field {@link Locale#id}
+     *
      * @param id - locale id
      */
     public void setId(int id) {
@@ -77,6 +83,7 @@ public class Locale implements Serializable {
 
     /**
      * Gets short name locale like <b>ua</b>, <b>ru</b>... This function gets value field {@link Locale#name}
+     *
      * @return short name locale
      */
     public String getName() {
@@ -85,6 +92,7 @@ public class Locale implements Serializable {
 
     /**
      * Sets short name locale like <b>ua</b>, <b>ru</b>...
+     *
      * @param name - short name locale
      */
     public void setName(String name) {
@@ -93,6 +101,7 @@ public class Locale implements Serializable {
 
     /**
      * Gets description locale
+     *
      * @return description locale
      */
     public String getDescription() {
@@ -101,6 +110,7 @@ public class Locale implements Serializable {
 
     /**
      * Sets description locale
+     *
      * @param description - description locale
      */
     public void setDescription(String description) {
