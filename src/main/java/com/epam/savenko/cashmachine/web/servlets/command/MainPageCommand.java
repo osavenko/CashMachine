@@ -13,6 +13,7 @@ import java.io.IOException;
 public class MainPageCommand extends Command{
 
     private static final Logger LOG = Logger.getLogger(MainPageCommand.class);
+    private static final long serialVersionUID = -6464059499920319851L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {

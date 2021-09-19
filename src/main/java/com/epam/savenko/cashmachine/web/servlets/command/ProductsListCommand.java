@@ -20,6 +20,7 @@ public class ProductsListCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(ProductsListCommand.class);
     public static final int ROWS_IN_PAGE = SessionParam.ROWS_IN_PAGE;
+    private static final long serialVersionUID = 5917893218719632767L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {

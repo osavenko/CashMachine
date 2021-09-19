@@ -31,6 +31,7 @@ import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
 
 public class RedirectCommand extends Command {
     private static final Logger LOG = Logger.getLogger(RedirectCommand.class);
+    private static final long serialVersionUID = 8135816868346486860L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {

@@ -16,6 +16,8 @@ public class AddProductCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(AddProductCommand.class);
 
+    private static final long serialVersionUID = -1028222281221255065L;
+
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {
         LOG.debug("Start command Add product");

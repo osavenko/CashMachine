@@ -14,6 +14,7 @@ import java.io.IOException;
 public class LogoutCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(LogoutCommand.class);
+    private static final long serialVersionUID = -8587348964592320045L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {

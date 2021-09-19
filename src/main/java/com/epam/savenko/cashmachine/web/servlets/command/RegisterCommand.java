@@ -27,6 +27,7 @@ import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
 public class RegisterCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(RegisterCommand.class);
+    private static final long serialVersionUID = 1337598930472920680L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {

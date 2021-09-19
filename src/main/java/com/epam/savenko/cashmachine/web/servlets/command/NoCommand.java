@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class NoCommand extends Command{
+    private static final long serialVersionUID = -5561463588390407190L;
+
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         return new RoutePath(Path.PAGE_NO_COMMAND, RouteType.REDIRECT);

@@ -19,6 +19,7 @@ import java.util.function.Function;
 public class User implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(User.class.getName());
+
     private static final long serialVersionUID = 856156479878950887L;
 
     private static final Function<String, String> hash = (pass) -> {

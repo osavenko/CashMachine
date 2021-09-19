@@ -26,6 +26,7 @@ public class OrdersListCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(OrdersListCommand.class);
     public static final int ROWS_IN_PAGE = 5;
+    private static final long serialVersionUID = -6439949376258681075L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {

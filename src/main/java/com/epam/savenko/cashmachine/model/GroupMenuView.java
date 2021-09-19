@@ -1,6 +1,11 @@
 package com.epam.savenko.cashmachine.model;
 
-public class GroupMenuView {
+import java.io.Serializable;
+
+public class GroupMenuView implements Serializable {
+
+    private static final long serialVersionUID = -5881332431836322801L;
+
     private int id;
     private String name;
 
