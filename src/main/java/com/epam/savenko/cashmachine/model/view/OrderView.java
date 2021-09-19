@@ -1,11 +1,11 @@
 package com.epam.savenko.cashmachine.model.view;
 
-import com.epam.savenko.cashmachine.dao.ProductDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcBrandDaoImpl;
-import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleProductImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
-import com.epam.savenko.cashmachine.model.*;
+import com.epam.savenko.cashmachine.model.Brand;
+import com.epam.savenko.cashmachine.model.Order;
+import com.epam.savenko.cashmachine.model.Product;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,8 +18,8 @@ public class OrderView implements Serializable {
     private static final long serialVersionUID = 2489483659859659232L;
 
     private Order order;
-    private List<ProductInOrderView> productInOrderViewList;
 
+    private List<ProductInOrderView> productInOrderViewList;
 
     public OrderView() {
     }
@@ -41,16 +41,21 @@ public class OrderView implements Serializable {
         return productInOrderViewList;
     }
 
+    public void setProductInOrderViewList(List<ProductInOrderView> productInOrderViewList) {
+        this.productInOrderViewList = productInOrderViewList;
+    }
+
+
     public void addOrderProduct(int productId, int quantity, double price) throws CashMachineException {
         long countProducts = productInOrderViewList.stream()
                 .filter(productInOrderView -> productInOrderView.getId() == productId)
                 .count();
         if (countProducts > 0) {
             Iterator<ProductInOrderView> iterator = productInOrderViewList.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 ProductInOrderView next = iterator.next();
-                if(next.getId()==productId){
-                    next.quantity+=quantity;
+                if (next.getId() == productId) {
+                    next.quantity += quantity;
                 }
             }
         } else {
@@ -64,7 +69,6 @@ public class OrderView implements Serializable {
                 productInOrderViewList.add(product);
             }
         }
-
     }
 
 

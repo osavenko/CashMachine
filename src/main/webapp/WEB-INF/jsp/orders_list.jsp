@@ -17,37 +17,32 @@
                 <td>${pDate}</td>
                 <fmt:message key="local.order.closed" var="pMarkOfClosed"/>
                 <td>${pMarkOfClosed}</td>
+                <fmt:message key="local.order.date.closed" var="pDate"/>
+                <td>${pDate}</td>
                 <fmt:message key="local.order.user" var="pAuthor"/>
                 <td>${pAuthor}</td>
                 <fmt:message key="local.order.amount" var="pAmount"/>
                 <td>${pAmount}</td>
             </tr>
 
-<%--
-            <c:forEach var="product" items="${products}">
+            <c:forEach var="order" items="${orderList}">
                 <tr>
-                    <td><c:out value="${product.getName()}"/></td>
-                    <c:if test="${product.isWeight()==true}">
-                        <fmt:message key="local.product.weight.message" var="pWeightMessage"/>
-                        <td><c:out value="${pWeightMessage}"/></td>
-                    </c:if>
-                    <c:if test="${product.isWeight()==false}">
-                        <fmt:message key="local.product.weight.quantitative" var="pWeightMessage"/>
-                        <td><c:out value="${pWeightMessage}"/></td>
-                    </c:if>
-                    <c:if test="${product.isWeight()==true}">
-                        <td><c:out value="${product.getQuantity()/1000}"/></td>
-                    </c:if>
-                    <c:if test="${product.isWeight()==false}">
-                        <td><c:out value="${product.getQuantity()}"/></td>
-                    </c:if>
+                    <td><c:out value="${order.getId()}"/></td>
 
-                    <td><c:out value="${product.getPrice()}"/></td>
-                    <td><c:out value=""/></td>
+                    <td><c:out value="${order.getOrderDateTime()}"/></td>
+
+                    <c:if test="${order.isClosed()==true}">
+                        <fmt:message key="local.order.closed.ok" var="pState"/>
+                    </c:if>
+                    <c:if test="${order.isClosed()==false}">
+                        <fmt:message key="local.order.closed.not" var="pState"/>
+                    </c:if>
+                    <td><c:out value="${pState}"/></td>
+                    <td><c:out value="${order.getClosedDateTime()}"/></td>
+                    <td><c:out value="${allUsers.get(order.getUserId())}"/></td>
+                    <td><c:out value="${order.getAmount()}"/></td>
                 </tr>
             </c:forEach>
---%>
-
         </table>
         <fmt:message key="local.common.add" var="pAdd"/>
         <a href="controller?command=addcheck">${pAdd}</a>

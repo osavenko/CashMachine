@@ -25,10 +25,10 @@ public class JdbcProductDaoImpl implements ProductDao {
     private static final String SQL_INSERT = "INSERT INTO product (name, brand_id, price, quantity, weight) VALUES (?,?,?,?,?)";
     private static final String SQL_UPDATE = "UPDATE product SET name =?, brand_id=?, price=?, quantity=?, weight=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM product WHERE id=?";
-    private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product ORDER BY id";
-    private static final String SQL_PRODUCT_COUNT = "SELECT count(*) FROM product";
+    private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product WHERE quantity>0 ORDER BY id";
+    private static final String SQL_PRODUCT_COUNT = "SELECT count(*) FROM product WHERE quantity>0";
     private static final String SQL_SELECT_PRODUCT_BY_ID = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product WHERE id=?";
-    private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product ORDER BY id LIMIT ? OFFSET ?";
+    private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product WHERE quantity>0 ORDER BY id LIMIT ? OFFSET ?";
 
     private static final EntityMapper<Product> mapProductRow = resultSet ->
             Product.newBuilder()
@@ -132,6 +132,18 @@ public class JdbcProductDaoImpl implements ProductDao {
             throw new CashMachineException(sb.toString(), e);
         }
         return true;
+    }
+
+    @Override
+    public boolean changeQuantityProduct(int id, int quantity) throws CashMachineException {
+        Optional<Product> product = this.findById(id);
+        if (product.isPresent()){
+            Product p = product.get();
+            p.setQuantity(p.getQuantity()+quantity);
+            this.update(p);
+            return true;
+        }
+        return false;
     }
 
     @Override

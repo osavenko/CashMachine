@@ -1,11 +1,16 @@
 package com.epam.savenko.cashmachine.dao.jdbc;
 
-import com.epam.savenko.cashmachine.dao.*;
+import com.epam.savenko.cashmachine.dao.ConnectionProvider;
+import com.epam.savenko.cashmachine.dao.EntitiesMapper;
+import com.epam.savenko.cashmachine.dao.EntityMapper;
+import com.epam.savenko.cashmachine.dao.OrderProductDao;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.OrderProduct;
+import com.epam.savenko.cashmachine.model.view.OrderView;
 import org.apache.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,29 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     private static final String SQL_DELETE = "DELETE FROM order_product WHERE id=?";
     private static final String SQL_SELECT_ALL_ORDER_PRODUCTS = "SELECT * FROM order_product";
     private static final String SQL_SELECT_ORDER_PRODUCT_BY_ID = "SELECT * FROM order_product WHERE id=?";
+    private static final String SQL_SELECT_ORDER_PRODUCT_VIEW_BY_ORDER_ID =
+            "SELECT p.id AS id, p.name AS name, b.name AS brand_name, p.weight as weight, SUM(op.quantity) AS quantity, op.price::money::numeric::float8 AS price" +
+                    " FROM order_product op" +
+                    " JOIN product p on p.id = op.product_id" +
+                    " JOIN brand b on b.id = p.brand_id" +
+                    " WHERE order_id=?" +
+                    " GROUP BY p.id, p.name, b.name, p.weight, op.price::money::numeric::float8" +
+                    " ORDER BY p.name";
+
+    public static final EntityMapper<OrderView.ProductInOrderView> mapProductInOrderViewRow = rs ->
+            new OrderView.ProductInOrderView(rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("brand_name"),
+                    rs.getBoolean("weight"),
+                    rs.getInt("quantity"),
+                    rs.getDouble("price"));
+    public static final EntitiesMapper<OrderView.ProductInOrderView> mapProductInOrderViewRows = rs -> {
+        List<OrderView.ProductInOrderView> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(mapProductInOrderViewRow.mapRow(rs));
+        }
+        return list;
+    };
 
     private static final EntityMapper<OrderProduct> mapOrderProductRow = resultSet ->
             OrderProduct.newBuilder()
@@ -46,6 +74,22 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
 
     public JdbcOrderProductDaoImpl() {
         jdbcEntity = new JdbcEntity<>(mapOrderProductRows, TABLE_NAME, LOG);
+    }
+
+    @Override
+    public List<OrderView.ProductInOrderView> getProductInOrderViewById(int id) throws CashMachineException {
+        List<OrderView.ProductInOrderView> list = new ArrayList<>();
+        try (Connection connection = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ORDER_PRODUCT_VIEW_BY_ORDER_ID)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                list = mapProductInOrderViewRows.mapList(rs);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error when receive data from ProductInOrderView", e);
+            throw new CashMachineException("Error when receive data from ProductInOrderView", e);
+        }
+        return list;
     }
 
     @Override
@@ -73,7 +117,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
             statement.setInt(1, orderProduct.getOrderId());
             statement.setInt(2, orderProduct.getProductId());
             statement.setInt(3, orderProduct.getQuantity());
-            statement.setDouble(4, orderProduct.getPrice());
+            statement.setBigDecimal(4, BigDecimal.valueOf(orderProduct.getPrice()));
             statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 if (resultSet.next()) {
@@ -112,4 +156,6 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
     }
+
+
 }

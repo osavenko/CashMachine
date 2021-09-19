@@ -1,6 +1,8 @@
 package com.epam.savenko.cashmachine.web.constant;
 
 public class SessionParam {
+    public static final String ALL_USERS = "allUsers";
+
     private SessionParam() {
     }
     public static final String LOGIN = "login";
@@ -13,6 +15,8 @@ public class SessionParam {
 
     public static final String NEW_CHECK = "newCheck";
     public static final String ORDER_VIEW = "orderView";
+    public static final String ORDER_LIST = "orderList";
+    public static final String ORDER_COUNT = "ordersCount";
 
     public static final String LANGUAGES = "languages";
     public static final String LANGUAGE = "language";

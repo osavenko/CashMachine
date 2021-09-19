@@ -12,7 +12,9 @@ public class Order implements Serializable {
     private int userId;
     private boolean closed;
     private double amount;
-    private Timestamp dataTime;
+
+    private Timestamp orderDateTime;
+    private Timestamp closedDateTime;
 
     public Order() {
     }
@@ -53,21 +55,33 @@ public class Order implements Serializable {
         this.amount = amount;
     }
 
+    public Timestamp getOrderDateTime() {
+        return orderDateTime;
+    }
+
+    public void setOrderDateTime(Timestamp orderDateTime) {
+        this.orderDateTime = orderDateTime;
+    }
+
+    public Timestamp getClosedDateTime() {
+        return closedDateTime;
+    }
+
+    public void setClosedDateTime(Timestamp closedDateTime) {
+        this.closedDateTime = closedDateTime;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id && userId == order.userId && closed == order.closed && Double.compare(order.amount, amount) == 0;
+        return id == order.id && userId == order.userId && closed == order.closed && Double.compare(order.amount, amount) == 0 && orderDateTime.equals(order.orderDateTime) && Objects.equals(closedDateTime, order.closedDateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, closed, amount);
+        return Objects.hash(id, userId, closed, amount, orderDateTime, closedDateTime);
     }
 
     @Override
@@ -77,6 +91,8 @@ public class Order implements Serializable {
                 ", userId=" + userId +
                 ", closed=" + closed +
                 ", amount=" + amount +
+                ", orderDateTime=" + orderDateTime +
+                ", closetDateTime=" + closedDateTime +
                 '}';
     }
 
@@ -109,8 +125,12 @@ public class Order implements Serializable {
             return this;
         }
 
-        public Builder setDateTime(Timestamp timestamp) {
-            Order.this.dataTime = timestamp;
+        public Builder setOrderDateTime(Timestamp timestamp) {
+            Order.this.orderDateTime = timestamp;
+            return this;
+        }
+        public Builder setClosedDateTime(Timestamp timestamp){
+            Order.this.closedDateTime = timestamp;
             return this;
         }
 

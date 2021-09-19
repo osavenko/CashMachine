@@ -9,6 +9,7 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Order;
 import org.apache.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,9 @@ public class JdbcOrderDaoImpl implements OrderDao {
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (user_id, closed, amount) VALUES (?,?,?)";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET user_id=?, closed=?, amount=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id=?";
-    private static final String SQL_SELECT_ALL_ORDERS = "SELECT * FROM " + TABLE_NAME;
+    private static final String SQL_SELECT_ALL_ORDERS = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime FROM " + TABLE_NAME;
     private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM " + TABLE_NAME;
-    private static final String SQL_SELECT_ORDER_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id=?";
+    private static final String SQL_SELECT_ORDER_BY_ID = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime FROM " + TABLE_NAME + " WHERE id=?";
 
     private static final EntityMapper<Order> mapOrderRow = resultSet ->
             Order.newOrder()
@@ -35,6 +36,8 @@ public class JdbcOrderDaoImpl implements OrderDao {
                     .setUserId(resultSet.getInt(USER_ID))
                     .setState(resultSet.getBoolean(CLOSED))
                     .setAmount(resultSet.getDouble(AMOUNT))
+                    .setOrderDateTime(resultSet.getTimestamp(ORDER_DATETIME))
+                    .setClosedDateTime(resultSet.getTimestamp(CLOSED_DATETIME))
                     .build();
 
     public static final EntitiesMapper<Order> mapOrderRows = resultSet -> {
@@ -73,7 +76,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
              PreparedStatement statement = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, order.getUserId());
             statement.setBoolean(2, order.isClosed());
-            statement.setDouble(3, order.getAmount());
+            statement.setBigDecimal(3, BigDecimal.valueOf(order.getAmount()));
             statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 if (resultSet.next()) {

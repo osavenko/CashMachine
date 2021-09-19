@@ -39,6 +39,8 @@ public class Fields {
         public static final String USER_ID = "user_id";
         public static final String AMOUNT = "amount";
         public static final String CLOSED = "closed";
+        public static final String ORDER_DATETIME = "order_datetime";
+        public static final String CLOSED_DATETIME = "closed_datetime";
     }
 
     public static class OrderProduct {
