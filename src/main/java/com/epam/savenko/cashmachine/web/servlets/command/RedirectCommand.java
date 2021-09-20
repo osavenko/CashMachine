@@ -43,6 +43,28 @@ public class RedirectCommand extends Command {
             forward.setPath(Path.PAGE_TO_ADD_PRODUCTS);
             LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_PRODUCTS);
         }
+        if ("savecheck".equals(command)) {
+            HttpSession session = req.getSession();
+            OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
+            Order order = orderView.getOrder();
+            try {
+                order.setAmount(new JdbcOrderProductDaoImpl().getSumByOrderId(order.getId()));
+                order.setClosed(true);
+                new JdbcOrderDaoImpl().update(order);
+            } catch (CashMachineException e) {
+                LOG.error("Error save order "+order);
+            }
+            forward.setPath("controller?command=orderslist");
+            LOG.debug("Save check: " + orderView.getOrder().getId());
+            session.setAttribute(ORDER_VIEW, null);
+        }
+        if("cancelcheck".equals(command)){
+            HttpSession session = req.getSession();
+            OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
+            forward.setPath("controller?command=orderslist");
+            LOG.debug("Cancel check: " + orderView.getOrder().getId());
+            session.setAttribute(ORDER_VIEW, null);
+        }
         if ("addcheck".equals(command)) {
             HttpSession session = req.getSession();
             session.setAttribute(NEW_CHECK, "yes");
@@ -101,9 +123,9 @@ public class RedirectCommand extends Command {
                             List<OrderView.ProductInOrderView> productInOrderViewList = orderView.getProductInOrderViewList();
                             new JdbcProductDaoImpl().changeQuantityProduct(tovId, -quantity);
                             LOG.debug("Length products in order:" + productInOrderViewList.size());
-                            if (productInOrderViewList != null) {
+                            /*if (productInOrderViewList != null) {
                                 orderView.addOrderProduct(tovId, quantity, price);
-                            }
+                            }*/
                         }
                     } catch (CashMachineException | NumberFormatException e) {
                         LOG.debug("Error quantity ", e);

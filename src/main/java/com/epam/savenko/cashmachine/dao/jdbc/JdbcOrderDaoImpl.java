@@ -98,7 +98,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE)) {
             statement.setInt(1, entity.getUserId());
             statement.setBoolean(2, entity.isClosed());
-            statement.setDouble(3, entity.getAmount());
+            statement.setBigDecimal(3, BigDecimal.valueOf(entity.getAmount()));
             statement.setInt(4, entity.getId());
             statement.executeUpdate();
         } catch (SQLException | CashMachineException e) {

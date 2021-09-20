@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface OrderProductDao extends GeneralDao<OrderProduct,Integer>{
     List<ProductInOrderView> getProductInOrderViewById(int id) throws CashMachineException;
+    double getSumByOrderId(int orderId)throws CashMachineException;
 }
