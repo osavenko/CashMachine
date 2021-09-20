@@ -2,6 +2,7 @@ package com.epam.savenko.cashmachine.web.servlets.command;
 
 import com.epam.savenko.cashmachine.dao.OrderProductDao;
 import com.epam.savenko.cashmachine.dao.ProductDao;
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcAppPropertiesDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderProductDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
@@ -41,6 +42,13 @@ public class RedirectCommand extends Command {
         LOG.debug("Redirect command: " + command);
         if ("addproductpage".equals(command)) {
             forward.setPath(Path.PAGE_TO_ADD_PRODUCTS);
+            HttpSession session = req.getSession();
+            try {
+                session.setAttribute(DEFAULT_LOCALE,new JdbcAppPropertiesDao().getByName("locale").get().getValue());
+            } catch (CashMachineException e) {
+                LOG.error("Error when receive default locale");
+                session.setAttribute(DEFAULT_LOCALE,"");
+            }
             LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_PRODUCTS);
         }
         if ("savecheck".equals(command)) {

@@ -1,9 +1,11 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
 import com.epam.savenko.cashmachine.dao.ProductDao;
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleProductImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Product;
+import com.epam.savenko.cashmachine.model.view.ProductView;
 import com.epam.savenko.cashmachine.web.WebUtil;
 import com.epam.savenko.cashmachine.web.constant.Path;
 import com.epam.savenko.cashmachine.web.constant.SessionParam;
@@ -14,6 +16,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsListCommand extends Command {
@@ -27,22 +30,24 @@ public class ProductsListCommand extends Command {
         LOG.debug("Start command productslist");
         RoutePath forward = new RoutePath(Path.PAGE_PRODUCTS_LIST, RouteType.FORWARD);
         LOG.debug("Set redirect address: " + forward);
-        int productCount;
-        List<Product> products;
         HttpSession session = req.getSession();
         session.setAttribute("offset", ROWS_IN_PAGE);
         int currentPage = WebUtil.getNumberStartPage(req, session, LOG);
 
         ProductDao productDao = new JdbcProductDaoImpl();
         try {
-            productCount = productDao.getCount();
-            products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage-1));
+            int productCount = productDao.getCount();
+            List<Product> products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage-1));
+            List<ProductView> productViews = new ArrayList<>();
+            for (Product product : products) {
+                productViews.add(new ProductView(product,new JdbcLocaleProductImpl().getAllDescriptionViewForProductById(product.getId())));
+            }
             LOG.debug("Selected products" + products.size());
             LOG.debug("Selected product offset: " + (currentPage * ROWS_IN_PAGE));
             session.setAttribute("currentPage", currentPage);
             session.setAttribute("pages", productCount / ROWS_IN_PAGE + 1);
             session.setAttribute("productCount", productCount);
-            session.setAttribute("products", products);
+            session.setAttribute("products", productViews);
         } catch (CashMachineException e) {
             LOG.error("Error product list " + e.getMessage());
         }

@@ -29,8 +29,18 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     private static final String SQL_DELETE = "DELETE FROM order_product WHERE id=?";
     private static final String SQL_SELECT_ALL_ORDER_PRODUCTS = "SELECT * FROM order_product";
     private static final String SQL_SELECT_ORDER_PRODUCT_BY_ID = "SELECT * FROM order_product WHERE id=?";
+/*
     private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(price*quantity)::money::numeric::float8 FROM order_product\n" +
             "WHERE order_id=?";
+*/
+    private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(CASE\n" +
+        "               WHEN p.weight = true\n" +
+        "                   THEN (order_product.price::money::numeric::float8 * order_product.quantity) / 1000\n" +
+        "               ELSE order_product.price::money::numeric::float8 * order_product.quantity\n" +
+        "    END)\n" +
+        "FROM order_product\n" +
+        "         JOIN product p on p.id = order_product.product_id\n" +
+        "WHERE order_product.order_id = ?";
     private static final String SQL_SELECT_ORDER_PRODUCT_VIEW_BY_ORDER_ID =
             "SELECT p.id AS id, p.name AS name, b.name AS brand_name, p.weight as weight, SUM(op.quantity) AS quantity, op.price::money::numeric::float8 AS price" +
                     " FROM order_product op" +

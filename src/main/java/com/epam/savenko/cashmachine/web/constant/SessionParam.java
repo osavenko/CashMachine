@@ -26,5 +26,7 @@ public class SessionParam {
     public static final String PAGES = "pages";
     public static final String PRODUCTS = "products";
 
+    public static final String DEFAULT_LOCALE = "defaultLocale";
+
     public static final int ROWS_IN_PAGE = 5;
 }

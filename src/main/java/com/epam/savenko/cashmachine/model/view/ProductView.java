@@ -11,33 +11,28 @@ public class ProductView implements Serializable {
     private static final long serialVersionUID = -3733252040592313428L;
 
     private Product product;
-    private List<LocaleProduct> localeProducts;
+    private List<ProductDescriptionView> descriptionViews;
 
     public ProductView() {
     }
 
-    public ProductView(Product product) {
+    public ProductView(Product product, List<ProductDescriptionView> localeProducts) {
         this.product = product;
-    }
-
-    public ProductView(Product product, List<LocaleProduct> localeProducts) {
-        this.product = product;
-        this.localeProducts = localeProducts;
+        this.descriptionViews = localeProducts;
     }
 
     public Product getProduct() {
         return product;
     }
-
     public void setProduct(Product product) {
         this.product = product;
     }
 
-    public List<LocaleProduct> getLocaleProducts() {
-        return localeProducts;
+    public List<ProductDescriptionView> getDescriptionViews() {
+        return descriptionViews;
     }
 
-    public void setLocaleProducts(List<LocaleProduct> localeProducts) {
-        this.localeProducts = localeProducts;
+    public void setDescriptionViews(List<ProductDescriptionView> descriptionViews) {
+        this.descriptionViews = descriptionViews;
     }
 }

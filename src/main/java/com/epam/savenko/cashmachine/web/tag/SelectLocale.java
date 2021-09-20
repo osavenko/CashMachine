@@ -16,7 +16,12 @@ public class SelectLocale extends TagSupport {
     private static final Logger LOG = Logger.getLogger(SelectLocale.class);
 
     private String name;
+    private String defaultLocale;
     private String localeMessage;
+
+    public void setDefaultLocale(String defaultLocale) {
+        this.defaultLocale = defaultLocale;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -42,7 +47,15 @@ public class SelectLocale extends TagSupport {
                 out.write("<select name=\"" + name + "\" required>");
                 out.write("<option disabled>" + localeMessage + "</option>");
                 for (Locale locale : locales) {
-                    out.write("<option value=\"" + locale.getName() + "\">" + locale.getDescription() + "</option>");
+                    LOG.debug("SelectLocale defaultLocale:"+defaultLocale);
+                    if (defaultLocale != null && !defaultLocale.isEmpty()) {
+                        if (defaultLocale.equals(locale.getName())) {
+                            out.write("<option value=\"" + locale.getName() + "\">" + locale.getDescription() + "</option>");
+                            break;
+                        }
+                    }else{
+                        out.write("<option value=\"" + locale.getName() + "\">" + locale.getDescription() + "</option>");
+                    }
                 }
                 out.write("</select>");
             } catch (IOException e) {

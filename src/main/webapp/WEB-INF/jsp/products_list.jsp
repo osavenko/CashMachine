@@ -1,10 +1,10 @@
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
-<%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
 <div class="container">
-    <fmt:message key="local.products.count" var="pCount"/>
+    <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 </div>
 <div class="container">
+    <fmt:message key="local.products.count" var="pCount"/>
     <span>${pCount}: ${sessionScope.get("productCount")}</span>
     <table class="table">
         <tr class="table-primary">
@@ -17,28 +17,39 @@
             <fmt:message key="local.product.price" var="pPrice"/>
             <td>${pPrice}</td>
             <fmt:message key="local.product.description" var="pDescription"/>
+            <td>${pDescription}</td>
         </tr>
 
         <c:forEach var="product" items="${products}">
             <tr>
-                <td><c:out value="${product.getName()}"/></td>
-                <c:if test="${product.isWeight()==true}">
+                <td><c:out value="${product.getProduct().getName()}"/></td>
+                <c:if test="${product.getProduct().isWeight()==true}">
                     <fmt:message key="local.product.weight.message" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
-                <c:if test="${product.isWeight()==false}">
+                <c:if test="${product.getProduct().isWeight()==false}">
                     <fmt:message key="local.product.weight.quantitative" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
-                <c:if test="${product.isWeight()==true}">
-                    <td><c:out value="${product.getQuantity()/1000}"/></td>
+                <c:if test="${product.getProduct().isWeight()==true}">
+                    <td><c:out value="${product.getProduct().getQuantity()/1000}"/></td>
                 </c:if>
-                <c:if test="${product.isWeight()==false}">
-                    <td><c:out value="${product.getQuantity()}"/></td>
+                <c:if test="${product.getProduct().isWeight()==false}">
+                    <td><c:out value="${product.getProduct().getQuantity()}"/></td>
                 </c:if>
 
-                <td><c:out value="${product.getPrice()}"/></td>
-                <td><c:out value=""/></td>
+                <td><c:out value="${product.getProduct().getPrice()}"/></td>
+                <td>
+                    <c:if test="${product.getDescriptionViews().size()>0}">
+                        <%--<tags:ProductLocales descriptions="${product.getDescriptionViews()}"/>--%>
+                        <c:forEach var="descr" items="${product.getDescriptionViews()}">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="${descr.getText()}">
+                                            ${descr.getLocale()}
+                                    </button>
+                        </c:forEach>
+                    </c:if>
+                </td>
             </tr>
         </c:forEach>
 

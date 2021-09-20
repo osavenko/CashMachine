@@ -1,6 +1,9 @@
 package com.epam.savenko.cashmachine.model;
 
+import com.epam.savenko.cashmachine.model.view.ProductDescriptionView;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class Product implements Serializable {

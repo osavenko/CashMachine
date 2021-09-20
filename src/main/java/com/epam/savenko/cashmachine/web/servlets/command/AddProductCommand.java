@@ -1,7 +1,10 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleDaoImpl;
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleProductImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
+import com.epam.savenko.cashmachine.model.LocaleProduct;
 import com.epam.savenko.cashmachine.model.Product;
 import com.epam.savenko.cashmachine.web.constant.Path;
 import com.epam.savenko.cashmachine.web.servlets.RoutePath;
@@ -11,6 +14,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 public class AddProductCommand extends Command {
 
@@ -26,11 +30,19 @@ public class AddProductCommand extends Command {
         HttpSession session = req.getSession();
 
         String productName = req.getParameter("productName");
+        String productDescription = req.getParameter("description");
         LOG.debug("Add product with name: " + productName);
         int idBrand = Integer.parseInt(req.getParameter("brand"));
-        boolean weight = getTypeGoods(req.getParameter("RadiosW"));
-        int quantity = getQuantity(req.getParameter("quantity"), weight);
+        boolean weight = getTypeGoods(req.getParameter("typeRadios"));
+        LOG.error("WWWWWWWWW "+weight+"    :    "+req.getParameter("typeRadios"));
+        int quantity = 0;
         double price = Double.parseDouble(req.getParameter("price"));
+        try {
+            quantity = getQuantity(req.getParameter("quantity"), weight);
+        } catch (NumberFormatException e) {
+            LOG.error("Error quantity "+weight, e);
+        }
+        String localeName = req.getParameter("locale");
         Product product = Product.newBuilder()
                 .setName(productName)
                 .setWeight(weight)
@@ -39,7 +51,11 @@ public class AddProductCommand extends Command {
                 .setBrandId(idBrand)
                 .build();
         try {
-            new JdbcProductDaoImpl().insert(product);
+            Optional<Product> newProduct = new JdbcProductDaoImpl().insert(product);
+            LOG.debug("Add product: "+newProduct.get());
+            int localeId = new JdbcLocaleDaoImpl().findByName(localeName).get().getId();
+            LocaleProduct localeProduct = new LocaleProduct(localeId, newProduct.get().getId(), productDescription);
+            new JdbcLocaleProductImpl().insert(localeProduct);
             forward.setPath("controller?command=productslist");
             forward.setRouteType(RouteType.FORWARD);
         } catch (CashMachineException e) {
@@ -50,11 +66,11 @@ public class AddProductCommand extends Command {
     }
 
     private int getQuantity(String quantity, boolean weight) {
-        return weight ? Integer.parseInt(quantity) * 1000 : Integer.parseInt(quantity);
+        return weight ? (int) (Double.parseDouble(quantity) * 1000) : (int) Double.parseDouble(quantity);
 
     }
 
     private boolean getTypeGoods(String type) {
-        return "RadiosW".equals(type);
+        return "0".equals(type);
     }
 }
