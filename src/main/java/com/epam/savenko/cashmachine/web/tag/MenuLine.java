@@ -46,7 +46,6 @@ public class MenuLine extends TagSupport {
             }
         } else {
             LOG.debug("No user");
-            sb.append("Меню отсутствует");
         }
         try {
             pageContext.getOut().write(sb.toString());

@@ -1,6 +1,7 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
 import com.epam.savenko.cashmachine.dao.ProductDao;
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcAppPropertiesDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleProductImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
@@ -22,30 +23,37 @@ import java.util.List;
 public class ProductsListCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(ProductsListCommand.class);
-    public static final int ROWS_IN_PAGE = SessionParam.ROWS_IN_PAGE;
+    //public static final int ROWS_IN_PAGE = SessionParam.ROWS_IN_PAGE;
     private static final long serialVersionUID = 5917893218719632767L;
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {
+        int rows = SessionParam.ROWS_IN_PAGE;
+        try {
+            rows = Integer.parseInt(new JdbcAppPropertiesDao().getByName("lines").get().getValue());
+        } catch (CashMachineException e) {
+            LOG.error("Error when receive number row", e);
+        }
         LOG.debug("Start command productslist");
         RoutePath forward = new RoutePath(Path.PAGE_PRODUCTS_LIST, RouteType.FORWARD);
         LOG.debug("Set redirect address: " + forward);
         HttpSession session = req.getSession();
-        session.setAttribute("offset", ROWS_IN_PAGE);
+        session.setAttribute("offset", rows);
         int currentPage = WebUtil.getNumberStartPage(req, session, LOG);
 
         ProductDao productDao = new JdbcProductDaoImpl();
         try {
             int productCount = productDao.getCount();
-            List<Product> products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage-1));
+            List<Product> products = productDao.findPage(rows, rows * (currentPage - 1));
             List<ProductView> productViews = new ArrayList<>();
             for (Product product : products) {
-                productViews.add(new ProductView(product,new JdbcLocaleProductImpl().getAllDescriptionViewForProductById(product.getId())));
+                productViews.add(new ProductView(product, new JdbcLocaleProductImpl().getAllDescriptionViewForProductById(product.getId())));
             }
             LOG.debug("Selected products" + products.size());
-            LOG.debug("Selected product offset: " + (currentPage * ROWS_IN_PAGE));
+            LOG.debug("Selected product offset: " + (currentPage * rows));
             session.setAttribute("currentPage", currentPage);
-            session.setAttribute("pages", productCount / ROWS_IN_PAGE + 1);
+            /// убрал +1 исправить
+            session.setAttribute("pages", productCount / rows+1);
             session.setAttribute("productCount", productCount);
             session.setAttribute("products", productViews);
         } catch (CashMachineException e) {
