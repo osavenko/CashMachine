@@ -25,6 +25,11 @@ public class SessionParam {
     public static final String CURRENT_PAGE = "currentPage";
     public static final String PAGES = "pages";
     public static final String PRODUCTS = "products";
+    public static final String REPORT_TYPE = "reportType";
+    public static final String STORE_NAME = "reportStoreName";
+    public static final String ADDRESS= "reportAddress";
+    public static final String IPN= "reportIPN";
+
 
     public static final String DEFAULT_LOCALE = "defaultLocale";
 
