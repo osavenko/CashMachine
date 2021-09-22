@@ -1,10 +1,11 @@
 package com.epam.savenko.cashmachine.web.constant;
 
 public class SessionParam {
-    public static final String ALL_USERS = "allUsers";
-
     private SessionParam() {
     }
+
+
+    public static final String ALL_USERS = "allUsers";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
     public static final String FULLNAME = "fullname";
@@ -17,6 +18,10 @@ public class SessionParam {
     public static final String ORDER_VIEW = "orderView";
     public static final String ORDER_LIST = "orderList";
     public static final String ORDER_COUNT = "ordersCount";
+    public static final String ORDER_SUM_CASH = "ordersSumCash";
+    public static final String ORDER_SUM_CARD = "ordersSumCard";
+    public static final String ORDER_TAX = "orderTax";
+    public static final String ORDER_TOTAL = "orderTotal";
 
     public static final String LANGUAGES = "languages";
     public static final String LANGUAGE = "language";

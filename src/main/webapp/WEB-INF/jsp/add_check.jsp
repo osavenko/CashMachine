@@ -11,19 +11,31 @@
     <p class="text-left">${pOrderCreated}<span>: </span>${orderView.order.getOrderDateTime()}</p>
 
     <form action="" method="post">
+        <input type="hidden" name="changePay" value="checkpay"/>
         <span>
             <fmt:message key="local.order.select.pay" var="pPay"/>
             ${pPay}
         </span>
-        <div>
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="cash">
+        <br/>
+        <div class="form-check">
+            <c:if test="${orderView.order.isCash()==true}">
+                <input class="form-check-input" type="radio" name="payment" id="idCash" value="cash" checked>
+            </c:if>
+            <c:if test="${orderView.order.isCash()==false}">
+                <input class="form-check-input" type="radio" name="payment" id="idCash" value="cash">
+            </c:if>
             <fmt:message key="local.report.info.check.cash" var="pCash"/>
-            <label class="form-check-label" for="inlineRadio1">${pCash}</label>
+            <label class="form-check-label" for="idCash">${pCash}</label>
         </div>
-        <div>
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="card">
+        <div class="form-check">
+            <c:if test="${orderView.order.isCash()==true}">
+                <input class="form-check-input" type="radio" name="payment" id="idCard" value="card">
+            </c:if>
+            <c:if test="${orderView.order.isCash()==false}">
+                <input class="form-check-input" type="radio" name="payment" id="idCard" value="card" checked>
+            </c:if>
             <fmt:message key="local.report.info.check.card" var="pCard"/>
-            <label class="form-check-label" for="inlineRadio2">${pCard}</label>
+            <label class="form-check-label" for="idCard">${pCard}</label>
         </div>
         <div>
             <fmt:message key="local.button.fix" var="pFix"/>

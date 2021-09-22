@@ -6,6 +6,7 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.AppProperties;
 import org.apache.log4j.Logger;
 
+import javax.swing.text.ChangedCharSetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,5 +36,19 @@ public class JdbcAppPropertiesDao implements AppPropertiesDao {
             LOG.error("Error when receive property: " + name);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public double getTax() throws CashMachineException {
+        Optional<AppProperties> tax = getByName("tax");
+        double dTax = 0.0;
+        if (tax.isPresent()) {
+            try {
+                dTax = Double.parseDouble(tax.get().getValue());
+            } catch (NumberFormatException e) {
+                LOG.error("Error when tax convert ", e);
+            }
+        }
+        return dTax;
     }
 }

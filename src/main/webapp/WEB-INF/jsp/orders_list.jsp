@@ -23,6 +23,8 @@
                 <td>${pAuthor}</td>
                 <fmt:message key="local.order.amount" var="pAmount"/>
                 <td>${pAmount}</td>
+                <fmt:message key="local.order.pay" var="pPay"/>
+                <td>${pPay}</td>
             </tr>
 
             <c:forEach var="order" items="${orderList}">
@@ -41,6 +43,14 @@
                     <td><c:out value="${order.getClosedDateTime()}"/></td>
                     <td><c:out value="${allUsers.get(order.getUserId())}"/></td>
                     <td><c:out value="${order.getAmount()}"/></td>
+                    <td>
+                        <c:if test="${order.isCash()==true}">
+                            Cash
+                        </c:if>
+                        <c:if test="${order.isCash()==false}">
+                            Card
+                        </c:if>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

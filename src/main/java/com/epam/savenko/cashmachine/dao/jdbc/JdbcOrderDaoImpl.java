@@ -24,11 +24,13 @@ public class JdbcOrderDaoImpl implements OrderDao {
     private static final String TABLE_NAME = "\"order\"";
 
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (user_id, closed, amount) VALUES (?,?,?)";
-    private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET user_id=?, closed=?, amount=? WHERE id=?";
+    private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET user_id=?, closed=?, amount=?, cash=?, closed_datetime=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id=?";
-    private static final String SQL_SELECT_ALL_ORDERS = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime FROM " + TABLE_NAME;
-    private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM " + TABLE_NAME;
-    private static final String SQL_SELECT_ORDER_BY_ID = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime FROM " + TABLE_NAME + " WHERE id=?";
+    private static final String SQL_SELECT_ALL_ORDERS = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime,cash FROM " + TABLE_NAME;
+    private static final String SQL_SELECT_SUM_CASH = "SELECT SUM(amount::money::numeric::float8) FROM " + TABLE_NAME + " WHERE closed=true AND cash=true";
+    private static final String SQL_SELECT_SUM_CARD = "SELECT SUM(amount::money::numeric::float8) FROM " + TABLE_NAME + " WHERE closed=true AND cash=true";
+    private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM " + TABLE_NAME + " WHERE closed=true";
+    private static final String SQL_SELECT_ORDER_BY_ID = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime, cash FROM " + TABLE_NAME + " WHERE id=?";
 
     private static final EntityMapper<Order> mapOrderRow = resultSet ->
             Order.newOrder()
@@ -36,6 +38,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
                     .setUserId(resultSet.getInt(USER_ID))
                     .setState(resultSet.getBoolean(CLOSED))
                     .setAmount(resultSet.getDouble(AMOUNT))
+                    .setCash(resultSet.getBoolean(CASH))
                     .setOrderDateTime(resultSet.getTimestamp(ORDER_DATETIME))
                     .setClosedDateTime(resultSet.getTimestamp(CLOSED_DATETIME))
                     .build();
@@ -98,7 +101,9 @@ public class JdbcOrderDaoImpl implements OrderDao {
             statement.setInt(1, entity.getUserId());
             statement.setBoolean(2, entity.isClosed());
             statement.setBigDecimal(3, BigDecimal.valueOf(entity.getAmount()));
-            statement.setInt(4, entity.getId());
+            statement.setBoolean(4, entity.isCash());
+            statement.setTimestamp(5, entity.getClosedDateTime());
+            statement.setInt(6, entity.getId());
             statement.executeUpdate();
         } catch (SQLException | CashMachineException e) {
             StringBuilder sb = new StringBuilder(ErrorMessage.getUpdate(TABLE_NAME))
@@ -117,5 +122,30 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Override
     public int getCount() throws CashMachineException {
         return new JdbcCountEntity().getCount(SQL_SELECT_ORDER_COUNTS, TABLE_NAME);
+    }
+
+    @Override
+    public double getSumCard() throws CashMachineException {
+        return getSum(SQL_SELECT_SUM_CARD);
+    }
+
+    @Override
+    public double getSumCash() throws CashMachineException {
+        return getSum(SQL_SELECT_SUM_CASH);
+    }
+
+    private double getSum(String sql) throws CashMachineException {
+        double sum = 0;
+        try (Connection conn = ConnectionProvider.getInstance().getConnection();
+             Statement statement = conn.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
+                if (resultSet.next()) {
+                    sum = resultSet.getDouble(1);
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Error when calculate sum ", e);
+        }
+        return sum;
     }
 }

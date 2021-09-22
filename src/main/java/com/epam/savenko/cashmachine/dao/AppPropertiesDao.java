@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface AppPropertiesDao{
     Optional<AppProperties> getByName(String name) throws CashMachineException;
+    double getTax() throws CashMachineException;
 }

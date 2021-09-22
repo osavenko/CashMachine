@@ -34,7 +34,6 @@ public class AddProductCommand extends Command {
         LOG.debug("Add product with name: " + productName);
         int idBrand = Integer.parseInt(req.getParameter("brand"));
         boolean weight = getTypeGoods(req.getParameter("typeRadios"));
-        LOG.error("WWWWWWWWW "+weight+"    :    "+req.getParameter("typeRadios"));
         int quantity = 0;
         double price = Double.parseDouble(req.getParameter("price"));
         try {

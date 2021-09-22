@@ -35,33 +35,33 @@
         <tr>
             <fmt:message key="local.report.info.check.count" var="pCount"/>
             <td class="text-left">${pCount}</td>
-            <td class="text-right">2</td>
+            <td class="text-right">${ordersCount}</td>
         </tr>
         <tr>
             <fmt:message key="local.report.info.check.cash" var="pCash"/>
             <td class="text-left">${pCash}</td>
-            <td class="text-right">2.00</td>
+            <td class="text-right">${ordersSumCash}</td>
         </tr>
         <tr>
             <fmt:message key="local.report.info.check.card" var="pCard"/>
             <td class="text-left">${pCard}</td>
-            <td class="text-right">3.00</td>
+            <td class="text-right">${ordersSumCard}</td>
         </tr>
         <tr>
             <fmt:message key="local.report.info.total.tax" var="pTotalTax"/>
             <td class="text-left">${pTotalTax}</td>
-            <td class="text-right">4.00</td>
+            <td class="text-right">${orderTax}</td>
         </tr>
         <tr>
             <fmt:message key="local.report.info.total" var="pTotal"/>
             <td class="text-left">${pTotal}</td>
-            <td class="text-right">5.00</td>
+            <td class="text-right">${orderTotal}</td>
         </tr>
         <tr><td colspan="2"><br/></td></tr>
         <tr>
             <td class="text-left" colspan="2">
                 <fmt:message key="local.report.info.return" var="pReturn"/>
-                <span class="text-left">${pSell}</span>
+                <span class="text-left">${pReturn}</span>
             </td>
         </tr>
         <tr>
