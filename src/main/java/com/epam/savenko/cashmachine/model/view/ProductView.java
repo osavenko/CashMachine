@@ -12,6 +12,7 @@ public class ProductView implements Serializable {
 
     private Product product;
     private List<ProductDescriptionView> descriptionViews;
+    private String localeDescription;
 
     public ProductView() {
     }
@@ -21,18 +22,29 @@ public class ProductView implements Serializable {
         this.descriptionViews = localeProducts;
     }
 
+    public ProductView(Product product, String localeDescription) {
+        this.product = product;
+        this.localeDescription = localeDescription;
+    }
+
     public Product getProduct() {
         return product;
     }
     public void setProduct(Product product) {
         this.product = product;
     }
-
     public List<ProductDescriptionView> getDescriptionViews() {
         return descriptionViews;
     }
-
     public void setDescriptionViews(List<ProductDescriptionView> descriptionViews) {
         this.descriptionViews = descriptionViews;
+    }
+
+    public String getLocaleDescription() {
+        return localeDescription;
+    }
+
+    public void setLocaleDescription(String localeDescription) {
+        this.localeDescription = localeDescription;
     }
 }

@@ -33,7 +33,7 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
             "WHERE p.id=?";
     private static final String SQL_SELECT_LOCALE_PRODUCT_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE id=?";
     private static final String SQL_SELECT_DESCRIPTION_TO_ID_PRODUCT_BY_LOCALE =
-            "SELECT * FROM " + TABLE_NAME + " WHERE product_id=? AND locale_id=?";
+            "SELECT id, product_id, locale_id, description FROM locale_product WHERE product_id=? AND locale_id=?";
 
     private static final EntityMapper<LocaleProduct> mapLocaleProductRow = resultSet -> new LocaleProduct(resultSet.getInt(ID),
             resultSet.getInt(LOCALE_ID),
@@ -119,6 +119,8 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
     public Optional<LocaleProduct> findDescriptionProductByLocale(int idProduct, int localeId) throws CashMachineException {
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SELECT_DESCRIPTION_TO_ID_PRODUCT_BY_LOCALE)) {
+            statement.setInt(1, idProduct);
+            statement.setInt(2, localeId);
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
                     return Optional.ofNullable(mapLocaleProductRow.mapRow(resultSet));
@@ -126,7 +128,7 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
             }
         } catch (SQLException e) {
             LOG.error(ErrorMessage.getReceiveById(TABLE_NAME));
-            throw new CashMachineException("ErrorMessage.getReceiveById(TABLE_NAME)", e);
+            throw new CashMachineException("ErrorMessage.getReceiveById(TABLE_NAME) id, localeId"+idProduct+":"+localeId, e);
         }
         return Optional.empty();
     }

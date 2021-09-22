@@ -40,18 +40,7 @@
 
                 <td><c:out value="${product.getProduct().getPrice()}"/></td>
                 <td>
-                    <c:if test="${product.getDescriptionViews().size()>0}">
-                        <%--<tags:ProductLocales descriptions="${product.getDescriptionViews()}"/>--%>
-                        <c:forEach var="descr" items="${product.getDescriptionViews()}">
-<%--
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="${descr.getText()}">
-                                            ${descr.getLocale()}
-                                    </button>
---%>
-                            <span data-toggle="tooltip" title="${descr.getText()}">${descr.getLocale()}</span>
-                        </c:forEach>
-                    </c:if>
+                    <c:out value="${product.getLocaleDescription()}"/>
                 </td>
             </tr>
         </c:forEach>
