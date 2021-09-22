@@ -1,4 +1,3 @@
-
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <div class="container">
@@ -29,14 +28,19 @@
             <input id="pwd" class="form-control" type="password" placeholder="${pplaceholder}" name="password">
             <div id="spanPassword" class="invalid-feedback">More example invalid feedback text</div>
         </fieldset>
-        <fmt:message key="local.login.button" var="lbutton"/>
-        <button class="btn" type="submit">${lbutton}</button>
+        <div class="col-12">
+            <fmt:message key="local.login.button" var="lbutton"/>
+            <button class="btn btn-primary" type="submit">${lbutton}</button>
+        </div>
+
     </div>
     <div class="container">
-        <label>
-            <fmt:message key="local.login.register.message" var="rmessage"/>
-            <a href="register.jsp">${rmessage}</a>
-        </label>
+        <div class="col-12">
+            <label>
+                <fmt:message key="local.login.register.message" var="rmessage"/>
+                <a class="btn btn-info" href="register.jsp">${rmessage}</a>
+            </label>
+        </div>
     </div>
 </form>
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

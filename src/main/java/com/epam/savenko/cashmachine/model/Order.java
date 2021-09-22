@@ -12,6 +12,7 @@ public class Order implements Serializable {
     private int userId;
     private boolean closed;
     private double amount;
+    private boolean cash;
 
     private Timestamp orderDateTime;
     private Timestamp closedDateTime;
@@ -55,6 +56,14 @@ public class Order implements Serializable {
         this.amount = amount;
     }
 
+    public boolean isCash() {
+        return cash;
+    }
+
+    public void setCash(boolean cash) {
+        this.cash = cash;
+    }
+
     public Timestamp getOrderDateTime() {
         return orderDateTime;
     }
@@ -76,12 +85,12 @@ public class Order implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id && userId == order.userId && closed == order.closed && Double.compare(order.amount, amount) == 0 && orderDateTime.equals(order.orderDateTime) && Objects.equals(closedDateTime, order.closedDateTime);
+        return id == order.id && userId == order.userId && closed == order.closed && Double.compare(order.amount, amount) == 0 && cash == order.cash && orderDateTime.equals(order.orderDateTime) && Objects.equals(closedDateTime, order.closedDateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, closed, amount, orderDateTime, closedDateTime);
+        return Objects.hash(id, userId, closed, amount, cash, orderDateTime, closedDateTime);
     }
 
     @Override
@@ -91,8 +100,9 @@ public class Order implements Serializable {
                 ", userId=" + userId +
                 ", closed=" + closed +
                 ", amount=" + amount +
+                ", cash=" + cash +
                 ", orderDateTime=" + orderDateTime +
-                ", closetDateTime=" + closedDateTime +
+                ", closedDateTime=" + closedDateTime +
                 '}';
     }
 
@@ -124,7 +134,10 @@ public class Order implements Serializable {
             Order.this.amount = amount;
             return this;
         }
-
+        public Builder setCash(boolean cash){
+            Order.this.cash = cash;
+            return this;
+        }
         public Builder setOrderDateTime(Timestamp timestamp) {
             Order.this.orderDateTime = timestamp;
             return this;

@@ -13,7 +13,7 @@
                 <input type="hidden" name="changeLanguage" value="changeLanguage"/>
                 <input type="hidden" name="choiceLang" value="${lang}"/>
                 <input type="hidden" name="currentPath" value="${currPath}"/>
-                <button type="submit">${lang}</button>
+                <button class="btn btn-success" type="submit">${lang}</button>
             </form>
         </c:forEach>
     </ul>

@@ -1,7 +1,7 @@
 body {font-family: Arial, Helvetica, sans-serif;}
-form {border: 3px solid #f1f1f1;}
+/*form {border: 3px solid #f1f1f1;}*/
 
-input[type=text], input[type=password] {
+/*input[type=text], input[type=password] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -16,8 +16,8 @@ select{
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
-}
-button {
+}*/
+/*button {
     background-color: #04AA6D;
     color: white;
     padding: 14px 20px;
@@ -25,11 +25,13 @@ button {
     border: none;
     cursor: pointer;
     width: 100%;
-}
+}*/
 
+/*
 button:hover {
     opacity: 0.8;
 }
+*/
 
 .imgcontainer {
     text-align: center;
@@ -41,12 +43,7 @@ img.avatar {
     border-radius: 50%;
 }
 
-.container {
-    width: 40%;
-    padding: 16px;
-}
-
-span.psw {
-    float: right;
-    padding-top: 16px;
+table.report{
+    width: 300px;
+    margin: auto;
 }

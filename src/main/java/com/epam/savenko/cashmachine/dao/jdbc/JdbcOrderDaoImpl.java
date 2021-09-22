@@ -67,8 +67,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Override
     public Optional<Order> insert(Order entity) throws CashMachineException {
         int id = insertOrder(entity);
-        entity.setId(id);
-        return Optional.ofNullable(id > 0 ? entity : null);
+        return findById(id);
     }
 
     private int insertOrder(Order order) throws CashMachineException {

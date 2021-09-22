@@ -1,8 +1,8 @@
 let regLogin = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ]{4,20}$/;
 let regFullName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,50}$/;
-let regProductName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,200}$/;
+let regProductName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\-\s]{4,100}$/;
 let regProductDescription = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,200}$/;
-let regPassword = /^[0-9a-zA-Z!@#$%]{3,}$/;
+let regPassword = /^[0-9a-zA-Z!@#$%]{1,}$/;
 
 
 let login = document.querySelector('#lg');

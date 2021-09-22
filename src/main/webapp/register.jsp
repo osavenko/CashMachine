@@ -30,31 +30,37 @@
             <fmt:message key="local.register.password" var="lpassword"/>
             <fmt:message key="local.error.password.repeat" var="errPasswordRepeat"/>
             <label><b>${lpassword}</b></label>
-            <input id="pwd" type="password" placeholder="${lpassword}" name="password"
+            <input id="pwd" class="form-control" type="password" placeholder="${lpassword}" name="password"
                    onchange="checkPassword('${errPasswordRepeat}')" required>
             <div id="spanPassword" class="invalid-feedback"></div>
         </fieldset>
         <fieldset>
             <fmt:message key="local.register.password.repeat" var="lrPassword"/>
             <label><b>${lrPassword}</b></label>
-            <input id="rpwd" type="password" placeholder="${lrPassword}" name="passwordRepeat"
+            <input id="rpwd" class="form-control" type="password" placeholder="${lrPassword}" name="passwordRepeat"
                    onchange="checkPassword('${errPasswordRepeat}')" required>
         </fieldset>
         <fieldset>
             <fmt:message key="local.register.fullname" var="lfullname"/>
             <label><b>${lfullname}</b></label>
-            <input id="fName" type="text" placeholder="${lfullname}" name="fullname" onchange="validateFullName('${errFullName}')" required>
+            <input id="fName" class="form-control" type="text" placeholder="${lfullname}" name="fullname"
+                   onchange="validateFullName('${errFullName}')" required>
             <div id="spanFullName" class="invalid-feedback"></div>
         </fieldset>
 
-        <fmt:message key="local.register.role" var="lrole"/>
-        <cash:SelectRole name="role" localeMessage="${lrole}"/>
+        <div>
+            <fmt:message key="local.register.role" var="lrole"/>
+            <cash:SelectRole name="role" localeMessage="${lrole}"/>
+        </div>
 
-        <fmt:message key="local.register.locale" var="llocale"/>
-        <cash:SelectLocale name="locale" localeMessage="${llocale}"/>
-
-        <fmt:message key="local.register.button" var="lbutton"/>
-        <button class="btn" type="submit">${lbutton}</button>
+        <div>
+            <fmt:message key="local.register.locale" var="llocale"/>
+            <cash:SelectLocale name="locale" localeMessage="${llocale}"/>
+        </div>
+        <div>
+            <fmt:message key="local.register.button" var="lbutton"/>
+            <button class="btn btn-primary" type="submit">${lbutton}</button>
+        </div>
     </div>
 </form>
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

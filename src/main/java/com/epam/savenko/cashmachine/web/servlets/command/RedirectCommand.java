@@ -79,10 +79,13 @@ public class RedirectCommand extends Command {
             OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
             if (orderView == null) {
                 User user = (User) session.getAttribute(USER);
-                Order order = Order.newOrder().setUserId(user.getId()).setState(false).build();
-                Optional<Order> newOrder = null;
+                Order order = Order.newOrder()
+                        .setUserId(user.getId())
+                        .setState(false)
+                        .setCash(true)
+                        .build();
                 try {
-                    newOrder = new JdbcOrderDaoImpl().insert(order);
+                    Optional<Order> newOrder = new JdbcOrderDaoImpl().insert(order);
                     orderView = new OrderView(newOrder.get());
                     session.setAttribute(ORDER_VIEW, orderView);
                 } catch (CashMachineException e) {

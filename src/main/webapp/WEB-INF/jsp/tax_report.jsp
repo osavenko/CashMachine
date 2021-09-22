@@ -25,7 +25,7 @@
     <br/>
     <p class="text-center">${pType}</p>
 
-    <table align="center">
+    <table class="report">
         <tr>
             <td class="text-left" colspan="2">
                 <fmt:message key="local.report.info.sell" var="pSell"/>

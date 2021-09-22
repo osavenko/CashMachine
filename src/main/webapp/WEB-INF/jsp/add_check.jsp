@@ -1,4 +1,3 @@
-
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <div class="container">
@@ -6,6 +5,31 @@
     <h2>${message}</h2>
 </div>
 <div class="container">
+
+    <p class="text-left"><span>&#8470;:&#32;&#32;&#32;&#32;</span>${orderView.order.getId()}</p>
+    <fmt:message key="local.order.date" var="pOrderCreated"/>
+    <p class="text-left">${pOrderCreated}<span>: </span>${orderView.order.getOrderDateTime()}</p>
+
+    <form action="" method="post">
+        <span>
+            <fmt:message key="local.order.select.pay" var="pPay"/>
+            ${pPay}
+        </span>
+        <div>
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="cash">
+            <fmt:message key="local.report.info.check.cash" var="pCash"/>
+            <label class="form-check-label" for="inlineRadio1">${pCash}</label>
+        </div>
+        <div>
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="card">
+            <fmt:message key="local.report.info.check.card" var="pCard"/>
+            <label class="form-check-label" for="inlineRadio2">${pCard}</label>
+        </div>
+        <div>
+            <fmt:message key="local.button.fix" var="pFix"/>
+            <button type="submit" class="btn btn-primary">${pFix}</button>
+        </div>
+    </form>
     <table class="table">
         <tr class="table-primary">
             <fmt:message key="local.product.name" var="pName"/>
@@ -53,5 +77,4 @@
         <a class="btn btn-outline-warning" role="button" href="controller?command=cancelcheck">${pCancel}</a>
     </div>
 </div>
-
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

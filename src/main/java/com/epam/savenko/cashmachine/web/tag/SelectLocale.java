@@ -44,7 +44,7 @@ public class SelectLocale extends TagSupport {
         if (locales != null) {
             JspWriter out = pageContext.getOut();
             try {
-                out.write("<select name=\"" + name + "\" required>");
+                out.write("<select class=\"form-control\" name=\"" + name + "\" required>");
                 out.write("<option disabled>" + localeMessage + "</option>");
                 for (Locale locale : locales) {
                     LOG.debug("SelectLocale defaultLocale:"+defaultLocale);

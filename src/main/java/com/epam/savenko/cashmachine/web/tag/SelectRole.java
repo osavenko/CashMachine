@@ -39,7 +39,7 @@ public class SelectRole extends TagSupport {
         if (roles != null) {
             JspWriter out = pageContext.getOut();
             try {
-                out.write("<select name=\"" + name + "\" required>");
+                out.write("<select class=\"form-control\" name=\"" + name + "\" required>");
                 out.write("<option disabled>" + localeMessage + "</option>");
                 for (Role role : roles) {
                     out.write("<option value=\"" + role.getId() + "\">" + role.getName() + "</option>");
