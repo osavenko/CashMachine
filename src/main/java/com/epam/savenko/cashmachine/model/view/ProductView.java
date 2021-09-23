@@ -1,6 +1,5 @@
 package com.epam.savenko.cashmachine.model.view;
 
-import com.epam.savenko.cashmachine.model.LocaleProduct;
 import com.epam.savenko.cashmachine.model.Product;
 
 import java.io.Serializable;
@@ -30,12 +29,15 @@ public class ProductView implements Serializable {
     public Product getProduct() {
         return product;
     }
+
     public void setProduct(Product product) {
         this.product = product;
     }
+
     public List<ProductDescriptionView> getDescriptionViews() {
         return descriptionViews;
     }
+
     public void setDescriptionViews(List<ProductDescriptionView> descriptionViews) {
         this.descriptionViews = descriptionViews;
     }

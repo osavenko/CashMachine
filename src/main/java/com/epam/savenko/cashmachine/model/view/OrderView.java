@@ -1,17 +1,10 @@
 package com.epam.savenko.cashmachine.model.view;
 
-import com.epam.savenko.cashmachine.dao.jdbc.JdbcBrandDaoImpl;
-import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
-import com.epam.savenko.cashmachine.exception.CashMachineException;
-import com.epam.savenko.cashmachine.model.Brand;
 import com.epam.savenko.cashmachine.model.Order;
-import com.epam.savenko.cashmachine.model.Product;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 public class OrderView implements Serializable {
 
@@ -44,33 +37,6 @@ public class OrderView implements Serializable {
     public void setProductInOrderViewList(List<ProductInOrderView> productInOrderViewList) {
         this.productInOrderViewList = productInOrderViewList;
     }
-
-
-    public void addOrderProduct(int productId, int quantity, double price) throws CashMachineException {
- /*       long countProducts = productInOrderViewList.stream()
-                .filter(productInOrderView -> productInOrderView.getId() == productId)
-                .count();
-        if (countProducts > 0) {
-            Iterator<ProductInOrderView> iterator = productInOrderViewList.iterator();
-            while (iterator.hasNext()) {
-                ProductInOrderView next = iterator.next();
-                if (next.getId() == productId) {
-                    next.quantity += quantity;
-                }
-            }
-        } else {
-            Optional<Product> oProduct = new JdbcProductDaoImpl().findById(productId);
-            if (oProduct.isPresent()) {
-                Product p = oProduct.get();
-                Optional<Brand> oBrand = new JdbcBrandDaoImpl().findById(p.getBrandId());
-                String brandName = oBrand.isPresent() ? oBrand.get().getName() : "";
-                ProductInOrderView product =
-                        new ProductInOrderView(p.getId(), p.getName(), brandName, p.isWeight(), quantity, price);
-                productInOrderViewList.add(product);
-            }
-        }*/
-    }
-
 
     public static class ProductInOrderView {
         private int id;

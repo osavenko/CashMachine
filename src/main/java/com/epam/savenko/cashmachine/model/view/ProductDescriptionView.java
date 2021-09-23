@@ -1,6 +1,11 @@
 package com.epam.savenko.cashmachine.model.view;
 
-public class ProductDescriptionView {
+import java.io.Serializable;
+
+public class ProductDescriptionView implements Serializable {
+
+    private static final long serialVersionUID = -2940529075909113699L;
+
     private String locale;
     private String text;
 
