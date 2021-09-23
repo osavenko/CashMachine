@@ -11,6 +11,10 @@
         <servlet-name>MainController</servlet-name>
         <url-pattern>/controller</url-pattern>
     </servlet-mapping>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error.jsp</location>
+    </error-page>
 
     <filter>
         <filter-name>EncodingFilter</filter-name>

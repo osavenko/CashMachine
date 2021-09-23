@@ -1,16 +1,13 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Oleh
-  Date: 14.09.2021
-  Time: 18:01
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-<h1>ERROR</h1>
-</body>
-</html>
+<%@ include file="/WEB-INF/jspf/head.jspf" %>
+
+<div class="container">
+    <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
+</div>
+<div class="container">
+    <fmt:message key="local.error.page.notfound" var="pMessage"/>
+    <p class="text-center"><strong>${pMessage}</strong></p>
+    <fmt:message key="local.main.page" var="pMainPage"/>
+    <a href="index.jsp">${pMainPage}</a>
+</div>
+
+<%@ include file="/WEB-INF/jspf/footer.jspf" %>
