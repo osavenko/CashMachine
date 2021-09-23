@@ -8,11 +8,5 @@
 <div class="container">
     <c:forEach var="descr" items="${descriptions}">
         ${descr}
-<%--
-        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="${description.getLocale()}">
-                ${description.getText()}
-        </button>
---%>
     </c:forEach>
 </div>
