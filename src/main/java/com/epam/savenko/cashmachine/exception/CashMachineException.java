@@ -1,6 +1,6 @@
 package com.epam.savenko.cashmachine.exception;
 
-public class CashMachineException extends Exception{
+public class CashMachineException extends Exception {
     public CashMachineException(String message) {
         super(message);
     }

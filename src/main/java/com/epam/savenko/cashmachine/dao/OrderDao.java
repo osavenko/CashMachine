@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface OrderDao extends GeneralDao<Order, Integer>, Count {
     double getSumCard() throws CashMachineException;
+
     double getSumCash() throws CashMachineException;
+
     List<String> getUsersFullNameInOrders() throws CashMachineException;
 }

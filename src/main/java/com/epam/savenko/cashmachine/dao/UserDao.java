@@ -5,8 +5,9 @@ import com.epam.savenko.cashmachine.model.User;
 
 import java.util.Optional;
 
-public interface UserDao extends GeneralDao<User, Integer>{
+public interface UserDao extends GeneralDao<User, Integer> {
 
     boolean setPassword(User user, String hash) throws CashMachineException;
+
     Optional<User> check(String login, String hash) throws CashMachineException;
 }

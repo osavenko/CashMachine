@@ -6,7 +6,6 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.AppProperties;
 import org.apache.log4j.Logger;
 
-import javax.swing.text.ChangedCharSetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,14 +21,12 @@ public class JdbcAppPropertiesDao implements AppPropertiesDao {
 
     @Override
     public Optional<AppProperties> getByName(String name) throws CashMachineException {
-
         try (Connection conn = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(SQL_SELECT_BY_NAME)) {
             statement.setString(1, name);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
-                    AppProperties appProperties = new AppProperties(rs.getInt(1), name, rs.getString(2));
-                    return Optional.ofNullable(appProperties);
+                    return Optional.of(new AppProperties(rs.getInt(1), name, rs.getString(2)));
                 }
             }
         } catch (SQLException e) {

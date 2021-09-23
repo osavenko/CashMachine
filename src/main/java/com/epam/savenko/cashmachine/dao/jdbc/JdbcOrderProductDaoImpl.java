@@ -29,18 +29,18 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     private static final String SQL_DELETE = "DELETE FROM order_product WHERE id=?";
     private static final String SQL_SELECT_ALL_ORDER_PRODUCTS = "SELECT * FROM order_product";
     private static final String SQL_SELECT_ORDER_PRODUCT_BY_ID = "SELECT * FROM order_product WHERE id=?";
-/*
-    private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(price*quantity)::money::numeric::float8 FROM order_product\n" +
-            "WHERE order_id=?";
-*/
+    /*
+        private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(price*quantity)::money::numeric::float8 FROM order_product\n" +
+                "WHERE order_id=?";
+    */
     private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(CASE\n" +
-        "               WHEN p.weight = true\n" +
-        "                   THEN (order_product.price::money::numeric::float8 * order_product.quantity) / 1000\n" +
-        "               ELSE order_product.price::money::numeric::float8 * order_product.quantity\n" +
-        "    END)\n" +
-        "FROM order_product\n" +
-        "         JOIN product p on p.id = order_product.product_id\n" +
-        "WHERE order_product.order_id = ?";
+            "               WHEN p.weight = true\n" +
+            "                   THEN (order_product.price::money::numeric::float8 * order_product.quantity) / 1000\n" +
+            "               ELSE order_product.price::money::numeric::float8 * order_product.quantity\n" +
+            "    END)\n" +
+            "FROM order_product\n" +
+            "         JOIN product p on p.id = order_product.product_id\n" +
+            "WHERE order_product.order_id = ?";
     private static final String SQL_SELECT_ORDER_PRODUCT_VIEW_BY_ORDER_ID =
             "SELECT p.id AS id, p.name AS name, b.name AS brand_name, p.weight as weight, SUM(op.quantity) AS quantity, op.price::money::numeric::float8 AS price" +
                     " FROM order_product op" +
@@ -91,18 +91,17 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
 
     @Override
     public List<OrderView.ProductInOrderView> getProductInOrderViewById(int id) throws CashMachineException {
-        List<OrderView.ProductInOrderView> list = new ArrayList<>();
+
         try (Connection connection = ConnectionProvider.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ORDER_PRODUCT_VIEW_BY_ORDER_ID)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                list = mapProductInOrderViewRows.mapList(rs);
+                return mapProductInOrderViewRows.mapList(rs);
             }
         } catch (SQLException e) {
             LOG.error("Error when receive data from ProductInOrderView", e);
             throw new CashMachineException("Error when receive data from ProductInOrderView", e);
         }
-        return list;
     }
 
     @Override
@@ -111,9 +110,9 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
         try (Connection conn = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = conn.prepareStatement(SQL_SELECT_SUM_BY_ORDER_ID)) {
             statement.setInt(1, orderId);
-            try(ResultSet rs = statement.executeQuery()){
-                if(rs.next()){
-                  sum = rs.getDouble(1);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    sum = rs.getDouble(1);
                 }
             }
 

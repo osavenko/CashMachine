@@ -28,7 +28,7 @@ public class JdbcUserDaoImpl implements UserDao {
     private static final String SQL_DELETE = "DELETE FROM \"user\" WHERE id=? ";
     private static final String SQL_SELECT_ALL_USERS = "SELECT * FROM \"user\"";
     private static final String SQL_SELECT_USERS_BY_LOGIN_AND_HASH = "SELECT * FROM \"user\" WHERE name=? AND hash=? AND activated='true'";
-    private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM \'user\" WHERE id=? ";
+    private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM \"user\" WHERE id=? ";
 
     private static final EntityMapper<User> mapUserRow = resultSet ->
             new User(resultSet.getInt(ID)
@@ -44,7 +44,7 @@ public class JdbcUserDaoImpl implements UserDao {
         }
         return users;
     };
-    private JdbcEntity<User> jdbcEntity;
+    private final JdbcEntity<User> jdbcEntity;
 
     public JdbcUserDaoImpl() {
         jdbcEntity = new JdbcEntity<>(mapUserList, TABLE_NAME, LOG);
@@ -115,12 +115,12 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public boolean setPassword(User user, String hash) throws CashMachineException {
-        try(Connection connection = ConnectionProvider.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PASSWORD)){
+        try (Connection connection = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PASSWORD)) {
             statement.setString(1, hash);
-            statement.setInt(2,user.getId());
+            statement.setInt(2, user.getId());
             statement.executeUpdate();
-        }catch (SQLException | CashMachineException e) {
+        } catch (SQLException | CashMachineException e) {
             StringBuilder sb = new StringBuilder(ErrorMessage.getSetPassword())
                     .append(user);
             LOG.error(sb, e);
@@ -132,16 +132,16 @@ public class JdbcUserDaoImpl implements UserDao {
     @Override
     public Optional<User> check(String login, String hash) throws CashMachineException {
         User user = null;
-        try(Connection connection = ConnectionProvider.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USERS_BY_LOGIN_AND_HASH)){
+        try (Connection connection = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USERS_BY_LOGIN_AND_HASH)) {
             statement.setString(1, login);
-            statement.setString(2,hash);
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
+            statement.setString(2, hash);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     user = mapUserRow.mapRow(resultSet);
                 }
             }
-        }catch (SQLException | CashMachineException e) {
+        } catch (SQLException | CashMachineException e) {
             StringBuilder sb = new StringBuilder(ErrorMessage.getCheckUser())
                     .append(login);
             LOG.error(sb, e);

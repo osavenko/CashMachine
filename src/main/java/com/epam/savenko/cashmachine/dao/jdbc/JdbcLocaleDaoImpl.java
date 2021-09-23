@@ -111,9 +111,9 @@ public class JdbcLocaleDaoImpl implements LocaleDao {
     public Optional<Locale> findByName(String name) throws CashMachineException {
         Locale locale = null;
         try (Connection con = ConnectionProvider.getInstance().getConnection();
-        PreparedStatement statement = con.prepareStatement(SQL_SELECT_LOCALE_BY_NAME)){
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_LOCALE_BY_NAME)) {
             statement.setString(1, name);
-            try(ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     locale = mapLocaleRow.mapRow(resultSet);
                 }

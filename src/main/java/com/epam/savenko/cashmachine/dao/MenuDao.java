@@ -6,9 +6,12 @@ import com.epam.savenko.cashmachine.model.MenuItem;
 
 import java.util.List;
 
-public interface MenuDao extends GeneralDao<MenuItem,Integer>{
+public interface MenuDao extends GeneralDao<MenuItem, Integer> {
     List<MenuItem> findRoleMenuItemsFromGroupByLocale(int roleId, int groupMenuId, int localeId) throws CashMachineException;
+
     List<String> findCommandByRole(int roleId) throws CashMachineException;
+
     List<Integer> findAllRolesInAccessMenuItem() throws CashMachineException;
+
     List<GroupMenuView> findAllGroupMenuByLocale(int locale_id) throws CashMachineException;
 }

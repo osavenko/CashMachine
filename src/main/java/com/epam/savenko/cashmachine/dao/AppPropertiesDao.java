@@ -5,7 +5,8 @@ import com.epam.savenko.cashmachine.model.AppProperties;
 
 import java.util.Optional;
 
-public interface AppPropertiesDao{
+public interface AppPropertiesDao {
     Optional<AppProperties> getByName(String name) throws CashMachineException;
+
     double getTax() throws CashMachineException;
 }

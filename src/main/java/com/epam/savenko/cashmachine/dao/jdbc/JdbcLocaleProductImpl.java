@@ -121,14 +121,14 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
              PreparedStatement statement = con.prepareStatement(SQL_SELECT_DESCRIPTION_TO_ID_PRODUCT_BY_LOCALE)) {
             statement.setInt(1, idProduct);
             statement.setInt(2, localeId);
-            try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     return Optional.ofNullable(mapLocaleProductRow.mapRow(resultSet));
                 }
             }
         } catch (SQLException e) {
             LOG.error(ErrorMessage.getReceiveById(TABLE_NAME));
-            throw new CashMachineException("ErrorMessage.getReceiveById(TABLE_NAME) id, localeId"+idProduct+":"+localeId, e);
+            throw new CashMachineException("ErrorMessage.getReceiveById(TABLE_NAME) id, localeId" + idProduct + ":" + localeId, e);
         }
         return Optional.empty();
     }
@@ -136,16 +136,16 @@ public class JdbcLocaleProductImpl implements LocaleProductDao {
     @Override
     public List<ProductDescriptionView> getAllDescriptionViewForProductById(int idProduct) throws CashMachineException {
         List<ProductDescriptionView> pView = new ArrayList<>();
-        try(Connection conn = ConnectionProvider.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(SQL_SELECT_DESCRIPTIONS_ALL_LOCALE_PRODUCT_BY_ID_PRODUCT)){
+        try (Connection conn = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = conn.prepareStatement(SQL_SELECT_DESCRIPTIONS_ALL_LOCALE_PRODUCT_BY_ID_PRODUCT)) {
             statement.setInt(1, idProduct);
-            try(ResultSet rs = statement.executeQuery()){
-                while (rs.next()){
-                    pView.add(new ProductDescriptionView(rs.getString(1), rs.getString(2) ));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    pView.add(new ProductDescriptionView(rs.getString(1), rs.getString(2)));
                 }
             }
         } catch (SQLException e) {
-            LOG.error("Error when receive all description for product with id: "+idProduct, e);
+            LOG.error("Error when receive all description for product with id: " + idProduct, e);
         }
         return pView;
     }

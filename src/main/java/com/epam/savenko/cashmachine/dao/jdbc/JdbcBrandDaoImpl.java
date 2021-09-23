@@ -37,7 +37,7 @@ public class JdbcBrandDaoImpl implements BrandDao {
         return brands;
     };
 
-    private JdbcEntity<Brand> jdbcEntity;
+    private final JdbcEntity<Brand> jdbcEntity;
 
     public JdbcBrandDaoImpl() {
         jdbcEntity = new JdbcEntity<>(mapBrandList, TABLE_NAME, LOG);

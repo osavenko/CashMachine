@@ -1,6 +1,9 @@
 package com.epam.savenko.cashmachine.dao.jdbc;
 
-import com.epam.savenko.cashmachine.dao.*;
+import com.epam.savenko.cashmachine.dao.ConnectionProvider;
+import com.epam.savenko.cashmachine.dao.EntitiesMapper;
+import com.epam.savenko.cashmachine.dao.EntityMapper;
+import com.epam.savenko.cashmachine.dao.MenuDao;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.GroupMenuView;
@@ -20,8 +23,6 @@ public class JdbcMenuDaoImpl implements MenuDao {
 
     private static final Logger LOG = Logger.getLogger(JdbcMenuDaoImpl.class.getName());
 
-    private static final String TABLE_NAME = "menu_item";
-
     private static final String SQL_SELECT_MENU_ITEMS =
             "SELECT im.id AS id, lim.name AS name, im.url AS url"
                     + " FROM public.access_menu_item AS amt"
@@ -36,7 +37,7 @@ public class JdbcMenuDaoImpl implements MenuDao {
                     + " WHERE ta.role_id=?";
     public static final String SQL_GROUP_MENU_BY_LOCALE_ID = "SELECT gm.id AS id, lgm.name AS name FROM group_menu gm\n" +
             "JOIN locale_group_menu lgm on gm.id = lgm.group_menu_id\n" +
-            "WHERE lgm.locale_id=?\n"+
+            "WHERE lgm.locale_id=?\n" +
             "ORDER BY gm.id";
 
 
@@ -53,9 +54,9 @@ public class JdbcMenuDaoImpl implements MenuDao {
 
     public static final EntityMapper<GroupMenuView> mapGroupRow = rs ->
             new GroupMenuView(rs.getInt("id"), rs.getString("name"));
-    public static final EntitiesMapper<GroupMenuView> mapGroupRows  =rs -> {
+    public static final EntitiesMapper<GroupMenuView> mapGroupRows = rs -> {
         List<GroupMenuView> list = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             list.add(mapGroupRow.mapRow(rs));
         }
         return list;
@@ -116,32 +117,30 @@ public class JdbcMenuDaoImpl implements MenuDao {
 
     @Override
     public List<GroupMenuView> findAllGroupMenuByLocale(int locale_id) throws CashMachineException {
-        List<GroupMenuView> list = new ArrayList<>();
-        try(Connection conn = ConnectionProvider.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(SQL_GROUP_MENU_BY_LOCALE_ID)) {
+        try (Connection conn = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = conn.prepareStatement(SQL_GROUP_MENU_BY_LOCALE_ID)) {
             statement.setInt(1, locale_id);
-            try(ResultSet rs = statement.executeQuery()){
-                list = mapGroupRows.mapList(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return mapGroupRows.mapList(rs);
             }
         } catch (SQLException e) {
             LOG.error("Error receive group menu", e);
             throw new CashMachineException("Error receive group menu", e);
         }
-        return list;
     }
 
     private String getCommandByPattern(String text, String patternLng) {
-        StringBuilder rezult = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         LOG.debug("Start check command by pattern");
         LOG.debug("Source: " + text);
         LOG.debug("Pattern: " + patternLng);
         Matcher matcher = Pattern.compile(patternLng).matcher(text);
         while (matcher.find()) {
-            rezult.append(matcher.group("cmd"));
+            result.append(matcher.group("cmd"));
         }
-        LOG.debug("Checked command: " + rezult);
+        LOG.debug("Checked command: " + result);
         LOG.debug("End check command by pattern");
-        return rezult.toString();
+        return result.toString();
     }
 
     private List<MenuItem> getMenuItemsByStatement(PreparedStatement statement) throws SQLException {

@@ -12,9 +12,9 @@ import java.util.Optional;
 
 public class JdbcEntity<T> {
 
-    private EntitiesMapper<T> mapRows;
-    private String tableName;
-    private Logger LOG;
+    private final EntitiesMapper<T> mapRows;
+    private final String tableName;
+    private final Logger LOG;
 
     public JdbcEntity(EntitiesMapper<T> mapRows, String tableName, Logger LOG) {
         this.mapRows = mapRows;
@@ -55,8 +55,7 @@ public class JdbcEntity<T> {
 
     private List<T> getEntityByStatement(PreparedStatement statement) throws SQLException {
         ResultSet rs = statement.executeQuery();
-        List<T> entities = mapRows.mapList(rs);
-        return entities;
+        return mapRows.mapList(rs);
     }
 
     public boolean delete(String sql, int id) throws CashMachineException {

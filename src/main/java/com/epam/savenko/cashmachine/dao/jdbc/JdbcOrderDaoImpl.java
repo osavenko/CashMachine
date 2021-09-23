@@ -56,7 +56,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
         return orders;
     };
 
-    private JdbcEntity<Order> jdbcEntity;
+    private final JdbcEntity<Order> jdbcEntity;
 
     public JdbcOrderDaoImpl() {
         jdbcEntity = new JdbcEntity<>(mapOrderRows, TABLE_NAME, LOG);
@@ -142,10 +142,10 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Override
     public List<String> getUsersFullNameInOrders() throws CashMachineException {
         List<String> users = new ArrayList<>();
-        try(Connection conn =ConnectionProvider.getInstance().getConnection();
-        Statement statement = conn.createStatement()){
-            try(ResultSet rs = statement.executeQuery(SQL_SELECT_USERS_CLOSED_ORDER)){
-                while (rs.next()){
+        try (Connection conn = ConnectionProvider.getInstance().getConnection();
+             Statement statement = conn.createStatement()) {
+            try (ResultSet rs = statement.executeQuery(SQL_SELECT_USERS_CLOSED_ORDER)) {
+                while (rs.next()) {
                     users.add(rs.getString(1));
                 }
             }

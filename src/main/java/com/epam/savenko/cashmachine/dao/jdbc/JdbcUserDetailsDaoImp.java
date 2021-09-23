@@ -18,6 +18,7 @@ import static com.epam.savenko.cashmachine.dao.Fields.UserDetails.*;
 
 
 public class JdbcUserDetailsDaoImp implements UserDetailsDao {
+
     private static final Logger LOG = Logger.getLogger(JdbcLocaleProductImpl.class.getName());
 
     private static final String TABLE_NAME = "user_details";
@@ -41,7 +42,7 @@ public class JdbcUserDetailsDaoImp implements UserDetailsDao {
         return userDetails;
     };
 
-    private JdbcEntity<UserDetails> jdbcEntity;
+    private final JdbcEntity<UserDetails> jdbcEntity;
 
     public JdbcUserDetailsDaoImp() {
         jdbcEntity = new JdbcEntity<>(mapUserDetailsRows, TABLE_NAME, LOG);
@@ -108,12 +109,11 @@ public class JdbcUserDetailsDaoImp implements UserDetailsDao {
 
     @Override
     public Optional<UserDetails> findByUserId(Integer key) throws CashMachineException {
-        UserDetails userDetails = null;
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SELECT_USER_DETAIL_BY_USER_ID)) {
             statement.setInt(1, key);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 return Optional.ofNullable(mapUserDetailRow.mapRow(resultSet));
             }
         } catch (SQLException | CashMachineException e) {
@@ -122,6 +122,6 @@ public class JdbcUserDetailsDaoImp implements UserDetailsDao {
             LOG.error(sb, e);
             throw new CashMachineException(sb.toString(), e);
         }
-        return Optional.ofNullable(userDetails);
+        return Optional.empty();
     }
 }

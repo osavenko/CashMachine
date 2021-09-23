@@ -1,6 +1,7 @@
 package com.epam.savenko.cashmachine.dao;
 
 public class Fields {
+
     private Fields() {
     }
 

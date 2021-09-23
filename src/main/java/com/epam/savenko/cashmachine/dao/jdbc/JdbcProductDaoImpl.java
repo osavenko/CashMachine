@@ -50,7 +50,7 @@ public class JdbcProductDaoImpl implements ProductDao {
         return products;
     };
 
-    private JdbcEntity<Product> jdbcEntity;
+    private final JdbcEntity<Product> jdbcEntity;
 
     public JdbcProductDaoImpl() {
         jdbcEntity = new JdbcEntity<>(mapProductRows, TABLE_NAME, LOG);
