@@ -56,6 +56,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
                     rs.getString("brand_name"),
                     rs.getBoolean("weight"),
                     rs.getInt("quantity"),
+                    0,
                     rs.getDouble("price"));
     public static final EntitiesMapper<OrderView.ProductInOrderView> mapProductInOrderViewRows = rs -> {
         List<OrderView.ProductInOrderView> list = new ArrayList<>();

@@ -14,6 +14,6 @@ public class NoCommand extends Command{
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-        return new RoutePath(Path.PAGE_NO_COMMAND, RouteType.REDIRECT);
+        return new RoutePath(Path.PAGE_MAIN, RouteType.REDIRECT);
     }
 }

@@ -20,27 +20,27 @@
             <td>${pDescription}</td>
         </tr>
 
-        <c:forEach var="product" items="${products}">
+        <c:forEach var="entry" items="${products}">
             <tr>
-                <td><c:out value="${product.getProduct().getName()}"/></td>
-                <c:if test="${product.getProduct().isWeight()==true}">
+                <td><c:out value="${entry.getProduct().getName()}"/></td>
+                <c:if test="${entry.getProduct().isWeight()==true}">
                     <fmt:message key="local.product.weight.message" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
-                <c:if test="${product.getProduct().isWeight()==false}">
+                <c:if test="${entry.getProduct().isWeight()==false}">
                     <fmt:message key="local.product.weight.quantitative" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
-                <c:if test="${product.getProduct().isWeight()==true}">
-                    <td><c:out value="${product.getProduct().getQuantity()/1000}"/></td>
+                <c:if test="${entry.getProduct().isWeight()==true}">
+                    <td><c:out value="${entry.getProduct().getQuantity()/1000}"/></td>
                 </c:if>
-                <c:if test="${product.getProduct().isWeight()==false}">
-                    <td><c:out value="${product.getProduct().getQuantity()}"/></td>
+                <c:if test="${entry.getProduct().isWeight()==false}">
+                    <td><c:out value="${entry.getProduct().getQuantity()}"/></td>
                 </c:if>
 
-                <td><c:out value="${product.getProduct().getPrice()}"/></td>
+                <td><c:out value="${entry.getProduct().getPrice()}"/></td>
                 <td>
-                    <c:out value="${product.getLocaleDescription()}"/>
+                    <c:out value="${entry.getLocaleDescription()}"/>
                 </td>
             </tr>
         </c:forEach>

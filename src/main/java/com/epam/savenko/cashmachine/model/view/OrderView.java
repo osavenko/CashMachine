@@ -47,7 +47,7 @@ public class OrderView implements Serializable {
 
 
     public void addOrderProduct(int productId, int quantity, double price) throws CashMachineException {
-        long countProducts = productInOrderViewList.stream()
+ /*       long countProducts = productInOrderViewList.stream()
                 .filter(productInOrderView -> productInOrderView.getId() == productId)
                 .count();
         if (countProducts > 0) {
@@ -68,7 +68,7 @@ public class OrderView implements Serializable {
                         new ProductInOrderView(p.getId(), p.getName(), brandName, p.isWeight(), quantity, price);
                 productInOrderViewList.add(product);
             }
-        }
+        }*/
     }
 
 
@@ -78,14 +78,16 @@ public class OrderView implements Serializable {
         private String brandName;
         private boolean type;
         private int quantity;
+        private int oldQuantity;
         private double price;
 
-        public ProductInOrderView(int id, String name, String brandName, boolean type, int quantity, double price) {
+        public ProductInOrderView(int id, String name, String brandName, boolean type, int quantity, int oldQuantity, double price) {
             this.id = id;
             this.name = name;
             this.brandName = brandName;
             this.type = type;
             this.quantity = quantity;
+            this.oldQuantity = oldQuantity;
             this.price = price;
         }
 
@@ -107,6 +109,10 @@ public class OrderView implements Serializable {
 
         public int getQuantity() {
             return quantity;
+        }
+
+        public int getOldQuantity() {
+            return oldQuantity;
         }
 
         public double getPrice() {

@@ -26,9 +26,7 @@ import javax.servlet.http.HttpSession;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.epam.savenko.cashmachine.web.constant.RequestParam.COMMAND;
 import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
@@ -40,7 +38,6 @@ public class RedirectCommand extends Command {
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) {
         RoutePath forward = new RoutePath(Path.PAGE_BAD_LOGIN, RouteType.FORWARD);
-        String errorMessage = "Error redirect";
         String command = req.getParameter(COMMAND);
         LOG.debug("Redirect command: " + command);
         if ("addproductpage".equals(command)) {
@@ -64,7 +61,7 @@ public class RedirectCommand extends Command {
                 order.setClosedDateTime(Timestamp.from(Instant.now()));
                 new JdbcOrderDaoImpl().update(order);
             } catch (CashMachineException e) {
-                LOG.error("Error save order " + order,e);
+                LOG.error("Error save order " + order, e);
             }
             forward.setPath("controller?command=orderslist");
             LOG.debug("Save check: " + orderView.getOrder().getId());
@@ -95,17 +92,17 @@ public class RedirectCommand extends Command {
                 } catch (CashMachineException e) {
                     LOG.error("Error when was created new order", e);
                 }
-            }else{
+            } else {
                 String changePay = req.getParameter("changePay");
-                if("checkpay".equals(changePay)){
-                    LOG.error("checkpay :changePay: "+ command);
-                    Order  order = orderView.getOrder();
+                if ("checkpay".equals(changePay)) {
+                    LOG.error("checkpay :changePay: " + command);
+                    Order order = orderView.getOrder();
                     order.setCash(getTypePay(req.getParameter("payment")));
                     try {
                         OrderDao orderDao = new JdbcOrderDaoImpl();
                         orderDao.update(order);
                     } catch (CashMachineException e) {
-                        LOG.error("Error save order " + order,e);
+                        LOG.error("Error save order " + order, e);
                     }
                 }
             }
@@ -137,7 +134,7 @@ public class RedirectCommand extends Command {
 
                         OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
                         LOG.debug("After getting " + ORDER_VIEW);
-                        if (orderView != null && quantity > 0) {
+                        if (orderView != null) {
                             LOG.debug(ORDER_VIEW + "is not null");
                             //add product
                             OrderProduct orderProduct = OrderProduct.newBuilder()
@@ -161,8 +158,6 @@ public class RedirectCommand extends Command {
                     }
                 }
             }
-
-
             forward.setPath(Path.PAGE_CHOICE_PRODUCT);
             List<Product> products;
             session.setAttribute(OFFSET, ROWS_IN_PAGE);
@@ -170,17 +165,41 @@ public class RedirectCommand extends Command {
             try {
                 ProductDao productDao = new JdbcProductDaoImpl();
                 int productCount = productDao.getCount();
+                session.setAttribute("productCount", productCount);
+                String search = req.getParameter("search");
+                //Всьавить код для поиска по строке или коду товара
                 products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage - 1));
+
                 session.setAttribute(CURRENT_PAGE, currentPage);
                 session.setAttribute(PAGES, productCount / ROWS_IN_PAGE + 1);
-                session.setAttribute(PRODUCTS, products);
+                OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
+                Map<Product, Integer> mapProducts = new LinkedHashMap<>();
+                if (orderView != null) {
+                    List<OrderView.ProductInOrderView> productInOrderViewList = orderView.getProductInOrderViewList();
+                    for (Product product : products) {
+                        int quantityInOrder = containsProduct(product, productInOrderViewList);
+                        mapProducts.put(product, quantityInOrder);
+                    }
+                }
+                //session.setAttribute(PRODUCTS, products);
+                session.setAttribute(PRODUCTS, mapProducts);
                 session.setAttribute("currUrl", "controller?command=choiceproduct");
             } catch (CashMachineException e) {
                 LOG.error("Error product list " + e.getMessage());
             }
+
             LOG.debug("Redirect page: " + Path.PAGE_CHOICE_PRODUCT);
         }
         return forward;
+    }
+
+    private int containsProduct(Product product, List<OrderView.ProductInOrderView> productInOrderViewList) {
+        for (OrderView.ProductInOrderView productInOrderView : productInOrderViewList) {
+            if (productInOrderView.getId() == product.getId()) {
+                return productInOrderView.getQuantity();
+            }
+        }
+        return 0;
     }
 
     private boolean getTypePay(String payment) {

@@ -14,6 +14,5 @@ public class Path {
     public static final String PAGE_TAX_REPORT = "/WEB-INF/jsp/tax_report.jsp";
     public static final String PAGE_REGISTRATION="register.jsp";
     public static final String PAGE_MAIN="/WEB-INF/jsp/main.jsp";
-    public static final String PAGE_NO_COMMAND="/hello-servlet";
     public static final String PAGE_ERROR = "/WEB-INF/jsp/error.jsp";
 }

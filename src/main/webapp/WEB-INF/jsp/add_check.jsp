@@ -53,25 +53,25 @@
             <fmt:message key="local.product.price" var="pPrice"/>
             <td>${pPrice}</td>
         </tr>
-        <c:forEach var="product" items="${orderView.getProductInOrderViewList()}">
+        <c:forEach var="entry" items="${orderView.getProductInOrderViewList()}">
             <tr>
-                <td><c:out value="${product.getName()}"/></td>
-                <c:if test="${product.isWeight()==true}">
+                <td><c:out value="${entry.getName()}"/></td>
+                <c:if test="${entry.isWeight()==true}">
                     <fmt:message key="local.product.weight.message" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
-                <c:if test="${product.isWeight()==false}">
+                <c:if test="${entry.isWeight()==false}">
                     <fmt:message key="local.product.weight.quantitative" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
-                <c:if test="${product.isWeight()==true}">
-                    <td><c:out value="${product.getQuantity()/1000}"/></td>
+                <c:if test="${entry.isWeight()==true}">
+                    <td><c:out value="${entry.getQuantity()/1000}"/></td>
                 </c:if>
-                <c:if test="${product.isWeight()==false}">
-                    <td><c:out value="${product.getQuantity()}"/></td>
+                <c:if test="${entry.isWeight()==false}">
+                    <td><c:out value="${entry.getQuantity()}"/></td>
                 </c:if>
 
-                <td><c:out value="${product.getPrice()}"/></td>
+                <td><c:out value="${entry.getPrice()}"/></td>
                 <td><c:out value=""/></td>
             </tr>
         </c:forEach>
