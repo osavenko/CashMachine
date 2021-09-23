@@ -5,7 +5,6 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Brand;
 import org.apache.log4j.Logger;
 
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.List;
 public class SelectBrand extends TagSupport {
 
     private static final Logger LOG = Logger.getLogger(SelectBrand.class);
+    private static final long serialVersionUID = -3438080619100682939L;
 
     private String name;
     private String localeMessage;
@@ -27,7 +27,7 @@ public class SelectBrand extends TagSupport {
     }
 
     @Override
-    public int doStartTag() throws JspException {
+    public int doStartTag() {
         LOG.debug("Start custom tag select brands");
         List<Brand> brands = null;
         try {

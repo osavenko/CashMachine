@@ -5,7 +5,6 @@ import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Locale;
 import org.apache.log4j.Logger;
 
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.List;
 public class SelectLocale extends TagSupport {
 
     private static final Logger LOG = Logger.getLogger(SelectLocale.class);
+    private static final long serialVersionUID = 3632994302720666113L;
 
     private String name;
     private String defaultLocale;
@@ -32,7 +32,7 @@ public class SelectLocale extends TagSupport {
     }
 
     @Override
-    public int doStartTag() throws JspException {
+    public int doStartTag() {
         LOG.debug("Start custom tag select locales");
         List<Locale> locales = null;
         try {
@@ -47,13 +47,13 @@ public class SelectLocale extends TagSupport {
                 out.write("<select class=\"form-control\" name=\"" + name + "\" required>");
                 out.write("<option disabled>" + localeMessage + "</option>");
                 for (Locale locale : locales) {
-                    LOG.debug("SelectLocale defaultLocale:"+defaultLocale);
+                    LOG.debug("SelectLocale defaultLocale:" + defaultLocale);
                     if (defaultLocale != null && !defaultLocale.isEmpty()) {
                         if (defaultLocale.equals(locale.getName())) {
                             out.write("<option value=\"" + locale.getName() + "\">" + locale.getDescription() + "</option>");
                             break;
                         }
-                    }else{
+                    } else {
                         out.write("<option value=\"" + locale.getName() + "\">" + locale.getDescription() + "</option>");
                     }
                 }

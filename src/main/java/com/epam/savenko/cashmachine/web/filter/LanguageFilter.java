@@ -20,11 +20,13 @@ import static com.epam.savenko.cashmachine.web.constant.SessionParam.USER;
 
 @WebFilter(filterName = "LanguageFilter")
 public class LanguageFilter implements Filter {
+
     public static final Logger LOG = Logger.getLogger(LanguageFilter.class);
+
     private static List<Locale> locales;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         try {
             locales = new JdbcLocaleDaoImpl().findAll();
         } catch (CashMachineException e) {
@@ -36,7 +38,7 @@ public class LanguageFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         LOG.debug("Start LanguageFilter");
         req.setAttribute(SessionParam.LANGUAGES, locales.stream()
-                .map(locale -> locale.getName())
+                .map(Locale::getName)
                 .collect(Collectors.toList()));
         HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession();

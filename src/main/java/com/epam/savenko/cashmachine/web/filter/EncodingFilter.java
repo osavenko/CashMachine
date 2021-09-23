@@ -3,17 +3,17 @@ package com.epam.savenko.cashmachine.web.filter;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
-import javax.servlet.annotation.*;
+import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 @WebFilter(filterName = "EncodingFilter")
 public class EncodingFilter implements Filter {
 
-    public static final Logger LOG= Logger.getLogger(EncodingFilter.class);
+    public static final Logger LOG = Logger.getLogger(EncodingFilter.class);
 
     private String encoding = "UTF-8";
 
-    public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) {
         String encodingParam = config.getInitParameter("encoding");
         if (encodingParam != null) {
             encoding = encodingParam;

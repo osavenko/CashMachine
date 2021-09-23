@@ -15,8 +15,8 @@ import java.util.*;
 
 public class AccessFilter implements Filter {
 
-
     private static final Logger LOG = Logger.getLogger(AccessFilter.class);
+
     private static Map<Integer, List<String>> accessMap = new HashMap<>();
     private static List<String> outOfControl = new ArrayList<>();
     private static List<String> commons = new ArrayList<>();
