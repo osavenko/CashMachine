@@ -5,6 +5,7 @@ public class SessionParam {
     }
 
 
+
     public static final String ALL_USERS = "allUsers";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
@@ -15,6 +16,7 @@ public class SessionParam {
     public static final String LOCALE = "locale";
 
     public static final String NEW_CHECK = "newCheck";
+
     public static final String ORDER_VIEW = "orderView";
     public static final String ORDER_LIST = "orderList";
     public static final String ORDER_COUNT = "ordersCount";
@@ -22,6 +24,7 @@ public class SessionParam {
     public static final String ORDER_SUM_CARD = "ordersSumCard";
     public static final String ORDER_TAX = "orderTax";
     public static final String ORDER_TOTAL = "orderTotal";
+    public static final String ORDER_USERS_OF_ORDERS = "ordersUsers";
 
     public static final String LANGUAGES = "languages";
     public static final String LANGUAGE = "language";
@@ -34,6 +37,9 @@ public class SessionParam {
     public static final String STORE_NAME = "reportStoreName";
     public static final String ADDRESS= "reportAddress";
     public static final String IPN= "reportIPN";
+    public static final String REPORT_TIME= "reportTime";
+    public static final String REPORT_DATE= "reportDate";
+    public static final String REPORT_CASH_REGISTER_NUMBER= "reportCashRegisterNumber";
 
 
     public static final String DEFAULT_LOCALE = "defaultLocale";

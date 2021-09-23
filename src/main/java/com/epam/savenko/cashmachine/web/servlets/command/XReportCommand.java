@@ -17,6 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 public class XReportCommand extends Command {
 
@@ -42,6 +48,20 @@ public class XReportCommand extends Command {
             String fTax = String.format("%,.2f", (sumCard+sumCash)*tax/100);
             session.setAttribute(SessionParam.ORDER_TAX,fTax);
             session.setAttribute(SessionParam.ORDER_TOTAL,String.format("%,.2f",(sumCard+sumCash)));
+            List<String> users = orderDao.getUsersFullNameInOrders();
+            session.setAttribute(SessionParam.ORDER_USERS_OF_ORDERS,users);
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter fDate = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter fTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LOG.error("REPORT DATE: "+localDateTime.format(fDate));
+            LOG.error("REPORT DATE: "+localDateTime.format(fTime));
+            session.setAttribute(SessionParam.REPORT_DATE,localDateTime.format(fDate));
+            session.setAttribute(SessionParam.REPORT_TIME,localDateTime.format(fTime));
+            Optional<AppProperties> cashnumber = appProperties.getByName("cashnumber");
+            if (cashnumber.isPresent()) {
+                String cashRegisterNumber = cashnumber.get().getValue();
+                session.setAttribute(SessionParam.REPORT_CASH_REGISTER_NUMBER,cashRegisterNumber);
+            }
         } catch (CashMachineException e) {
             LOG.error("Error when receive parameters: ", e);
         }

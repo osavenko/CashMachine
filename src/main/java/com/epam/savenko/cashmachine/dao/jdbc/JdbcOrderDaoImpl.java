@@ -31,6 +31,11 @@ public class JdbcOrderDaoImpl implements OrderDao {
     private static final String SQL_SELECT_SUM_CARD = "SELECT SUM(amount::money::numeric::float8) FROM " + TABLE_NAME + " WHERE closed=true AND cash=true";
     private static final String SQL_SELECT_ORDER_COUNTS = "SELECT count(*) FROM " + TABLE_NAME + " WHERE closed=true";
     private static final String SQL_SELECT_ORDER_BY_ID = "SELECT id, amount::money::numeric::float8, user_id, closed, order_datetime, closed_datetime, cash FROM " + TABLE_NAME + " WHERE id=?";
+    private static final String SQL_SELECT_USERS_CLOSED_ORDER = "SELECT ud.fullname FROM \"order\" o" +
+            " JOIN \"user\" u on u.id = o.user_id" +
+            " JOIN user_details ud on o.user_id = ud.user_id" +
+            " WHERE o.closed=true" +
+            " GROUP BY ud.fullname";
 
     private static final EntityMapper<Order> mapOrderRow = resultSet ->
             Order.newOrder()
@@ -132,6 +137,22 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Override
     public double getSumCash() throws CashMachineException {
         return getSum(SQL_SELECT_SUM_CASH);
+    }
+
+    @Override
+    public List<String> getUsersFullNameInOrders() throws CashMachineException {
+        List<String> users = new ArrayList<>();
+        try(Connection conn =ConnectionProvider.getInstance().getConnection();
+        Statement statement = conn.createStatement()){
+            try(ResultSet rs = statement.executeQuery(SQL_SELECT_USERS_CLOSED_ORDER)){
+                while (rs.next()){
+                    users.add(rs.getString(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     private double getSum(String sql) throws CashMachineException {

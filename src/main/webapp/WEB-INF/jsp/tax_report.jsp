@@ -4,13 +4,6 @@
     <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 </div>
 <div class="container">
-<%--
-    public static final String STORE_NAME = "reportStoreName";
-    public static final String ADDRESS= "reportAddress";
-    public static final String IPN= "reportIPN";
---%>
-
-
     <p class="text-center">${reportStoreName}</p>
     <p class="text-center">${reportAddress}</p>
     <p class="text-center">${reportIPN}</p>
@@ -23,13 +16,13 @@
     </c:if>
 
     <br/>
-    <p class="text-center">${pType}</p>
+    <p class="text-center"><strong>${pType}</strong></p>
 
     <table class="report">
         <tr>
             <td class="text-left" colspan="2">
                 <fmt:message key="local.report.info.sell" var="pSell"/>
-                <span class="text-left">${pSell}</span>
+                <p class="text-left"><strong>${pSell}</strong></p>
             </td>
         </tr>
         <tr>
@@ -57,45 +50,77 @@
             <td class="text-left">${pTotal}</td>
             <td class="text-right">${orderTotal}</td>
         </tr>
-        <tr><td colspan="2"><br/></td></tr>
+        <tr>
+            <td colspan="2"><br/></td>
+        </tr>
         <tr>
             <td class="text-left" colspan="2">
                 <fmt:message key="local.report.info.return" var="pReturn"/>
-                <span class="text-left">${pReturn}</span>
+                <p class="text-left"><strong>${pReturn}</strong></p>
             </td>
         </tr>
         <tr>
             <td class="text-left">${pCount}</td>
-            <td class="text-right">2</td>
+            <td class="text-right">0</td>
         </tr>
         <tr>
             <td class="text-left">${pCash}</td>
-            <td class="text-right">2.00</td>
+            <td class="text-right">0.00</td>
         </tr>
         <tr>
             <td class="text-left">${pCard}</td>
-            <td class="text-right">3.00</td>
+            <td class="text-right">0.00</td>
         </tr>
         <tr>
             <td class="text-left">${pTotalTax}</td>
-            <td class="text-right">4.00</td>
+            <td class="text-right">0.00</td>
         </tr>
         <tr>
             <td class="text-left">${pTotal}</td>
-            <td class="text-right">5.00</td>
+            <td class="text-right">0.00</td>
         </tr>
-        <tr><td colspan="2"><br/></td></tr>
+        <tr>
+            <td colspan="2"><br/></td>
+        </tr>
         <tr>
             <fmt:message key="local.report.info.official.payment" var="pPayment"/>
             <td class="text-left">${pPayment}</td>
-            <td class="text-right">0.21</td>
+            <td class="text-right">0.00</td>
         </tr>
         <tr>
             <fmt:message key="local.report.info.official.issuance" var="pIssuance"/>
             <td class="text-left">${pIssuance}</td>
-            <td class="text-right">0.22</td>
+            <td class="text-right">0.00</td>
         </tr>
-        <tr><td colspan="2"></td></tr>
+        <tr>
+            <td colspan="2"><br/></td>
+        </tr>
+        <tr>
+            <fmt:message key="local.report.info.cashier" var="pIssuance"/>
+            <td>${pIssuance}</td>
+            <td>
+                <c:forEach var="userFullName" items="${ordersUsers}">
+                    ${userFullName}<br/>
+                </c:forEach>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><br/></td>
+        </tr>
+        <tr>
+            <td colspan="2"><br/></td>
+        </tr>
+        <fmt:message key="local.report.info.date" var="pDate"/>
+        <fmt:message key="local.report.info.time" var="pTime"/>
+        <tr>
+            <td><span class="text-left">${pDate}:${reportDate}</span></td>
+            <td><span class="text-left">${pTime}:${reportTime}</span></td>
+        </tr>
+        <fmt:message key="local.cash.register" var="pCashRegisterNumber"/>
+        <tr>
+            <td><span class="text-left">${pCashRegisterNumber} ${reportCashRegisterNumber}</span></td>
+            <td></td>
+        </tr>
     </table>
 </div>
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>
