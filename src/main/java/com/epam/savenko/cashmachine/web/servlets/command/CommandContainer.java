@@ -20,7 +20,7 @@ public class CommandContainer {
         commands.put("orderslist", new OrdersListCommand());
         commands.put("cancelcheck", new CancelCheckCommand());
         commands.put("addcheck", new AddCheckCommand());
-        commands.put("choiceproduct", new RedirectCommand());
+        commands.put("choiceproduct", new ChoiceProductCommand());
         commands.put("addProduct", new AddProductCommand());
         commands.put("addproductpage", new AddProductPageCommand());
         commands.put("savecheck", new SaveCheckCommand());
@@ -31,11 +31,11 @@ public class CommandContainer {
         LOG.debug("Command container was successfully initialized");
         LOG.trace("Number of commands --> " + commands.size());
     }
+
     /**
      * Returns command object with the given name.
      *
-     * @param commandName
-     *            Name of the command.
+     * @param commandName Name of the command.
      * @return Command object.
      */
     public static Command get(String commandName) {

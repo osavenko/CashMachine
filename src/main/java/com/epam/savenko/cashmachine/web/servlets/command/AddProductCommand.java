@@ -38,7 +38,7 @@ public class AddProductCommand extends Command {
         try {
             quantity = getQuantity(req.getParameter("quantity"), weight);
         } catch (NumberFormatException e) {
-            LOG.error("Error quantity "+weight, e);
+            LOG.error("Error quantity " + weight, e);
         }
         String localeName = req.getParameter("locale");
         Product product = Product.newBuilder()
@@ -50,7 +50,7 @@ public class AddProductCommand extends Command {
                 .build();
         try {
             Optional<Product> newProduct = new JdbcProductDaoImpl().insert(product);
-            LOG.debug("Add product: "+newProduct.orElse(null));
+            LOG.debug("Add product: " + newProduct.orElse(null));
             int localeId = new JdbcLocaleDaoImpl().findByName(localeName).get().getId();
             LocaleProduct localeProduct = new LocaleProduct(localeId, newProduct.get().getId(), productDescription);
             new JdbcLocaleProductImpl().insert(localeProduct);
