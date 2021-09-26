@@ -19,7 +19,7 @@ public class CommandContainer {
         commands.put("productslist", new ProductsListCommand());
         commands.put("orderslist", new OrdersListCommand());
         commands.put("cancelcheck", new CancelCheckCommand());
-        commands.put("addcheck", new RedirectCommand());
+        commands.put("addcheck", new AddCheckCommand());
         commands.put("choiceproduct", new RedirectCommand());
         commands.put("addProduct", new AddProductCommand());
         commands.put("addproductpage", new AddProductPageCommand());

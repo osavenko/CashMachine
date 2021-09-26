@@ -1,16 +1,12 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
-import com.epam.savenko.cashmachine.dao.OrderDao;
 import com.epam.savenko.cashmachine.dao.OrderProductDao;
 import com.epam.savenko.cashmachine.dao.ProductDao;
-import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderProductDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
-import com.epam.savenko.cashmachine.model.Order;
 import com.epam.savenko.cashmachine.model.OrderProduct;
 import com.epam.savenko.cashmachine.model.Product;
-import com.epam.savenko.cashmachine.model.User;
 import com.epam.savenko.cashmachine.model.view.OrderView;
 import com.epam.savenko.cashmachine.web.WebUtil;
 import com.epam.savenko.cashmachine.web.constant.Path;
@@ -21,7 +17,10 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.epam.savenko.cashmachine.web.constant.RequestParam.COMMAND;
 import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
@@ -36,42 +35,6 @@ public class RedirectCommand extends Command {
         String command = req.getParameter(COMMAND);
         LOG.debug("Redirect command: " + command);
 
-        if ("addcheck".equals(command)) {
-            HttpSession session = req.getSession();
-            session.setAttribute(NEW_CHECK, "yes");
-            OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
-            if (orderView == null) {
-                User user = (User) session.getAttribute(USER);
-                Order order = Order.newOrder()
-                        .setUserId(user.getId())
-                        .setState(false)
-                        .setCash(true)
-                        .build();
-                try {
-                    Optional<Order> newOrder = new JdbcOrderDaoImpl().insert(order);
-                    LOG.debug(newOrder.orElse(null));
-                    orderView = new OrderView(newOrder.get());
-                } catch (CashMachineException e) {
-                    LOG.error("Error when was created new order", e);
-                }
-            } else {
-                String changePay = req.getParameter("changePay");
-                if ("checkpay".equals(changePay)) {
-                    LOG.error("checkpay :changePay: " + command);
-                    Order order = orderView.getOrder();
-                    order.setCash(isCashPay(req.getParameter("payment")));
-                    try {
-                        OrderDao orderDao = new JdbcOrderDaoImpl();
-                        orderDao.update(order);
-                    } catch (CashMachineException e) {
-                        LOG.error("Error save order " + order, e);
-                    }
-                }
-            }
-            session.setAttribute(ORDER_VIEW, orderView);
-            forward.setPath(Path.PAGE_TO_ADD_CHECK);
-            LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_CHECK);
-        }
         if ("choiceproduct".equals(command)) {
             LOG.debug("Start choiceproduct");
             HttpSession session = req.getSession();
@@ -159,9 +122,5 @@ public class RedirectCommand extends Command {
             }
         }
         return 0;
-    }
-
-    private boolean isCashPay(String payment) {
-        return "cash".equals(payment);
     }
 }
