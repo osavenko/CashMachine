@@ -49,7 +49,7 @@ public class RedirectCommand extends Command {
             }
             LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_PRODUCTS);
         }*/
-        if ("savecheck".equals(command)) {
+/*        if ("savecheck".equals(command)) {
             HttpSession session = req.getSession();
             OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
             Order order = orderView.getOrder();
@@ -64,7 +64,7 @@ public class RedirectCommand extends Command {
             forward.setPath("controller?command=orderslist");
             LOG.debug("Save check: " + orderView.getOrder().getId());
             session.setAttribute(ORDER_VIEW, null);
-        }
+        }*/
         if ("cancelcheck".equals(command)) {
             HttpSession session = req.getSession();
             OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
