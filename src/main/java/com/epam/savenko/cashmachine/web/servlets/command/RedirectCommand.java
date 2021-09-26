@@ -3,7 +3,6 @@ package com.epam.savenko.cashmachine.web.servlets.command;
 import com.epam.savenko.cashmachine.dao.OrderDao;
 import com.epam.savenko.cashmachine.dao.OrderProductDao;
 import com.epam.savenko.cashmachine.dao.ProductDao;
-import com.epam.savenko.cashmachine.dao.jdbc.JdbcAppPropertiesDao;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderProductDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
@@ -22,8 +21,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 import static com.epam.savenko.cashmachine.web.constant.RequestParam.COMMAND;
@@ -38,40 +35,7 @@ public class RedirectCommand extends Command {
         RoutePath forward = new RoutePath(Path.PAGE_BAD_LOGIN, RouteType.FORWARD);
         String command = req.getParameter(COMMAND);
         LOG.debug("Redirect command: " + command);
-/*        if ("addproductpage".equals(command)) {
-            forward.setPath(Path.PAGE_TO_ADD_PRODUCTS);
-            HttpSession session = req.getSession();
-            try {
-                session.setAttribute(DEFAULT_LOCALE, new JdbcAppPropertiesDao().getByName("locale").get().getValue());
-            } catch (CashMachineException e) {
-                LOG.error("Error when receive default locale");
-                session.setAttribute(DEFAULT_LOCALE, "");
-            }
-            LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_PRODUCTS);
-        }*/
-/*        if ("savecheck".equals(command)) {
-            HttpSession session = req.getSession();
-            OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
-            Order order = orderView.getOrder();
-            try {
-                order.setAmount(new JdbcOrderProductDaoImpl().getSumByOrderId(order.getId()));
-                order.setClosed(true);
-                order.setClosedDateTime(Timestamp.from(Instant.now()));
-                new JdbcOrderDaoImpl().update(order);
-            } catch (CashMachineException e) {
-                LOG.error("Error save order " + order, e);
-            }
-            forward.setPath("controller?command=orderslist");
-            LOG.debug("Save check: " + orderView.getOrder().getId());
-            session.setAttribute(ORDER_VIEW, null);
-        }*/
-        if ("cancelcheck".equals(command)) {
-            HttpSession session = req.getSession();
-            OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
-            forward.setPath("controller?command=orderslist");
-            LOG.debug("Cancel check: " + orderView.getOrder().getId());
-            session.setAttribute(ORDER_VIEW, null);
-        }
+
         if ("addcheck".equals(command)) {
             HttpSession session = req.getSession();
             session.setAttribute(NEW_CHECK, "yes");
