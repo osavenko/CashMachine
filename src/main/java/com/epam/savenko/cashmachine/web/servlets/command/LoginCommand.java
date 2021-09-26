@@ -24,7 +24,6 @@ import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
 public class LoginCommand extends Command {
 
     private static final long serialVersionUID = 5430749800774281878L;
-
     private static final Logger LOG = Logger.getLogger(LoginCommand.class);
 
     @Override

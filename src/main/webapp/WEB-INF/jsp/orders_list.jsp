@@ -1,4 +1,3 @@
-
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <div class="container">
@@ -34,21 +33,24 @@
                     <td><c:out value="${order.getOrderDateTime()}"/></td>
 
                     <c:if test="${order.isClosed()==true}">
-                        <fmt:message key="local.order.closed.ok" var="pState"/>
+                        <td>
+                            <i class="bi bi-file-earmark-check"></i>
+                        </td>
                     </c:if>
                     <c:if test="${order.isClosed()==false}">
-                        <fmt:message key="local.order.closed.not" var="pState"/>
+                        <td>
+                            <i class="bi bi-file-earmark"></i>
+                        </td>
                     </c:if>
-                    <td><c:out value="${pState}"/></td>
                     <td><c:out value="${order.getClosedDateTime()}"/></td>
                     <td><c:out value="${allUsers.get(order.getUserId())}"/></td>
                     <td><c:out value="${order.getAmount()}"/></td>
                     <td>
                         <c:if test="${order.isCash()==true}">
-                            Cash
+                            <i class="bi bi-cash-coin"></i>
                         </c:if>
                         <c:if test="${order.isCash()==false}">
-                            Card
+                            <i class="bi bi-credit-card-2-front"></i>
                         </c:if>
                     </td>
                 </tr>

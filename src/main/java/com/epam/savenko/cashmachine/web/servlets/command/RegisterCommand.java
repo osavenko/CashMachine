@@ -50,7 +50,7 @@ public class RegisterCommand extends Command {
                 if (!oLocale.isPresent()) {
                     return forward;
                 }
-                LOG.debug("Got the locale -->"+oLocale.get());
+                LOG.debug("Got the locale -->" + oLocale.get());
                 User user = new User(login, oRole.get().getId(), oLocale.get().getId(), false);
 
                 UserDao userDao = new JdbcUserDaoImpl();
@@ -58,15 +58,13 @@ public class RegisterCommand extends Command {
                 if (!newUser.isPresent()) {
                     return forward;
                 }
-                LOG.debug("Created user -->"+newUser.get());
+                LOG.debug("Created user -->" + newUser.get());
 
                 UserDetailsDao userDetailsDao = new JdbcUserDetailsDaoImp();
                 UserDetails userDetails = new UserDetails(fullName, newUser.get());
                 Optional<UserDetails> newUserDetails = userDetailsDao.insert(userDetails);
-                if (!newUser.isPresent()) {
-                    return forward;
-                }
-                LOG.debug("Saved user details -->"+newUserDetails.get());
+
+                LOG.debug("Saved user details -->" + newUserDetails.orElse(null));
 
                 if (!userDao.setPassword(newUser.get(), User.getHash().apply(password))) {
                     return forward;
@@ -101,7 +99,7 @@ public class RegisterCommand extends Command {
             LOG.debug("Password null or empty");
             return false;
         }
-        if ((fullName == null) || (password.isEmpty())) {
+        if ((fullName == null) || (fullName.isEmpty())) {
             LOG.debug("Full name null or empty");
             return false;
         }

@@ -15,7 +15,6 @@ import com.epam.savenko.cashmachine.model.User;
 import com.epam.savenko.cashmachine.model.view.OrderView;
 import com.epam.savenko.cashmachine.web.WebUtil;
 import com.epam.savenko.cashmachine.web.constant.Path;
-import com.epam.savenko.cashmachine.web.constant.SessionParam;
 import com.epam.savenko.cashmachine.web.servlets.RoutePath;
 import com.epam.savenko.cashmachine.web.servlets.RouteType;
 import org.apache.log4j.Logger;
@@ -23,7 +22,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
@@ -40,7 +38,7 @@ public class RedirectCommand extends Command {
         RoutePath forward = new RoutePath(Path.PAGE_BAD_LOGIN, RouteType.FORWARD);
         String command = req.getParameter(COMMAND);
         LOG.debug("Redirect command: " + command);
-        if ("addproductpage".equals(command)) {
+/*        if ("addproductpage".equals(command)) {
             forward.setPath(Path.PAGE_TO_ADD_PRODUCTS);
             HttpSession session = req.getSession();
             try {
@@ -50,7 +48,7 @@ public class RedirectCommand extends Command {
                 session.setAttribute(DEFAULT_LOCALE, "");
             }
             LOG.debug("Redirect page: " + Path.PAGE_TO_ADD_PRODUCTS);
-        }
+        }*/
         if ("savecheck".equals(command)) {
             HttpSession session = req.getSession();
             OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
@@ -87,7 +85,7 @@ public class RedirectCommand extends Command {
                         .build();
                 try {
                     Optional<Order> newOrder = new JdbcOrderDaoImpl().insert(order);
-                    LOG.debug(newOrder.get());
+                    LOG.debug(newOrder.orElse(null));
                     orderView = new OrderView(newOrder.get());
                 } catch (CashMachineException e) {
                     LOG.error("Error when was created new order", e);
@@ -97,7 +95,7 @@ public class RedirectCommand extends Command {
                 if ("checkpay".equals(changePay)) {
                     LOG.error("checkpay :changePay: " + command);
                     Order order = orderView.getOrder();
-                    order.setCash(getTypePay(req.getParameter("payment")));
+                    order.setCash(isCashPay(req.getParameter("payment")));
                     try {
                         OrderDao orderDao = new JdbcOrderDaoImpl();
                         orderDao.update(order);
@@ -149,9 +147,6 @@ public class RedirectCommand extends Command {
                             List<OrderView.ProductInOrderView> productInOrderViewList = orderView.getProductInOrderViewList();
                             new JdbcProductDaoImpl().changeQuantityProduct(tovId, -quantity);
                             LOG.debug("Length products in order:" + productInOrderViewList.size());
-                            /*if (productInOrderViewList != null) {
-                                orderView.addOrderProduct(tovId, quantity, price);
-                            }*/
                         }
                     } catch (CashMachineException | NumberFormatException e) {
                         LOG.debug("Error quantity ", e);
@@ -202,7 +197,7 @@ public class RedirectCommand extends Command {
         return 0;
     }
 
-    private boolean getTypePay(String payment) {
+    private boolean isCashPay(String payment) {
         return "cash".equals(payment);
     }
 }

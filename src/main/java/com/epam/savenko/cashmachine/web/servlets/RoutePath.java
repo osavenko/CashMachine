@@ -1,6 +1,7 @@
 package com.epam.savenko.cashmachine.web.servlets;
 
 public class RoutePath {
+
     private String path;
     private RouteType routeType;
 

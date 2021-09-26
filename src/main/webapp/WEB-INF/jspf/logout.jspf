@@ -4,6 +4,6 @@
 
 <form class="d-flex">
     <input type="hidden" name="command" value="logout"/>
-    <fmt:message key="local.button.logout" var="btnLogout" />
+    <fmt:message key="local.button.logout" var="btnLogout"/>
     <button class="btn btn-outline-success" type="submit">${btnLogout}</button>
 </form>

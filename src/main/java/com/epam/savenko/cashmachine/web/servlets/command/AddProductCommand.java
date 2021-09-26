@@ -19,7 +19,6 @@ import java.util.Optional;
 public class AddProductCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger(AddProductCommand.class);
-
     private static final long serialVersionUID = -1028222281221255065L;
 
     @Override
@@ -51,7 +50,7 @@ public class AddProductCommand extends Command {
                 .build();
         try {
             Optional<Product> newProduct = new JdbcProductDaoImpl().insert(product);
-            LOG.debug("Add product: "+newProduct.get());
+            LOG.debug("Add product: "+newProduct.orElse(null));
             int localeId = new JdbcLocaleDaoImpl().findByName(localeName).get().getId();
             LocaleProduct localeProduct = new LocaleProduct(localeId, newProduct.get().getId(), productDescription);
             new JdbcLocaleProductImpl().insert(localeProduct);

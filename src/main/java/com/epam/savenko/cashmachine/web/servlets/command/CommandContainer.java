@@ -24,6 +24,7 @@ public class CommandContainer {
         commands.put("addcheck", new RedirectCommand());
         commands.put("choiceproduct", new RedirectCommand());
         commands.put("addProduct", new AddProductCommand());
+        commands.put("addproductpage", new AddProductPageCommand());
         commands.put("noCommand", new NoCommand());
         commands.put("xreport", new XReportCommand());
         commands.put("zreport", new ZReportCommand());
