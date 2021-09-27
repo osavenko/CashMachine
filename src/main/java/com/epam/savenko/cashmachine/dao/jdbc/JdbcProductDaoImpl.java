@@ -116,17 +116,43 @@ public class JdbcProductDaoImpl implements ProductDao {
         return -1;
     }
 
+    public boolean updateProductWithConnection(Connection conn, Product product) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement(SQL_UPDATE)) {
+            statement.setString(1, product.getName());
+            statement.setInt(2, product.getBrandId());
+            statement.setBigDecimal(3, BigDecimal.valueOf(product.getPrice()));
+            statement.setInt(4, product.getQuantity());
+            statement.setBoolean(5, product.isWeight());
+            statement.setInt(6, product.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            StringBuilder sb = new StringBuilder(ErrorMessage.getUpdate(TABLE_NAME))
+                    .append(product.getId());
+            LOG.error(sb, e);
+            throw new CashMachineException(sb.toString(), e);
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<Product> findByIdWithConnection(Connection conn, int id) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement(SQL_SELECT_PRODUCT_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(mapProductRow.mapRow(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
     @Override
     public boolean update(Product entity) throws CashMachineException {
-        try (Connection con = ConnectionProvider.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_UPDATE)) {
-            statement.setString(1, entity.getName());
-            statement.setInt(2, entity.getBrandId());
-            statement.setBigDecimal(3, BigDecimal.valueOf(entity.getPrice()));
-            statement.setInt(4, entity.getQuantity());
-            statement.setBoolean(5, entity.isWeight());
-            statement.setInt(6, entity.getId());
-            statement.executeUpdate();
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            updateProductWithConnection(con, entity);
         } catch (SQLException | CashMachineException e) {
             StringBuilder sb = new StringBuilder(ErrorMessage.getUpdate(TABLE_NAME))
                     .append(entity.getId());
@@ -139,9 +165,9 @@ public class JdbcProductDaoImpl implements ProductDao {
     @Override
     public boolean changeQuantityProduct(int id, int quantity) throws CashMachineException {
         Optional<Product> product = this.findById(id);
-        if (product.isPresent()){
+        if (product.isPresent()) {
             Product p = product.get();
-            p.setQuantity(p.getQuantity()+quantity);
+            p.setQuantity(p.getQuantity() + quantity);
             this.update(p);
             return true;
         }

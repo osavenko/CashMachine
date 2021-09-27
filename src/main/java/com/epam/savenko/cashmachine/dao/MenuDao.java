@@ -14,4 +14,5 @@ public interface MenuDao extends GeneralDao<MenuItem, Integer> {
     List<Integer> findAllRolesInAccessMenuItem() throws CashMachineException;
 
     List<GroupMenuView> findAllGroupMenuByLocale(int locale_id) throws CashMachineException;
+    boolean checkAccessToRoleId(int roleId, int menuId) throws CashMachineException;
 }

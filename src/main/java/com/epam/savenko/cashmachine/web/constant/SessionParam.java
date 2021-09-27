@@ -2,6 +2,8 @@ package com.epam.savenko.cashmachine.web.constant;
 
 public class SessionParam {
 
+    public static final String CAN_DELETE_ORDER = "canDeleteOrder";
+
     private SessionParam() {
     }
 

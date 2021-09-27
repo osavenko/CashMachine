@@ -2,9 +2,7 @@
 
 <div class="container">
     <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
-
     <div>
-
         <fmt:message key="local.order.count" var="pCount"/>
         <span>${pCount}: ${sessionScope.get("ordersCount")}</span>
 
@@ -24,6 +22,9 @@
                 <td>${pAmount}</td>
                 <fmt:message key="local.order.pay" var="pPay"/>
                 <td>${pPay}</td>
+                <c:if test="${canDeleteOrder==true}">
+                    <td></td>
+                </c:if>
             </tr>
 
             <c:forEach var="order" items="${orderList}">
@@ -53,6 +54,14 @@
                             <i class="bi bi-credit-card-2-front"></i>
                         </c:if>
                     </td>
+                    <c:if test="${canDeleteOrder==true}">
+                        <td>
+                            <form method="post" action="">
+                                <input type="hidden" name="curOrder" value="${order.getId()}"/>
+                                <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </table>

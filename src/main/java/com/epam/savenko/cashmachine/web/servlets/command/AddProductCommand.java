@@ -4,6 +4,7 @@ import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcLocaleProductImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcProductDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
+import com.epam.savenko.cashmachine.model.Locale;
 import com.epam.savenko.cashmachine.model.LocaleProduct;
 import com.epam.savenko.cashmachine.model.Product;
 import com.epam.savenko.cashmachine.web.constant.Path;
@@ -39,6 +40,9 @@ public class AddProductCommand extends Command {
             quantity = getQuantity(req.getParameter("quantity"), weight);
         } catch (NumberFormatException e) {
             LOG.error("Error quantity " + weight, e);
+        }
+        if (quantity==0){
+            return forward;
         }
         String localeName = req.getParameter("locale");
         Product product = Product.newBuilder()

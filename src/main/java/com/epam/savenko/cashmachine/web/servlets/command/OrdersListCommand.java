@@ -1,6 +1,9 @@
 package com.epam.savenko.cashmachine.web.servlets.command;
 
+import com.epam.savenko.cashmachine.dao.MenuDao;
 import com.epam.savenko.cashmachine.dao.OrderDao;
+import com.epam.savenko.cashmachine.dao.Permission;
+import com.epam.savenko.cashmachine.dao.jdbc.JdbcMenuDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcOrderDaoImpl;
 import com.epam.savenko.cashmachine.dao.jdbc.JdbcUserDaoImpl;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,22 +38,47 @@ public class OrdersListCommand extends Command {
 
         HttpSession session = req.getSession();
         session.setAttribute("offset", ROWS_IN_PAGE);
+        Enumeration<String> parameterNames = req.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            if ("curOrder".equals(parameterNames.nextElement())) {
+                String currOrder = req.getParameter("curOrder");
+                if (currOrder.length() > 0) {
+                    try {
+                        int orderId = Integer.parseInt(currOrder);
+                        new JdbcOrderDaoImpl().delete(orderId);
+                    } catch (NumberFormatException | CashMachineException e) {
+                        LOG.error("Error when delete order id:" + currOrder);
+                    }
+                }
+                break;
+            }
+        }
         Integer start = WebUtil.getNumberStartPage(req, session, LOG);
         try {
+
             List<Order> orders = new JdbcOrderDaoImpl().findAll();
+            session.setAttribute(SessionParam.ORDER_LIST, orders);
             if (!orders.isEmpty()) {
                 session.setAttribute(SessionParam.ORDER_COUNT, orders.size());
-                session.setAttribute(SessionParam.ORDER_LIST, orders);
+                User user = (User) session.getAttribute(SessionParam.USER);
+                session.setAttribute(SessionParam.CAN_DELETE_ORDER, getCanDelete(user));
             }
             List<User> userList = new JdbcUserDaoImpl().findAll();
             Map<Integer, String> usersMap = userList.stream()
                     .collect(Collectors.toMap(User::getId, User::getName));
-            if(!usersMap.isEmpty()){
+            if (!usersMap.isEmpty()) {
                 session.setAttribute(SessionParam.ALL_USERS, usersMap);
             }
         } catch (CashMachineException e) {
             LOG.error("JDBC Error", e);
         }
         return forward;
+    }
+
+    private boolean getCanDelete(User user) throws CashMachineException {
+        if (user == null) {
+            return false;
+        }
+        return new JdbcMenuDaoImpl().checkAccessToRoleId(user.getRoleId(), Permission.CAN_DELETE_ORDER);
     }
 }

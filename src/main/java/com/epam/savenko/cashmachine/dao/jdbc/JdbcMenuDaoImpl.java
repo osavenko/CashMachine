@@ -31,6 +31,9 @@ public class JdbcMenuDaoImpl implements MenuDao {
                     + " WHERE amt.role_id=? AND lim.locale_id=? AND im.group_menu_id=?";
 
     public static final String SQL_SELECT_ALL_ROLE = "SELECT role_id FROM access_menu_item  GROUP BY role_id";
+    public static final String SQL_CHECK_ACCESS_TO_ROLE = "SELECT count(*) FROM access_menu_item" +
+            " WHERE role_id=? AND item_menu_id=?";
+
     public static final String SQL_SELECT_COMMAND_BY_ROLE =
             "SELECT im.url AS url FROM access_menu_item AS ta"
                     + " INNER JOIN item_menu im ON im.id = ta.item_menu_id"
@@ -127,6 +130,24 @@ public class JdbcMenuDaoImpl implements MenuDao {
             LOG.error("Error receive group menu", e);
             throw new CashMachineException("Error receive group menu", e);
         }
+    }
+
+    @Override
+    public boolean checkAccessToRoleId(int roleId, int menuId) throws CashMachineException {
+        int count = 0;
+        try (Connection conn = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = conn.prepareStatement(SQL_CHECK_ACCESS_TO_ROLE)) {
+            statement.setInt(1, roleId);
+            statement.setInt(2, menuId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    count = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Error when check access");
+        }
+        return count == 1;
     }
 
     private String getCommandByPattern(String text, String patternLng) {

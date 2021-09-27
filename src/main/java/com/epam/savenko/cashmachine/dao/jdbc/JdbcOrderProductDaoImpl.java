@@ -29,10 +29,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     private static final String SQL_DELETE = "DELETE FROM order_product WHERE id=?";
     private static final String SQL_SELECT_ALL_ORDER_PRODUCTS = "SELECT * FROM order_product";
     private static final String SQL_SELECT_ORDER_PRODUCT_BY_ID = "SELECT * FROM order_product WHERE id=?";
-    /*
-        private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(price*quantity)::money::numeric::float8 FROM order_product\n" +
-                "WHERE order_id=?";
-    */
+
     private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(CASE\n" +
             "               WHEN p.weight = true\n" +
             "                   THEN (order_product.price::money::numeric::float8 * order_product.quantity) / 1000\n" +
@@ -50,7 +47,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
                     " GROUP BY p.id, p.name, b.name, p.weight, op.price::money::numeric::float8" +
                     " ORDER BY p.name";
 
-    public static final EntityMapper<OrderView.ProductInOrderView> mapProductInOrderViewRow = rs ->
+    private static final EntityMapper<OrderView.ProductInOrderView> mapProductInOrderViewRow = rs ->
             new OrderView.ProductInOrderView(rs.getInt("id"),
                     rs.getString("name"),
                     rs.getString("brand_name"),
@@ -58,7 +55,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
                     rs.getInt("quantity"),
                     0,
                     rs.getDouble("price"));
-    public static final EntitiesMapper<OrderView.ProductInOrderView> mapProductInOrderViewRows = rs -> {
+    private static final EntitiesMapper<OrderView.ProductInOrderView> mapProductInOrderViewRows = rs -> {
         List<OrderView.ProductInOrderView> list = new ArrayList<>();
         while (rs.next()) {
             list.add(mapProductInOrderViewRow.mapRow(rs));
@@ -66,7 +63,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
         return list;
     };
 
-    private static final EntityMapper<OrderProduct> mapOrderProductRow = resultSet ->
+    public static final EntityMapper<OrderProduct> mapOrderProductRow = resultSet ->
             OrderProduct.newBuilder()
                     .setId(resultSet.getInt(ID))
                     .setOrderId(resultSet.getInt(ORDER_ID))
@@ -75,7 +72,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
                     .setPrice(resultSet.getDouble(PRICE))
                     .build();
 
-    public static final EntitiesMapper<OrderProduct> mapOrderProductRows = resultSet -> {
+    private static final EntitiesMapper<OrderProduct> mapOrderProductRows = resultSet -> {
         List<OrderProduct> orderProducts = new ArrayList<>();
         while (resultSet.next()) {
             orderProducts.add(mapOrderProductRow.mapRow(resultSet));
@@ -187,6 +184,8 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
     }
-
-
+    @Override
+    public boolean deleteWithConnection(int id, Connection connection) throws CashMachineException {
+        return false;
+    }
 }

@@ -1,12 +1,11 @@
 package com.epam.savenko.cashmachine.dao.jdbc;
 
-import com.epam.savenko.cashmachine.dao.ConnectionProvider;
-import com.epam.savenko.cashmachine.dao.EntitiesMapper;
-import com.epam.savenko.cashmachine.dao.EntityMapper;
-import com.epam.savenko.cashmachine.dao.OrderDao;
+import com.epam.savenko.cashmachine.dao.*;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Order;
+import com.epam.savenko.cashmachine.model.OrderProduct;
+import com.epam.savenko.cashmachine.model.Product;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
@@ -23,6 +22,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
 
     private static final String TABLE_NAME = "\"order\"";
 
+    private static final String DELETE_FROM_ORDER_PRODUCT_WHERE_ORDER_ID = "DELETE FROM order_product WHERE order_id=?";
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (user_id, closed, amount) VALUES (?,?,?)";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET user_id=?, closed=?, amount=?, cash=?, closed_datetime=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id=?";
@@ -121,7 +121,70 @@ public class JdbcOrderDaoImpl implements OrderDao {
 
     @Override
     public boolean delete(int id) throws CashMachineException {
-        return jdbcEntity.delete(SQL_DELETE, id);
+        Connection conn = null;
+        try {
+            conn = ConnectionProvider.getInstance().getConnection();
+            conn.setAutoCommit(false);
+            List<OrderProduct> orderProductList = new ArrayList<>();
+            LOG.debug("DELETE ORDER get all order product order id");
+            try (PreparedStatement statementProductAll = conn.prepareStatement("SELECT id, order_id, product_id, quantity, price::money::numeric::float8 FROM order_product WHERE order_id=?")) {
+                LOG.error("SET STATEMENT");
+                statementProductAll.setInt(1, id);
+                try (ResultSet resultSet = statementProductAll.executeQuery()) {
+                    LOG.error("Call statementProductAll.executeQuery()");
+                    int c = 1;
+                    while (resultSet.next()) {
+                        LOG.error("C = " + c);
+                        orderProductList.add(JdbcOrderProductDaoImpl.mapOrderProductRow.mapRow(resultSet));
+                        c++;
+                    }
+                }
+            }
+            LOG.debug("Get PRODUCTS COUNT:" + orderProductList.size());
+            ProductDao productDao = new JdbcProductDaoImpl();
+            LOG.debug("COUNTING new quantity:");
+            for (OrderProduct orderProduct : orderProductList) {
+                LOG.debug("orderProduct: " + orderProduct);
+                LOG.debug("orderProduct.getProductId() " + orderProduct.getProductId());
+                Optional<Product> product = productDao.findByIdWithConnection(conn, orderProduct.getProductId());
+                if (!product.isPresent()) {
+                    LOG.debug("orderProduct is NOT present : " + orderProduct);
+                    throw new CashMachineException("Error when counting quantity to order:" + id);
+                }
+                Product p = product.get();
+                LOG.debug("NEW quantity to product :" + p.getName());
+                LOG.debug("current quantity :" + p.getQuantity());
+                LOG.debug("new quantity :" + (p.getQuantity() + orderProduct.getQuantity()));
+                p.setQuantity(p.getQuantity() + orderProduct.getQuantity());
+                LOG.debug("Start save quantity");
+                productDao.updateProductWithConnection(conn, p);
+                LOG.debug("End save quantity");
+            }
+            try (PreparedStatement statementProduct = conn.prepareStatement(DELETE_FROM_ORDER_PRODUCT_WHERE_ORDER_ID)) {
+                statementProduct.setInt(1, id);
+                statementProduct.executeUpdate();
+            }
+            jdbcEntity.deleteWithConnection(conn, SQL_DELETE, id);
+            conn.commit();
+        } catch (SQLException e) {
+            LOG.error("Error when delete order ", e);
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    LOG.error("Error when rollback ", e1);
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    LOG.error("Error when close connection", e);
+                }
+            }
+        }
+        return true;
     }
 
     @Override

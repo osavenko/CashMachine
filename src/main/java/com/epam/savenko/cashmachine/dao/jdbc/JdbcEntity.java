@@ -59,11 +59,36 @@ public class JdbcEntity<T> {
     }
 
     public boolean delete(String sql, int id) throws CashMachineException {
+/*
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException | CashMachineException e) {
+            StringBuilder sb = new StringBuilder(ErrorMessage.getDelete(tableName))
+                    .append(id);
+            LOG.error(sb, e);
+            throw new CashMachineException(sb.toString(), e);
+        }
+        return true;
+*/
+        boolean result = false;
+        try(Connection connection = ConnectionProvider.getInstance().getConnection()){
+            result = deleteWithConnection(connection,sql,id);
+        }catch (SQLException | CashMachineException e) {
+            StringBuilder sb = new StringBuilder(ErrorMessage.getDelete(tableName))
+                    .append(id);
+            LOG.error(sb, e);
+            throw new CashMachineException(sb.toString(), e);
+        }
+        return result;
+    }
+
+    public boolean deleteWithConnection(Connection conn, String sql, int id) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
             StringBuilder sb = new StringBuilder(ErrorMessage.getDelete(tableName))
                     .append(id);
             LOG.error(sb, e);
