@@ -26,11 +26,13 @@ public class JdbcProductDaoImpl implements ProductDao {
     private static final String SQL_UPDATE = "UPDATE product SET name =?, brand_id=?, price=?, quantity=?, weight=? WHERE id=?";
     private static final String SQL_DELETE = "DELETE FROM product WHERE id=?";
     private static final String SQL_SELECT_ALL_PRODUCTS = "SELECT * FROM product WHERE quantity>0 ORDER BY id";
-    private static final String SQL_PRODUCT_COUNT = "SELECT count(*) FROM product";
+    private static final String SQL_PRODUCT_COUNT = "SELECT COUNT(*) FROM product";
     //private static final String SQL_PRODUCT_COUNT = "SELECT count(*) FROM product WHERE quantity>0";
     private static final String SQL_SELECT_PRODUCT_BY_ID = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product WHERE id=?";
     //private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product WHERE quantity>0 ORDER BY id LIMIT ? OFFSET ?";
     private static final String SQL_SELECT_PRODUCT_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product ORDER BY id LIMIT ? OFFSET ?";
+    private static final String SQL_SELECT_PRODUCT_SEARCH_BY_PAGES = "SELECT id, name, quantity, price::money::numeric::float8, brand_id, weight FROM product WHERE id=? OR name LIKE ? ORDER BY id LIMIT ? OFFSET ?";
+    private static final String SQL_SELECT_COUNT_PRODUCT_SEARCH = "SELECT COUNT(*) FROM product WHERE id=? OR name LIKE ?";
 
     private static final EntityMapper<Product> mapProductRow = resultSet ->
             Product.newBuilder()
@@ -91,6 +93,51 @@ public class JdbcProductDaoImpl implements ProductDao {
             LOG.error("Error pagination database", e);
             throw new CashMachineException("Error pagination database", e);
         }
+    }
+
+    @Override
+    public List<Product> findSearch(int code, String name, int rows, int offset) throws CashMachineException {
+        try (Connection con = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_PRODUCT_SEARCH_BY_PAGES)) {
+            statement.setInt(1, code);
+            name = name
+                    .replace("!", "!!")
+                    .replace("%", "!%")
+                    .replace("_", "!_")
+                    .replace("[", "![");
+            statement.setString(2, "%" + name + "%");
+            statement.setInt(3, rows);
+            statement.setInt(4, offset);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return mapProductRows.mapList(resultSet);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error search pagination database", e);
+            throw new CashMachineException("Error search pagination database", e);
+        }
+    }
+
+    @Override
+    public int getCountWhenSearch(int code, String name) throws CashMachineException {
+        int count = 0;
+        try (Connection conn = ConnectionProvider.getInstance().getConnection();
+             PreparedStatement statement = conn.prepareStatement(SQL_SELECT_COUNT_PRODUCT_SEARCH)) {
+            statement.setInt(1, code);
+            name = name
+                    .replace("!", "!!")
+                    .replace("%", "!%")
+                    .replace("_", "!_")
+                    .replace("[", "![");
+            statement.setString(2, "%" + name + "%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    count = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     private int insertProduct(Product product) throws CashMachineException {

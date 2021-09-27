@@ -58,6 +58,7 @@
                         <td>
                             <form method="post" action="">
                                 <input type="hidden" name="curOrder" value="${order.getId()}"/>
+                                <input type="hidden" name="command" value="orderslist"/>
                                 <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>

@@ -28,7 +28,7 @@ public class SaveCheckCommand extends Command {
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-        RoutePath forward = new RoutePath(Path.PAGE_BAD_LOGIN, RouteType.FORWARD);
+        RoutePath forward = new RoutePath("/controller?command=orderslist", RouteType.REDIRECT);
         String command = req.getParameter(COMMAND);
         LOG.debug("Redirect command: " + command);
 
@@ -43,10 +43,8 @@ public class SaveCheckCommand extends Command {
         } catch (CashMachineException e) {
             LOG.error("Error save order " + order, e);
         }
-        forward.setPath("controller?command=orderslist");
         LOG.debug("Save check: " + orderView.getOrder().getId());
         session.setAttribute(ORDER_VIEW, null);
-
         return forward;
     }
 }

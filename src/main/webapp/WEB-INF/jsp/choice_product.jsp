@@ -1,18 +1,18 @@
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 <div class="container">
     <br/>
-    <form action="" method="post">
+    <form class="form-inline" action="" method="get">
         <div class="input-group">
+            <input type="hidden" name="command" value="choiceproduct"/>
             <input name="search" type="text" class="form-control" placeholder="Search">
-            <div class="input-group-btn">
-                <button class="btn btn-default" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                    </svg>
-                </button>
-            </div>
+            <div id="spanSearch" class="invalid-feedback"></div>
+            <button class="btn btn-default" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
         </div>
     </form>
+</div>
+<div class="container">
     <fmt:message key="local.products.count" var="pCount"/>
     <span>${pCount}: ${productCount}</span>
     <table class="table">
@@ -61,12 +61,14 @@
                         <input type="hidden" name="isWeight" value="${entry.key.isWeight()}"/>
                         <div class="col">
                             <c:if test="${entry.key.isWeight()==true}">
-                                <input class="form-control" type="number" name="tov${entry.key.getId()}" min="${-entry.value/1000}"
+                                <input class="form-control" type="number" name="tov${entry.key.getId()}"
+                                       min="${-entry.value/1000}"
                                        step="0.001"
                                        max="${entry.key.getQuantity()/1000}" value="0.000" required/>
                             </c:if>
                             <c:if test="${entry.key.isWeight()==false}">
-                                <input class="form-control" type="number" name="tov${entry.key.getId()}" min="${-entry.value}"
+                                <input class="form-control" type="number" name="tov${entry.key.getId()}"
+                                       min="${-entry.value}"
                                        step="1"
                                        max="${entry.key.getQuantity()}" value="0" required/>
                             </c:if>
@@ -78,8 +80,9 @@
                 </td>
             </tr>
         </c:forEach>
-
     </table>
+</div>
+<div class="container">
     <fmt:message key="local.common.add" var="pAdd"/>
     <a href="controller?command=addcheck">${pAdd}</a>
     <nav class="container" aria-label="Page navigation">

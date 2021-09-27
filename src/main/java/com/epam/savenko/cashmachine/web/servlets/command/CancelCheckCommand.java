@@ -22,13 +22,11 @@ public class CancelCheckCommand extends Command {
 
     @Override
     public RoutePath execute(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-
-        RoutePath forward = new RoutePath(Path.PAGE_BAD_LOGIN, RouteType.FORWARD);
+        RoutePath forward = new RoutePath("/controller?command=orderslist", RouteType.REDIRECT);
         String command = req.getParameter(COMMAND);
         LOG.debug("Redirect command: " + command);
         HttpSession session = req.getSession();
         OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
-        forward.setPath("controller?command=orderslist");
         LOG.debug("Cancel check: " + orderView.getOrder().getId());
         session.setAttribute(ORDER_VIEW, null);
         return forward;

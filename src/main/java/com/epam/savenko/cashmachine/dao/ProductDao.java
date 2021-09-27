@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface ProductDao extends GeneralDao<Product, Integer>, Count {
     List<Product> findPage(int rows, int offset) throws CashMachineException;
+    List<Product> findSearch(int code, String name, int rows, int offset) throws CashMachineException;
+    int getCountWhenSearch(int code, String name) throws CashMachineException;
 
     boolean changeQuantityProduct(int id, int quantity) throws CashMachineException;
     boolean updateProductWithConnection(Connection conn, Product product) throws CashMachineException;

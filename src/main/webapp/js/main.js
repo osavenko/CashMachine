@@ -3,6 +3,7 @@ let regFullName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,50}$/;
 let regProductName = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\-\s]{4,100}$/;
 let regProductDescription = /^[0-9a-zA-Zа-яА-ЯЄєіІїЇёЁ\s]{4,200}$/;
 let regPassword = /^[0-9a-zA-Z!@#$%]{1,}$/;
+let reByCode = /^[0-9]{1,}$/;
 
 
 let login = document.querySelector('#lg');

@@ -17,10 +17,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.epam.savenko.cashmachine.web.constant.RequestParam.COMMAND;
 import static com.epam.savenko.cashmachine.web.constant.SessionParam.*;
@@ -80,19 +77,35 @@ public class ChoiceProductCommand extends Command {
             }
         }
         forward.setPath(Path.PAGE_CHOICE_PRODUCT);
-        List<Product> products;
+        List<Product> products = new ArrayList<>();
         session.setAttribute(OFFSET, ROWS_IN_PAGE);
         int currentPage = WebUtil.getNumberStartPage(req, session, LOG);
         try {
-            ProductDao productDao = new JdbcProductDaoImpl();
-            int productCount = productDao.getCount();
-            session.setAttribute("productCount", productCount);
             String search = req.getParameter("search");
-            //Вставить код для поиска по строке или коду товара
-            products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage - 1));
+            ProductDao productDao = new JdbcProductDaoImpl();
+            int productCount = 0;
+            if (search != null && !search.isEmpty()) {
+                int code = 0;
+                try {
+                    code = Integer.parseInt(search);
+                } catch (NumberFormatException e) {
+                    LOG.error("Search string not code");
+                }
+                if (search.length() > 0) {
+                    products = productDao.findSearch(code, search, ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage - 1));
+                    productCount = productDao.getCountWhenSearch(code, search);
+                    session.setAttribute("currUrl", "controller?command=choiceproduct&search=" + search);
+                }
+            } else {
+                products = productDao.findPage(ROWS_IN_PAGE, ROWS_IN_PAGE * (currentPage - 1));
+                productCount = productDao.getCount();
+                session.setAttribute("currUrl", "controller?command=choiceproduct");
+            }
+
+            session.setAttribute("productCount", productCount);
 
             session.setAttribute(CURRENT_PAGE, currentPage);
-            session.setAttribute(PAGES, productCount / ROWS_IN_PAGE + 1);
+            session.setAttribute(PAGES, (productCount + ROWS_IN_PAGE) / ROWS_IN_PAGE);
             OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
             Map<Product, Integer> mapProducts = new LinkedHashMap<>();
             if (orderView != null) {
@@ -102,9 +115,7 @@ public class ChoiceProductCommand extends Command {
                     mapProducts.put(product, quantityInOrder);
                 }
             }
-            //session.setAttribute(PRODUCTS, products);
             session.setAttribute(PRODUCTS, mapProducts);
-            session.setAttribute("currUrl", "controller?command=choiceproduct");
         } catch (CashMachineException e) {
             LOG.error("Error product list " + e.getMessage());
         }
