@@ -182,7 +182,7 @@ public class JdbcProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findByIdWithConnection(Connection conn, int id) throws CashMachineException {
+    public Optional<Product> findByIdWithConnection(Connection conn, int id) {
         try (PreparedStatement statement = conn.prepareStatement(SQL_SELECT_PRODUCT_BY_ID)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {

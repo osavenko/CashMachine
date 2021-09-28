@@ -6,7 +6,9 @@ import com.epam.savenko.cashmachine.dao.EntityMapper;
 import com.epam.savenko.cashmachine.dao.OrderProductDao;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
+import com.epam.savenko.cashmachine.model.Order;
 import com.epam.savenko.cashmachine.model.OrderProduct;
+import com.epam.savenko.cashmachine.model.Product;
 import com.epam.savenko.cashmachine.model.view.OrderView;
 import org.apache.log4j.Logger;
 
@@ -30,6 +32,7 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     private static final String SQL_SELECT_ALL_ORDER_PRODUCTS = "SELECT * FROM order_product";
     private static final String SQL_SELECT_ORDER_PRODUCT_BY_ID = "SELECT * FROM order_product WHERE id=?";
 
+
     private static final String SQL_SELECT_SUM_BY_ORDER_ID = "SELECT sum(CASE\n" +
             "               WHEN p.weight = true\n" +
             "                   THEN (order_product.price::money::numeric::float8 * order_product.quantity) / 1000\n" +
@@ -38,6 +41,8 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
             "FROM order_product\n" +
             "         JOIN product p on p.id = order_product.product_id\n" +
             "WHERE order_product.order_id = ?";
+    private static final String SQL_SELECT_QUANTITY_FROM_ORDER_PRODUCT_BY_ORDER_ID_AND_PRODUCT_ID = "SELECT sum(quantity) FROM order_product WHERE order_id = ? AND product_id=?";
+
     private static final String SQL_SELECT_ORDER_PRODUCT_VIEW_BY_ORDER_ID =
             "SELECT p.id AS id, p.name AS name, b.name AS brand_name, p.weight as weight, SUM(op.quantity) AS quantity, op.price::money::numeric::float8 AS price" +
                     " FROM order_product op" +
@@ -104,8 +109,18 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     @Override
     public double getSumByOrderId(int orderId) throws CashMachineException {
         double sum = 0;
-        try (Connection conn = ConnectionProvider.getInstance().getConnection();
-             PreparedStatement statement = conn.prepareStatement(SQL_SELECT_SUM_BY_ORDER_ID)) {
+        try (Connection conn = ConnectionProvider.getInstance().getConnection()) {
+            sum = getSumProductsInOrderWithConnection(orderId, conn);
+        } catch (SQLException e) {
+            LOG.error("Error when calc sum for order id: " + orderId);
+            throw new CashMachineException("Error when calc sum for order id: " + orderId, e);
+        }
+        return sum;
+    }
+
+    private double getSumProductsInOrderWithConnection(int orderId, Connection conn) throws CashMachineException {
+        double sum = 0;
+        try (PreparedStatement statement = conn.prepareStatement(SQL_SELECT_SUM_BY_ORDER_ID)) {
             statement.setInt(1, orderId);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -118,6 +133,83 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
             throw new CashMachineException("Error when calc sum for order id: " + orderId, e);
         }
         return sum;
+    }
+
+    private int getSumQuantityProductInOrder(int orderId, int productId, Connection conn) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement(SQL_SELECT_QUANTITY_FROM_ORDER_PRODUCT_BY_ORDER_ID_AND_PRODUCT_ID)) {
+            statement.setInt(1, orderId);
+            statement.setInt(2, productId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Error when calc quantity");
+            throw new CashMachineException("Error when calc quantity", e);
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean deleteProductFromOrder(int orderId, int productId) throws CashMachineException {
+        boolean result = false;
+        Connection conn = null;
+        try {
+            conn = ConnectionProvider.getInstance().getConnection();
+            conn.setAutoCommit(false);
+            int newQuantity = getSumQuantityProductInOrder(orderId, productId, conn);
+            result = deleteProductFromOrderWithConnection(orderId, productId, conn);
+            double newOrderSum = getSumProductsInOrderWithConnection(orderId, conn);
+            JdbcOrderDaoImpl jdbcOrderDao = new JdbcOrderDaoImpl();
+            Optional<Order> order = jdbcOrderDao.findById(orderId, conn);
+            if (!order.isPresent()) {
+                LOG.error("Error when transaction.");
+                rollbackWhenError(conn);
+                throw new CashMachineException("Can not get order with ID: " + orderId);
+            }
+            order.get().setAmount(newOrderSum);
+            jdbcOrderDao.updateOrderWithConnection(order.get(), conn);
+
+            JdbcProductDaoImpl productDao = new JdbcProductDaoImpl();
+            Optional<Product> product = productDao.findByIdWithConnection(conn, productId);
+            if (!product.isPresent()) {
+                rollbackWhenError(conn);
+            }
+            newQuantity += product.get().getQuantity();
+            Product p = product.get();
+            p.setQuantity(newQuantity);
+            productDao.updateProductWithConnection(conn, p);
+            conn.commit();
+        } catch (SQLException e) {
+            rollbackWhenError(conn);
+            LOG.error("Error when delete product from order: orderId=" + orderId + ", productId=" + productId, e);
+            throw new CashMachineException("Error when delete product from order: orderId=" + orderId + ", productId=" + productId, e);
+        }
+        return result;
+    }
+
+    private void rollbackWhenError(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                LOG.error("Error when rollback ", e1);
+            }
+        }
+    }
+
+    @Override
+    public boolean deleteProductFromOrderWithConnection(int orderId, int productId, Connection conn) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement("DELETE FROM order_product WHERE order_id=? AND product_id=?")) {
+            statement.setInt(1, orderId);
+            statement.setInt(2, productId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOG.error("Error when delete product from order: orderId=" + orderId + ", productId=" + productId, e);
+            throw new CashMachineException("Error when delete product from order: orderId=" + orderId + ", productId=" + productId, e);
+        }
+        return false;
     }
 
     @Override
@@ -184,8 +276,5 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
     public boolean delete(int id) throws CashMachineException {
         return jdbcEntity.delete(SQL_DELETE, id);
     }
-    @Override
-    public boolean deleteWithConnection(int id, Connection connection) throws CashMachineException {
-        return false;
-    }
+
 }

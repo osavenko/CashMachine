@@ -101,18 +101,28 @@ public class JdbcOrderDaoImpl implements OrderDao {
 
     @Override
     public boolean update(Order entity) throws CashMachineException {
-        try (Connection con = ConnectionProvider.getInstance().getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_UPDATE)) {
-            statement.setInt(1, entity.getUserId());
-            statement.setBoolean(2, entity.isClosed());
-            statement.setBigDecimal(3, BigDecimal.valueOf(entity.getAmount()));
-            statement.setBoolean(4, entity.isCash());
-            statement.setTimestamp(5, entity.getClosedDateTime());
-            statement.setInt(6, entity.getId());
-            statement.executeUpdate();
+        try (Connection con = ConnectionProvider.getInstance().getConnection()) {
+            return updateOrderWithConnection(entity, con);
         } catch (SQLException | CashMachineException e) {
             StringBuilder sb = new StringBuilder(ErrorMessage.getUpdate(TABLE_NAME))
                     .append(entity.getId());
+            LOG.error(sb, e);
+            throw new CashMachineException(sb.toString(), e);
+        }
+    }
+
+    public boolean updateOrderWithConnection(Order order, Connection conn) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement(SQL_UPDATE)) {
+            statement.setInt(1, order.getUserId());
+            statement.setBoolean(2, order.isClosed());
+            statement.setBigDecimal(3, BigDecimal.valueOf(order.getAmount()));
+            statement.setBoolean(4, order.isCash());
+            statement.setTimestamp(5, order.getClosedDateTime());
+            statement.setInt(6, order.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            StringBuilder sb = new StringBuilder(ErrorMessage.getUpdate(TABLE_NAME))
+                    .append(order.getId());
             LOG.error(sb, e);
             throw new CashMachineException(sb.toString(), e);
         }
@@ -200,6 +210,21 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Override
     public double getSumCash() throws CashMachineException {
         return getSum(SQL_SELECT_SUM_CASH);
+    }
+
+    @Override
+    public Optional<Order> findById(int id, Connection conn) throws CashMachineException {
+        try (PreparedStatement statement = conn.prepareStatement(SQL_SELECT_ORDER_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapOrderRow.mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Error when select by ID: " + id);
+        }
+        return Optional.empty();
     }
 
     @Override

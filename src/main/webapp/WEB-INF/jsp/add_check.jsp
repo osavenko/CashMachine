@@ -52,6 +52,10 @@
             <td>${pQuantity}</td>
             <fmt:message key="local.product.price" var="pPrice"/>
             <td>${pPrice}</td>
+            <c:if test="${newCheck==false}">
+                <td>
+                </td>
+            </c:if>
         </tr>
         <c:forEach var="entry" items="${orderView.getProductInOrderViewList()}">
             <tr>
@@ -72,16 +76,18 @@
                 </c:if>
 
                 <td><c:out value="${entry.getPrice()}"/></td>
-                <td>
-                    <c:if test="${newCheck==false}">
+
+                <c:if test="${newCheck==false}">
+                    <td>
                         <form method="post" action="controller">
                             <input type="hidden" name="delete" value="${entry.getId()}"/>
-                            <input type="hidden" name="command" value="deleteProductInOrder"/>
-                            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-door-open"></i>
+                            <input type="hidden" name="command" value="deletepio"/>
+                            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-trash"></i></i>
                             </button>
                         </form>
-                    </c:if>
-                </td>
+                    </td>
+                </c:if>
+
             </tr>
         </c:forEach>
     </table>
