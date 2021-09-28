@@ -2,11 +2,11 @@ package com.epam.savenko.cashmachine.web.constant;
 
 public class SessionParam {
 
-    public static final String CAN_DELETE_ORDER = "canDeleteOrder";
-
     private SessionParam() {
     }
 
+    public static final String CAN_DELETE_ORDER = "canDeleteOrder";
+    public static final String CAN_DELETE_PRODUCT = "canDeleteProduct";
     public static final String ALL_USERS = "allUsers";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";

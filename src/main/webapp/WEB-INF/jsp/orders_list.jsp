@@ -25,6 +25,9 @@
                 <c:if test="${canDeleteOrder==true}">
                     <td></td>
                 </c:if>
+                <c:if test="${canDeleteProduct==true}">
+                    <td></td>
+                </c:if>
             </tr>
 
             <c:forEach var="order" items="${orderList}">
@@ -60,6 +63,15 @@
                                 <input type="hidden" name="curOrder" value="${order.getId()}"/>
                                 <input type="hidden" name="command" value="orderslist"/>
                                 <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </c:if>
+                    <c:if test="${canDeleteProduct==true}">
+                        <td>
+                            <form method="post" action="controller">
+                                <input type="hidden" name="inOrder" value="${order.getId()}"/>
+                                <input type="hidden" name="command" value="editcheck"/>
+                                <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-door-open"></i></button>
                             </form>
                         </td>
                     </c:if>

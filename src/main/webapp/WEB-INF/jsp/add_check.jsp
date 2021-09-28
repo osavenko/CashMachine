@@ -72,7 +72,16 @@
                 </c:if>
 
                 <td><c:out value="${entry.getPrice()}"/></td>
-                <td><c:out value=""/></td>
+                <td>
+                    <c:if test="${newCheck==false}">
+                        <form method="post" action="controller">
+                            <input type="hidden" name="delete" value="${entry.getId()}"/>
+                            <input type="hidden" name="command" value="deleteProductInOrder"/>
+                            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-door-open"></i>
+                            </button>
+                        </form>
+                    </c:if>
+                </td>
             </tr>
         </c:forEach>
     </table>
@@ -81,8 +90,10 @@
 </div>
 <div class="container">
     <div class="input-group">
-        <fmt:message key="local.add.product.button" var="pAdd"/>
-        <a class="btn btn-primary" role="button" href="controller?command=choiceproduct">${pAdd}</a>
+        <c:if test="${newCheck==true}">
+            <fmt:message key="local.add.product.button" var="pAdd"/>
+            <a class="btn btn-primary" role="button" href="controller?command=choiceproduct">${pAdd}</a>
+        </c:if>
         <fmt:message key="local.common.save" var="pSave"/>
         <a class="btn btn-outline-success" role="button" href="controller?command=savecheck" href="#">${pSave}</a>
         <fmt:message key="local.common.cancel" var="pCancel"/>

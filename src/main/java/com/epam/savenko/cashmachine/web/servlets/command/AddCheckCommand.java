@@ -34,7 +34,7 @@ public class AddCheckCommand extends Command {
         LOG.debug("Redirect command: " + command);
 
         HttpSession session = req.getSession();
-        session.setAttribute(NEW_CHECK, "yes");
+        session.setAttribute(NEW_CHECK, true);
         OrderView orderView = (OrderView) session.getAttribute(ORDER_VIEW);
         if (orderView == null) {
             User user = (User) session.getAttribute(USER);

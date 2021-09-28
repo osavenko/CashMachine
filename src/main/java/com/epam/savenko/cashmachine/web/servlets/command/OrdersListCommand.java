@@ -53,15 +53,21 @@ public class OrdersListCommand extends Command {
                 break;
             }
         }
+        while (parameterNames.hasMoreElements()) {
+            if ("inOrder".equals(parameterNames.nextElement())) {
+                String currOrder = req.getParameter("inOrder");
+            }
+        }
+
         Integer start = WebUtil.getNumberStartPage(req, session, LOG);
         try {
-
             List<Order> orders = new JdbcOrderDaoImpl().findAll();
             session.setAttribute(SessionParam.ORDER_LIST, orders);
             if (!orders.isEmpty()) {
                 session.setAttribute(SessionParam.ORDER_COUNT, orders.size());
                 User user = (User) session.getAttribute(SessionParam.USER);
                 session.setAttribute(SessionParam.CAN_DELETE_ORDER, getCanDelete(user));
+                session.setAttribute(SessionParam.CAN_DELETE_PRODUCT, getCanDeleteProduct(user));
             }
             List<User> userList = new JdbcUserDaoImpl().findAll();
             Map<Integer, String> usersMap = userList.stream()
@@ -73,6 +79,13 @@ public class OrdersListCommand extends Command {
             LOG.error("JDBC Error", e);
         }
         return forward;
+    }
+
+    private boolean getCanDeleteProduct(User user) throws CashMachineException {
+        if (user == null) {
+            return false;
+        }
+        return new JdbcMenuDaoImpl().checkAccessToRoleId(user.getRoleId(), Permission.CAN_DELETE_PRODUCT);
     }
 
     private boolean getCanDelete(User user) throws CashMachineException {
