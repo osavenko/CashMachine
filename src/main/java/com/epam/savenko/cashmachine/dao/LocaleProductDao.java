@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface LocaleProductDao extends GeneralDao<LocaleProduct, Integer> {
     Optional<LocaleProduct> findDescriptionProductByLocale(int idProduct, int localeId) throws CashMachineException;
 
-    List<ProductDescriptionView> getAllDescriptionViewForProductById(int idProdect) throws CashMachineException;
+    List<ProductDescriptionView> getAllDescriptionViewForProductById(int idProduct) throws CashMachineException;
 }

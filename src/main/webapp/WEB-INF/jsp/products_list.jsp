@@ -18,6 +18,7 @@
             <td>${pPrice}</td>
             <fmt:message key="local.product.description" var="pDescription"/>
             <td>${pDescription}</td>
+            <td></td>
         </tr>
 
         <c:forEach var="entry" items="${products}">
@@ -41,6 +42,13 @@
                 <td><c:out value="${entry.getProduct().getPrice()}"/></td>
                 <td>
                     <c:out value="${entry.getLocaleDescription()}"/>
+                </td>
+                <td>
+                    <form method="post" action="controller">
+                        <input type="hidden" name="productId" value="${entry.getProduct().getId()}"/>
+                        <input type="hidden" name="command" value="editprod"/>
+                        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-door-open"></i></button>
+                    </form>
                 </td>
             </tr>
         </c:forEach>
