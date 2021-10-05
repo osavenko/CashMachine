@@ -38,7 +38,7 @@
                 <td><c:out value="${entry.key.getId()}"/></td>
                 <td><c:out value="${entry.key.getName()}"/></td>
                 <c:if test="${entry.key.isWeight()==true}">
-                    <fmt:message key="local.product.weight.message" var="pWeightMessage"/>
+                    <fmt:message key="local.product.weight.weight" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
                 <c:if test="${entry.key.isWeight()==false}">

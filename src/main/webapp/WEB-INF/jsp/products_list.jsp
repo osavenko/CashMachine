@@ -25,7 +25,7 @@
             <tr>
                 <td><c:out value="${entry.getProduct().getName()}"/></td>
                 <c:if test="${entry.getProduct().isWeight()==true}">
-                    <fmt:message key="local.product.weight.message" var="pWeightMessage"/>
+                    <fmt:message key="local.product.weight.weight" var="pWeightMessage"/>
                     <td><c:out value="${pWeightMessage}"/></td>
                 </c:if>
                 <c:if test="${entry.getProduct().isWeight()==false}">
@@ -44,11 +44,8 @@
                     <c:out value="${entry.getLocaleDescription()}"/>
                 </td>
                 <td>
-                    <form method="post" action="controller">
-                        <input type="hidden" name="productId" value="${entry.getProduct().getId()}"/>
-                        <input type="hidden" name="command" value="editprod"/>
-                        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-door-open"></i></button>
-                    </form>
+                    <a class="btn" href="controller?command=editprod&currentid=${entry.getProduct().getId()}"><i
+                            class="bi bi-door-open"></i></a>
                 </td>
             </tr>
         </c:forEach>

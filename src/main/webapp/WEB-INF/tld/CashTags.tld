@@ -71,6 +71,11 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
+            <name>defaultId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>localeMessage</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>

@@ -21,6 +21,7 @@ public class CommandContainer {
         commands.put("cancelcheck", new CancelCheckCommand());
         commands.put("addcheck", new AddCheckCommand());
         commands.put("editcheck", new EditCheckCommand());
+        commands.put("editprod", new EditProductCommand());
         commands.put("deletepio", new DeleteProductInOrderCommand());
         commands.put("choiceproduct", new ChoiceProductCommand());
         commands.put("addProduct", new AddProductCommand());

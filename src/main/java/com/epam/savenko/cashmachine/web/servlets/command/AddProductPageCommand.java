@@ -37,6 +37,7 @@ public class AddProductPageCommand extends Command {
                 defaultLocale = appLocale.get().getValue();
             }
             session.setAttribute(DEFAULT_LOCALE, defaultLocale);
+            session.setAttribute("id", 0);
         } catch (CashMachineException e) {
             LOG.error("Error when receive default locale");
             session.setAttribute(DEFAULT_LOCALE, "");

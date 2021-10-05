@@ -17,6 +17,11 @@ public class SelectBrand extends TagSupport {
 
     private String name;
     private String localeMessage;
+    private String defaultId;
+
+    public void setDefaultId(String defaultId) {
+        this.defaultId = defaultId;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -39,10 +44,15 @@ public class SelectBrand extends TagSupport {
         if (brands != null) {
             JspWriter out = pageContext.getOut();
             try {
-                out.write("<select name=\"" + name + "\" required>");
+                out.write("<select class=\"form-select\" name=\"" + name + "\" required>");
                 out.write("<option disabled>" + localeMessage + "</option>");
+                int id = getDefaultId();
                 for (Brand brand : brands) {
-                    out.write("<option value=\"" + brand.getId() + "\">" + brand.getName() + "</option>");
+                    if (id == brand.getId()) {
+                        out.write("<option value=\"" + brand.getId() + " \" selected>" + brand.getName() + "</option>");
+                    } else {
+                        out.write("<option value=\"" + brand.getId() + "\">" + brand.getName() + "</option>");
+                    }
                 }
                 out.write("</select>");
             } catch (IOException e) {
@@ -50,5 +60,19 @@ public class SelectBrand extends TagSupport {
             }
         }
         return SKIP_BODY;
+    }
+
+    private int getDefaultId() {
+        if (defaultId == null) {
+            return 0;
+        }
+        if (defaultId.isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(defaultId);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }
