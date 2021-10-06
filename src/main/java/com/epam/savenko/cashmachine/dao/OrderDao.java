@@ -15,4 +15,5 @@ public interface OrderDao extends GeneralDao<Order, Integer>, Count {
     Optional<Order> findById(int id, Connection conn) throws CashMachineException;
 
     List<String> getUsersFullNameInOrders() throws CashMachineException;
+    boolean deleteAll() throws CashMachineException;
 }

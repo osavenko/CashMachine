@@ -209,7 +209,17 @@ public class JdbcOrderProductDaoImpl implements OrderProductDao {
             LOG.error("Error when delete product from order: orderId=" + orderId + ", productId=" + productId, e);
             throw new CashMachineException("Error when delete product from order: orderId=" + orderId + ", productId=" + productId, e);
         }
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean deleteAll(Connection conn) throws CashMachineException {
+        try (Statement statement = conn.createStatement()){
+            return statement.execute("DELETE FROM order_product");
+        } catch (SQLException e) {
+            LOG.error("Error when delete products of orders", e);
+            throw new CashMachineException("Error when delete products of orders", e);
+        }
     }
 
     @Override

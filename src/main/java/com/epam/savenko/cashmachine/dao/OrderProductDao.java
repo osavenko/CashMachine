@@ -13,4 +13,6 @@ public interface OrderProductDao extends GeneralDao<OrderProduct, Integer> {
     double getSumByOrderId(int orderId) throws CashMachineException;
     boolean deleteProductFromOrder(int orderId, int productId) throws CashMachineException;
     boolean deleteProductFromOrderWithConnection(int orderId, int productId, Connection conn) throws CashMachineException;
+    boolean deleteAll(Connection conn) throws CashMachineException;
+
 }

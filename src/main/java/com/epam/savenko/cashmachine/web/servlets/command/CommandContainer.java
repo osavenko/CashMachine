@@ -30,6 +30,7 @@ public class CommandContainer {
         commands.put("noCommand", new NoCommand());
         commands.put("xreport", new XReportCommand());
         commands.put("zreport", new ZReportCommand());
+        commands.put("fixreport", new FixZReportCommand());
 
         LOG.debug("Command container was successfully initialized");
         LOG.trace("Number of commands --> " + commands.size());

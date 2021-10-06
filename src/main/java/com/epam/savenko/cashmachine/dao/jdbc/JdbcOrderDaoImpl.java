@@ -178,23 +178,21 @@ public class JdbcOrderDaoImpl implements OrderDao {
             conn.commit();
         } catch (SQLException e) {
             LOG.error("Error when delete order ", e);
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException e1) {
-                    LOG.error("Error when rollback ", e1);
-                }
-            }
+            rollBackTransaction(conn);
         } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOG.error("Error when close connection", e);
-                }
-            }
+            close(conn);
         }
         return true;
+    }
+
+    private void close(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                LOG.error("Error when close connection", e);
+            }
+        }
     }
 
     @Override
@@ -243,6 +241,39 @@ public class JdbcOrderDaoImpl implements OrderDao {
         return users;
     }
 
+    @Override
+    public boolean deleteAll() throws CashMachineException {
+        Connection conn = null;
+        Statement statement = null;
+        boolean result = false;
+        try {
+            conn = ConnectionProvider.getInstance().getConnection();
+            statement = conn.createStatement();
+            conn.setAutoCommit(false);
+            new JdbcOrderProductDaoImpl().deleteAll(conn);
+            statement.execute("DELETE FROM "+TABLE_NAME);
+            conn.commit();
+            result = true;
+        } catch (SQLException e) {
+            LOG.error("Error when calculate sum ", e);
+            rollBackTransaction(conn);
+            throw new CashMachineException("Error when calculate sum ", e);
+        }finally {
+            close(conn);
+        }
+        return result;
+    }
+
+    private void rollBackTransaction(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                LOG.error("Error when rollback ", e1);
+            }
+        }
+    }
+
     private double getSum(String sql) throws CashMachineException {
         double sum = 0;
         try (Connection conn = ConnectionProvider.getInstance().getConnection();
@@ -254,6 +285,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
             }
         } catch (SQLException e) {
             LOG.error("Error when calculate sum ", e);
+            throw new CashMachineException("Error when calculate sum ", e);
         }
         return sum;
     }

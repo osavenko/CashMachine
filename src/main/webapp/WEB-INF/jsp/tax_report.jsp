@@ -123,4 +123,15 @@
         </tr>
     </table>
 </div>
+
+<c:if test="${reportType=='z'}">
+    <div class="container">
+        <form action="controller" method="post">
+            <input type="hidden" name="command" value="fixreport"/>
+            <fmt:message key="local.button.fix" var="lbutton"/>
+            <button class="btn btn-primary" type="submit">${lbutton}</button>
+        </form>
+    </div>
+</c:if>
+
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>
