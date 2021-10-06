@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>4854e078-1420-4100-a962-7126488d8daf.SCHEMA:cashbox.public</OriginalElement>
+  <nodes>
+    <node x="401.00000000000006" y="175.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_group_menu</node>
+    <node x="816.75" y="153.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user</node>
+    <node x="490.32500000000005" y="731.505034446211">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order_product</node>
+    <node x="697.825" y="384.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order</node>
+    <node x="540.2700000000001" y="0.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale</node>
+    <node x="0.0" y="395.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.product</node>
+    <node x="23.75" y="712.4255431902491">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_product</node>
+    <node x="797.625" y="11.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.role</node>
+    <node x="0.0" y="197.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.brand</node>
+    <node x="281.32500000000005" y="417.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_item_menu</node>
+    <node x="288.61000000000007" y="11.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.group_menu</node>
+    <node x="13.786433492315837" y="11.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.appproperties</node>
+    <node x="901.825" y="428.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user_details</node>
+    <node x="223.00000000000006" y="175.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.item_menu</node>
+    <node x="461.32500000000005" y="428.0">4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.access_menu_item</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_product" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.product" relationship="REFERENCES">
+      <point x="-42.25" y="-61.5" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_group_menu" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.group_menu" relationship="REFERENCES">
+      <point x="-42.50000000000006" y="-61.5" />
+      <point x="443.5" y="132.0" />
+      <point x="351.61000000000007" y="132.0" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user_details" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user" relationship="REFERENCES">
+      <point x="0.0" y="-50.5" />
+      <point x="976.825" y="362.0" />
+      <point x="882.25" y="362.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_product" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale" relationship="REFERENCES">
+      <point x="42.25" y="-61.5" />
+      <point x="150.5" y="604.0" />
+      <point x="635.825" y="604.0" />
+      <point x="635.825" y="132.0" />
+      <point x="621.7700000000001" y="132.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order_product" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.product" relationship="REFERENCES">
+      <point x="-33.75" y="-72.5" />
+      <point x="524.075" y="594.0" />
+      <point x="66.0" y="594.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.role" relationship="REFERENCES">
+      <point x="32.75" y="-83.5" />
+      <point x="915.0" y="122.0" />
+      <point x="860.625" y="122.0" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.access_menu_item" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.item_menu" relationship="REFERENCES">
+      <point x="-41.0" y="-50.5" />
+      <point x="502.32500000000005" y="342.0" />
+      <point x="302.00000000000006" y="342.0" />
+      <point x="0.0" y="61.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_group_menu" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale" relationship="REFERENCES">
+      <point x="42.49999999999994" y="-61.5" />
+      <point x="528.5" y="132.0" />
+      <point x="621.7700000000001" y="132.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.access_menu_item" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.role" relationship="REFERENCES">
+      <point x="41.0" y="-50.5" />
+      <point x="584.325" y="362.0" />
+      <point x="745.75" y="362.0" />
+      <point x="745.75" y="122.0" />
+      <point x="860.625" y="122.0" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_item_menu" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.item_menu" relationship="REFERENCES">
+      <point x="-40.0" y="-61.5" />
+      <point x="321.32500000000005" y="342.0" />
+      <point x="302.00000000000006" y="342.0" />
+      <point x="0.0" y="61.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user" relationship="REFERENCES">
+      <point x="0.0" y="-94.5" />
+      <point x="789.825" y="362.0" />
+      <point x="882.25" y="362.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order_product" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order" relationship="REFERENCES">
+      <point x="33.75" y="-72.5" />
+      <point x="591.575" y="614.0" />
+      <point x="789.825" y="614.0" />
+      <point x="0.0" y="94.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale_item_menu" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale" relationship="REFERENCES">
+      <point x="40.0" y="-61.5" />
+      <point x="401.32500000000005" y="352.0" />
+      <point x="581.5" y="352.0" />
+      <point x="581.5" y="132.0" />
+      <point x="621.7700000000001" y="132.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.item_menu" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.group_menu" relationship="REFERENCES">
+      <point x="0.0" y="-61.5" />
+      <point x="302.00000000000006" y="132.0" />
+      <point x="351.61000000000007" y="132.0" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.user" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.locale" relationship="REFERENCES">
+      <point x="-32.75" y="-83.5" />
+      <point x="849.5" y="132.0" />
+      <point x="621.7700000000001" y="132.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.product" target="4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.brand" relationship="REFERENCES">
+      <point x="0.0" y="-83.5" />
+      <point x="0.0" y="39.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.7978858350951373" showDependencies="false" x="692.5601483836779" y="544.5906200317966" />
+  <SelectedNodes>
+    <node>4854e078-1420-4100-a962-7126488d8daf.TABLE:cashbox.public.order_product</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
