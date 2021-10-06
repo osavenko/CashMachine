@@ -7,6 +7,8 @@ import com.epam.savenko.cashmachine.dao.UserDao;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.User;
+import com.epam.savenko.cashmachine.validation.UserValidator;
+import com.epam.savenko.cashmachine.validation.Validator;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -62,12 +64,22 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> insert(User entity) throws CashMachineException {
+        validate(entity);
         int id = insertUser(entity);
         entity.setId(id);
         return Optional.ofNullable(id > 0 ? entity : null);
     }
 
+    private void validate(User entity) throws CashMachineException {
+        Validator uValidator = new UserValidator(entity);
+        if(uValidator.validate()){
+            LOG.error("Error user invalid");
+            throw new CashMachineException("Error user invalid");
+        }
+    }
+
     private int insertUser(User user) throws CashMachineException {
+        validate(user);
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
@@ -91,6 +103,7 @@ public class JdbcUserDaoImpl implements UserDao {
 
     @Override
     public boolean update(User entity) throws CashMachineException {
+        validate(entity);
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE)) {
             statement.setString(1, entity.getName());

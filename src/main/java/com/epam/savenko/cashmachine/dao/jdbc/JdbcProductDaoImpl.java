@@ -7,6 +7,8 @@ import com.epam.savenko.cashmachine.dao.ProductDao;
 import com.epam.savenko.cashmachine.dao.jdbc.util.ErrorMessage;
 import com.epam.savenko.cashmachine.exception.CashMachineException;
 import com.epam.savenko.cashmachine.model.Product;
+import com.epam.savenko.cashmachine.validation.ProductValidator;
+import com.epam.savenko.cashmachine.validation.Validator;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
@@ -70,9 +72,18 @@ public class JdbcProductDaoImpl implements ProductDao {
 
     @Override
     public Optional<Product> insert(Product entity) throws CashMachineException {
+        validate(entity);
         int id = insertProduct(entity);
         entity.setId(id);
         return Optional.ofNullable(id > 0 ? entity : null);
+    }
+
+    private void validate(Product entity) throws CashMachineException {
+        Validator productValidator = new ProductValidator(entity);
+        if (!productValidator.validate()) {
+            LOG.error("Product is not valid: " + entity);
+            throw new CashMachineException("This product is not valid");
+        }
     }
 
     @Override
@@ -141,6 +152,7 @@ public class JdbcProductDaoImpl implements ProductDao {
     }
 
     private int insertProduct(Product product) throws CashMachineException {
+        validate(product);
         try (Connection con = ConnectionProvider.getInstance().getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, product.getName());
@@ -164,6 +176,7 @@ public class JdbcProductDaoImpl implements ProductDao {
     }
 
     public boolean updateProductWithConnection(Connection conn, Product product) throws CashMachineException {
+        validate(product);
         try (PreparedStatement statement = conn.prepareStatement(SQL_UPDATE)) {
             statement.setString(1, product.getName());
             statement.setInt(2, product.getBrandId());
@@ -198,6 +211,7 @@ public class JdbcProductDaoImpl implements ProductDao {
 
     @Override
     public boolean update(Product entity) throws CashMachineException {
+        validate(entity);
         try (Connection con = ConnectionProvider.getInstance().getConnection()) {
             updateProductWithConnection(con, entity);
         } catch (SQLException | CashMachineException e) {
