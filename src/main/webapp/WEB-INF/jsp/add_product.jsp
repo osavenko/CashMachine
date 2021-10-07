@@ -127,9 +127,14 @@
             <label for="id_description"><b>${pdescription}</b></label>
             <fmt:message key="local.register.locale" var="llocale"/>
             <cash:SelectLocale name="locale" localeMessage="${llocale}" defaultLocale="${defaultLocale}"/>
-
+            <%--localeDescription--%>
+            <c:set var="descr" value=""/>
+            <c:if test="${id>0}">
+                <c:set var="descr" value="${localeDescription}"/>
+            </c:if>
             <textarea id="id_description" class="form-control" rows="3" name="description"
-                      onchange="validateProductDescription('${errDescription}')" required></textarea>
+                      onchange="validateProductDescription('${errDescription}')" required><c:out
+                    value="${descr}"/></textarea>
             <div id="spanProductDescription" class="invalid-feedback"></div>
         </fieldset>
         <fmt:message key="local.add.product.button" var="lbutton"/>
