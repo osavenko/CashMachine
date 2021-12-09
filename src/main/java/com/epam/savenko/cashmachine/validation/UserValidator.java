@@ -16,7 +16,7 @@ public class UserValidator implements Validator {
         if (user == null) {
             return false;
         }
-        if (!Pattern.matches(RegxPattern.PRODUCT_NAME, user.getName())) {
+        if (!Pattern.matches(RegxPattern.USER_NAME, user.getName())) {
             return false;
         }
         return true;
